@@ -68,3 +68,7 @@ The fixtures under `tests/fixtures/` cover one passing file and one targeted fai
 ## Notes on the inline template `<script>`
 
 Bloom templates themselves must include inline JavaScript (not TypeScript) because Rule 1 forbids any build step — the file has to run from `file://`. This validator is the only place in the Bloom repo where TypeScript runs at all, and it runs in Node, not the browser.
+
+
+### Rule 12: no-dialog-apis
+Flags `alert()`, `prompt()`, and `confirm()` calls in `<script>` blocks. These blocking dialog APIs violate progressive enhancement — use inline UI instead.
