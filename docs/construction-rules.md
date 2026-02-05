@@ -177,3 +177,7 @@ copyBtn.addEventListener('click', function () {
 });
 </script>
 ```
+
+
+### Rule 13: Print Styles
+Include `@media print` styles that hide interactive elements and ensure text is readable at standard paper widths. Key content must render without JavaScript.
