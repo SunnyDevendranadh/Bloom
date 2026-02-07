@@ -275,3 +275,12 @@ aside {
   .card { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
 }
 ```
+
+
+### Motion Tokens
+| Token | Value | Usage |
+|---|---|---|
+| `--duration-fast` | `150ms` | Hover states, tooltips |
+| `--duration-normal` | `300ms` | Transitions, expands |
+| `--duration-slow` | `500ms` | Page transitions, reveals |
+| `--ease-out` | `cubic-bezier(0.16, 1, 0.3, 1)` | Default easing |
