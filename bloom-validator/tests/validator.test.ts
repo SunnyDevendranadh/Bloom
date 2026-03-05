@@ -112,6 +112,24 @@ describe("bloom-validator", () => {
     );
   });
 
+  it("flags alert(), prompt(), and confirm() calls (Rule 12)", () => {
+    const { path, source } = load("invalid-dialog-apis.html");
+    const report = validate(path, source);
+    assert.equal(report.passed, false);
+    const dialogIssues = report.issues.filter(
+      (i) => i.ruleName === "no-dialog-apis"
+    );
+    assert.equal(
+      dialogIssues.length,
+      3,
+      `expected 3 dialog issues, got ${dialogIssues.length}: ${JSON.stringify(dialogIssues)}`
+    );
+    const messages = dialogIssues.map((i) => i.message).join("\n");
+    assert.match(messages, /alert\(\)/, "should flag alert()");
+    assert.match(messages, /prompt\(\)/, "should flag prompt()");
+    assert.match(messages, /confirm\(\)/, "should flag confirm()");
+  });
+
   it("emits JSON-serializable issues with line numbers", () => {
     const { path, source } = load("invalid-hex.html");
     const report = validate(path, source);

@@ -4,6 +4,7 @@ import { resolve } from "node:path";
 import { buildContext } from "./parser.ts";
 import { renderJson, renderText } from "./reporter.ts";
 import { headingHierarchy } from "./rules/heading-hierarchy.ts";
+import { noDialogApis } from "./rules/no-dialog-apis.ts";
 import { noExternalDeps } from "./rules/no-external-deps.ts";
 import { noHardcodedHex } from "./rules/no-hardcoded-hex.ts";
 import { securityHardening } from "./rules/security-hardening.ts";
@@ -18,6 +19,7 @@ const ALL_RULES: Rule[] = [
   headingHierarchy,
   viewportMeta,
   securityHardening,
+  noDialogApis,
 ];
 
 export function validate(filePath: string, source: string): ValidationReport {
