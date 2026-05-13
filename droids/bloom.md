@@ -398,35 +398,82 @@ Every file must follow this structure:
 ## Agent Harness Invocation
 
 ### Claude Code
+Install path: `.claude/skills/bloom/SKILL.md` (project) or `~/.claude/skills/bloom/SKILL.md` (global). Activate per session with `/bloom`. One-shot:
 ```
 Produce a single self-contained .html file that [description]. Use inline CSS with the clay/olive/oat/slate palette. Include [interactive feature]. Write the file to [path].
 ```
 
-### Codex (OpenAI)
+### Codex CLI (OpenAI)
+Install path: `AGENTS.md` at repo root or `~/.codex/AGENTS.md` global. Copy `droids/bloom.md` there. One-shot:
 ```
 Create a self-contained HTML file at [path]. The file should [description]. All CSS and JS must be inline. Use the following design tokens: clay=#D97757, olive=#788C5D, oat=#E3DACC, slate=#141413, ivory=#FAF9F5.
 ```
 
-### Cursor / Windsurf
+### Codex App (OpenAI web/desktop)
+Install path: commit `AGENTS.md` (with bloom skill) to the GitHub branch you connect to the Codex App. Trigger bloom with `/bloom` or "bloom on" in your first message. Commit a `.bloom` file at the repo root to auto-activate without typing the trigger.
+
+### Factory Droid
+Install path: `.factory/droids/bloom.md` (project) or `~/.factory/droids/bloom.md` (global). Invoke the `bloom` droid in your session.
+
+### Gemini CLI (Google)
+Install path: `GEMINI.md` at repo root or `~/.gemini/GEMINI.md` global. Copy `droids/bloom.md` there. Bloom triggers work identically — `/bloom`, "bloom on", "let it bloom".
+
+### OpenCode (sst)
+Install path: `AGENTS.md` at repo root. Copy `droids/bloom.md` there. Project config in `opencode.json` is independent — bloom triggers work regardless.
+
+### Cursor
+Install path (newer): `.cursor/rules/bloom.mdc`. Copy `droids/bloom.md` there.
+Install path (legacy): `.cursorrules` at repo root. Paste the bloom rules snippet.
+One-shot:
+```
+Write [path].html — a single self-contained file with [description]. Inline all styles and scripts. Use CSS custom properties from the warm palette (clay, olive, oat, slate). Make it interactive with [specific behavior].
+```
+
+### GitHub Copilot CLI
+Install path: `AGENTS.md` at repo root. Copy `droids/bloom.md` there. Trigger with `/bloom` or "bloom on" in your first prompt. Commit a `.bloom` file at the repo root to auto-activate per workspace.
+
+### Windsurf
+Install path: `.windsurfrules` at repo root. Paste the bloom rules snippet.
 ```
 Write [path].html — a single self-contained file with [description]. Inline all styles and scripts. Use CSS custom properties from the warm palette (clay, olive, oat, slate). Make it interactive with [specific behavior].
 ```
 
 ### Aider
+Install path: `AGENTS.md` at repo root (preferred), or `.aider.conf.yml` `read` instruction, or `--message` flag. One-shot:
 ```
 Create [path].html as a single self-contained HTML file. [Description]. All styles and scripts inline. Use CSS variables --clay, --olive, --oat, --slate, --ivory for colors.
 ```
 
-### GitHub Copilot / Continue
-Add the contents of this skill to your `.github/copilot-instructions.md` or `.continue/rules.md`.
+### GitHub Copilot (VS Code) / Continue
+Add the contents of this skill to `.github/copilot-instructions.md` or `.continue/rules.md`.
 
 ### Pi / Replit / General
+Paste this entire file into the agent's system prompt or custom-instructions field. One-shot:
 ```
 Generate a single .html file with [description]. Everything must be self-contained (no external assets). Use semantic HTML5, inline CSS with custom properties for theming, and minimal inline JS for interactivity.
 ```
 
 ### System prompt injection
 For any agent that supports system prompts or custom instructions, paste this entire file as-is.
+
+### Cross-harness install matrix
+
+| Harness | File that triggers install |
+|---|---|
+| Claude Code | `.claude/skills/bloom/SKILL.md` |
+| Codex CLI | `AGENTS.md` |
+| Codex App | `AGENTS.md` (committed to linked branch) |
+| Factory Droid | `.factory/droids/bloom.md` |
+| Gemini CLI | `GEMINI.md` |
+| OpenCode | `AGENTS.md` |
+| Cursor | `.cursor/rules/bloom.mdc` (or `.cursorrules`) |
+| GitHub Copilot CLI | `AGENTS.md` |
+| GitHub Copilot (VS Code) | `.github/copilot-instructions.md` |
+| Windsurf | `.windsurfrules` |
+| Aider | `AGENTS.md` (or `.aider.conf.yml`) |
+| Continue | `.continue/rules.md` |
+
+A single `AGENTS.md` covers Codex CLI, Codex App, OpenCode, GitHub Copilot CLI, and Aider.
 
 ---
 

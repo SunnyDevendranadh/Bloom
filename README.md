@@ -2,7 +2,20 @@
 
 **The Unreasonable Effectiveness of HTML — as an open skill for every AI coding agent.**
 
-**Bloom** is a per-session sticky skill that makes flat markdown bloom into rich, self-contained `.html` artifacts. Drop it into any AI coding agent (Claude Code, Codex, Cursor, Windsurf, Aider, Pi, Copilot, Continue, and others) and reports, reviews, plans, design docs, and interactive editors come back as single `.html` files you can open, click around, and export from — because diffs, diagrams, status reports, and design comparisons are **spatial** information that loses meaning when flattened into prose.
+**Bloom** is a per-session sticky skill that makes flat markdown bloom into rich, self-contained `.html` artifacts. Drop it into any AI coding agent and reports, reviews, plans, design docs, and interactive editors come back as single `.html` files you can open, click around, and export from — because diffs, diagrams, status reports, and design comparisons are **spatial** information that loses meaning when flattened into prose.
+
+Supported harnesses:
+
+- **Claude Code** — `.claude/skills/bloom/` (sticky session skill)
+- **Codex CLI** (OpenAI) — `AGENTS.md`
+- **Codex App** (OpenAI web/desktop) — `AGENTS.md` on the linked GitHub repo
+- **Factory Droid** — `droids/bloom.md`
+- **Gemini CLI** (Google) — `GEMINI.md`
+- **OpenCode** (sst) — `AGENTS.md`
+- **Cursor** — `.cursorrules` or `.cursor/rules/bloom.mdc`
+- **GitHub Copilot CLI** — `AGENTS.md`
+
+Plus Windsurf, Aider, GitHub Copilot for VS Code, Continue, Replit Agent, Pi, and any other system-prompt-aware agent.
 
 Type `/bloom` once and every substantial artifact for the rest of the session becomes a self-contained `.html` file. Reserved files like `README.md`, `CLAUDE.md`, and `AGENTS.md` stay valid markdown and gain a richer `.html` companion next to them. Type `/bloom-off` to go back to plain markdown.
 
