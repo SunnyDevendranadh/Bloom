@@ -2,11 +2,136 @@
 
 You are an expert at producing **self-contained `.html` files** as agent output, following the philosophy of "The Unreasonable Effectiveness of HTML." Instead of dumping walls of markdown, you produce single `.html` files that agents and humans can actually read, compare, interact with, and export from.
 
+This skill supports **Session Mode**: once a user activates it, it stays on for the rest of the session and every substantial artifact is produced as a self-contained `.html` file.
+
 ---
 
-## When to Activate
+## Session Mode
 
-Produce an `.html` file instead of markdown whenever the output benefits from:
+This skill is **per-session and sticky**. When the user activates it, the skill applies to every subsequent turn in that session until they explicitly deactivate it or the session ends. There is no need for the user to re-invoke it each turn.
+
+### Activation triggers
+
+Treat any of the following as activation. They are case-insensitive and may appear anywhere in a user message:
+
+**Slash commands:**
+- `/html-effectiveness`
+- `/html`
+- `/html-on`
+- `/html-mode`
+
+**Trigger phrases:**
+- "html mode on"
+- "activate html mode"
+- "enable html effectiveness"
+- "use html mode"
+- "switch to html mode"
+- "html-only mode"
+- "respond in html"
+- "html responses please"
+
+**File marker (optional):**
+- Presence of an `.html-mode` file (any contents) in the project root activates the skill at session start for that workspace.
+
+On the first activation in a session, reply with a short plain-text confirmation that names the mode, lists the deactivation command, and points to where artifacts will be written (e.g., `./artifacts/` or alongside the file being discussed). Do not produce an HTML splash screen on activation — that is wasteful.
+
+Example confirmation:
+> HTML Effectiveness mode is on for this session. Artifacts will be written as self-contained `.html` files (companion `.html` for any `.md` doc). Say "html mode off" or `/html-off` to deactivate.
+
+### Deactivation triggers
+
+Treat any of the following as deactivation:
+
+**Slash commands:**
+- `/html-off`
+- `/html-effectiveness-off`
+- `/no-html`
+- `/html-mode-off`
+
+**Trigger phrases:**
+- "html mode off"
+- "disable html mode"
+- "stop html mode"
+- "turn off html"
+- "exit html mode"
+- "deactivate html"
+
+On deactivation, confirm in plain text and return to the agent's default markdown behavior.
+
+### What gets produced as HTML when active
+
+When Session Mode is active, produce a self-contained `.html` artifact for any **substantial** output. Substantial means anything you would normally render as more than a few sentences of structured markdown:
+
+- Reports (status, weekly, sprint, monthly, KPI)
+- Reviews (PR, code, design, architecture)
+- Comparisons (multiple approaches, before/after, A/B)
+- Documentation (architecture, API, onboarding, runbooks, ADRs)
+- Plans (implementation, migration, rollout, incident response)
+- Explainers (concept, feature, system, walkthrough)
+- Diagrams (flow, sequence, module map, dependency graph)
+- Slide decks and pitches
+- Incident timelines and postmortems
+- Triage boards, prioritization lists, kanban
+- Editor-like UI (flag editor, prompt tuner, config editor)
+- Glossaries, FAQs, decision logs
+
+After writing the file, reply with a single plain-text line telling the user what was written and where (e.g., `Wrote ./artifacts/sprint-44-status.html`). Do not dump the HTML source into the chat.
+
+### What stays plain text even when active
+
+Do NOT wrap these in HTML:
+
+- One-line factual answers ("Yes", "No", "Run `npm test`")
+- Tool execution status ("Reading config.toml", "Running tests")
+- Error messages that need to be visible immediately
+- Short clarifying questions back to the user
+- Code edits inside existing source files (use the editor tools normally)
+- Commit messages, PR titles, branch names
+- Shell command output
+
+The rule of thumb: if the user could act on the answer in under 5 seconds of reading, keep it plain text. If they would skim or refer back to it later, produce an HTML artifact.
+
+### Companion-file rule for `.md` artifacts
+
+Several conventional filenames are **markdown by contract** because harnesses, GitHub, and other tools look for them by name:
+
+- `README.md`
+- `CLAUDE.md`
+- `AGENTS.md`
+- `CODEOWNERS`
+- `CONTRIBUTING.md`
+- `CHANGELOG.md`
+- `LICENSE`
+- Anything under `.github/`, `.factory/`, `.cursor/`, `.windsurf/`, `.continue/`, `.claude/`
+
+When the user asks you to create or update one of these files **and Session Mode is active**, do BOTH:
+
+1. Write the canonical `.md` file as the source of truth (so the harness/tool keeps working).
+2. Also write a companion `.html` next to it with the same stem (`README.html`, `CLAUDE.html`, `AGENTS.html`) that uses the full design system, semantic structure, and interactivity from this skill.
+
+The companion file is the rich, browsable version. The `.md` file is the canonical contract.
+
+For non-reserved doc files (e.g., `docs/architecture.md`, `notes/sprint-44.md`), default to writing the `.html` version as the primary artifact unless the user explicitly asks for markdown.
+
+### Output-location convention
+
+Unless the user specifies a path:
+
+- For a doc that has a natural companion (`README.md` → `README.html`), write the companion next to the original.
+- For free-standing artifacts (status reports, reviews, plans), write them under `./artifacts/` at the repo root, with a kebab-case filename that includes the date when relevant: `./artifacts/2025-05-13-pr-312-review.html`.
+- Create the `./artifacts/` directory if it does not exist.
+
+### Session memory
+
+Treat Session Mode state as conversation-scoped, not persistent. When a new session starts, the skill is off by default unless an `.html-mode` file is present in the workspace root or the harness configuration auto-enables it.
+
+If the user toggles state multiple times in one session, the most recent toggle wins.
+
+---
+
+## When to Use HTML at All (outside Session Mode)
+
+Even when Session Mode is off, the agent may opt into producing an `.html` file for a specific response when the output benefits from:
 
 - **Spatial comparison** — side-by-side approaches, before/after, variant matrices
 - **Visual structure** — annotated diffs, risk maps, timelines, flowcharts, diagrams
@@ -443,3 +568,16 @@ Before delivering any `.html` file, verify:
 - [ ] `<meta name="viewport">` present
 - [ ] Proper heading hierarchy (one `<h1>`, no skipped levels)
 - [ ] SVGs have `aria-label` or `role="img"`
+
+---
+
+## Session-Mode Self-Check
+
+When Session Mode is active, also verify before responding:
+
+- [ ] If the response is a substantial artifact (report, review, plan, doc, comparison), it was written to an `.html` file — not dumped inline.
+- [ ] If the file is a companion to a reserved `.md` (README/CLAUDE/AGENTS/etc.), the `.md` was also written/updated as the canonical contract.
+- [ ] Free-standing artifacts live under `./artifacts/` with a kebab-case filename.
+- [ ] The chat reply is a 1-line plain-text confirmation pointing at the file path — not a paste of the HTML source.
+- [ ] Short answers, tool status, and trivial confirmations are still plain text (the mode does not force HTML on everything).
+- [ ] On any user message matching a deactivation trigger, the mode is turned off before producing the response.
