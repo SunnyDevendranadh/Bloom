@@ -1,13 +1,13 @@
 ---
-name: html-effectiveness
-description: Per-session sticky mode that produces rich, self-contained .html artifacts instead of flat markdown for reports, reviews, plans, docs, comparisons, and editor-like UI. Trigger with /html-effectiveness, /html, /html-on, or phrases like "html mode on", "use html", "respond in html". Deactivate with /html-off or "html mode off".
+name: bloom
+description: Per-session sticky mode that makes markdown bloom into rich, self-contained .html artifacts — reports, reviews, plans, docs, comparisons, diagrams, editor UI. Activate with /bloom, /bloom-on, or phrases like "bloom on", "let it bloom". Deactivate with /bloom-off or "bloom off". Once on, it stays on for the rest of the session.
 ---
 
-# HTML Effectiveness — Claude Code skill
+# Bloom — Self-Contained HTML Artifact Skill
 
-This skill puts the current session into **HTML Mode**: every substantial artifact (status report, PR review, plan, doc, comparison, diagram, editor UI) is produced as a self-contained `.html` file using the warm clay/olive/oat/slate palette, semantic HTML5, inline CSS + JS, and no external dependencies.
+**Bloom** puts the current session into a sticky HTML-output mode. Once activated, every substantial artifact (status report, PR review, plan, doc, comparison, diagram, editor UI) blooms into a self-contained `.html` file using the warm clay/olive/oat/slate palette, semantic HTML5, inline CSS + JS, and zero external dependencies.
 
-The canonical reference for the skill lives at `droids/html-effectiveness.md` in the HTML.md repo. The rules below are the Claude-Code-specific operating instructions.
+The canonical reference for the skill lives at `droids/bloom.md` in the HTML.md repo. The rules below are the Claude-Code-specific operating instructions.
 
 ---
 
@@ -15,48 +15,44 @@ The canonical reference for the skill lives at `droids/html-effectiveness.md` in
 
 1. **Activate** when the user message matches an activation trigger (slash or phrase, see below).
 2. **Stay sticky** for the rest of the session. Do not re-prompt the user. Do not require re-invocation per turn.
-3. **Honor the mode on every turn** until a deactivation trigger fires or the session ends.
+3. **Honor bloom on every turn** until a deactivation trigger fires or the session ends.
 
 ### Activation triggers (case-insensitive, may appear anywhere in a user message)
 
 Slash:
-- `/html-effectiveness`
-- `/html`
-- `/html-on`
-- `/html-mode`
+- `/bloom`
+- `/bloom-on`
+- `/bloom-mode`
 
 Phrases:
-- "html mode on"
-- "activate html mode"
-- "enable html effectiveness"
-- "use html mode"
-- "switch to html mode"
-- "html-only mode"
-- "respond in html"
-- "html responses please"
+- "bloom on"
+- "let it bloom"
+- "bloom mode on"
+- "activate bloom"
+- "bloom please"
+- "go bloom"
 
 File marker:
-- If `.html-mode` exists at the repo root at session start, activate immediately without waiting for an explicit trigger.
+- If `.bloom` exists at the repo root at session start, activate immediately without waiting for an explicit trigger.
 
 ### Deactivation triggers
 
 Slash:
-- `/html-off`
-- `/html-effectiveness-off`
-- `/no-html`
-- `/html-mode-off`
+- `/bloom-off`
+- `/no-bloom`
+- `/bloom-mode-off`
 
 Phrases:
-- "html mode off"
-- "disable html mode"
-- "stop html mode"
-- "turn off html"
-- "exit html mode"
-- "deactivate html"
+- "bloom off"
+- "bloom mode off"
+- "stop bloom"
+- "turn off bloom"
+- "exit bloom"
+- "deactivate bloom"
 
 ---
 
-## What to produce as HTML (when active)
+## What to produce as HTML (when bloom is on)
 
 Write a self-contained `.html` artifact for any of the following:
 
@@ -75,13 +71,13 @@ Write a self-contained `.html` artifact for any of the following:
 
 After writing the file, reply with a single plain-text line stating the path. Example:
 
-> Wrote `./artifacts/2025-05-13-pr-312-review.html` — open it in your browser.
+> Wrote `./bloom/2025-05-13-pr-312-review.html` — open it in your browser.
 
 Do NOT paste the HTML source into the chat. The file is the artifact.
 
 ---
 
-## What stays plain text (even when active)
+## What stays plain text (even when bloom is on)
 
 - Direct one-line factual answers
 - Tool execution status updates
@@ -97,7 +93,7 @@ Rule of thumb: if the user could act on the answer in under 5 seconds of reading
 
 ## Companion-file rule for reserved `.md` filenames
 
-When the user asks you to create or update one of these files and HTML Mode is active, write **both** the canonical `.md` (so the harness contract keeps working) **and** a richer `.html` companion next to it:
+When the user asks you to create or update one of these files and bloom is on, write **both** the canonical `.md` (so the harness contract keeps working) **and** a richer `.html` companion next to it:
 
 | Canonical (.md) | Companion (.html) |
 |---|---|
@@ -116,12 +112,12 @@ For non-reserved docs (`docs/architecture.md`, `notes/sprint-44.md`, etc.), defa
 ## Output-location convention
 
 - Doc with a natural sibling → write the companion next to the original (`README.md` → `README.html`).
-- Free-standing artifact → write under `./artifacts/` at the repo root with a kebab-case filename. Prefix with the date when relevant: `./artifacts/2025-05-13-sprint-44-status.html`.
-- Create `./artifacts/` if it doesn't exist.
+- Free-standing artifact → write under `./bloom/` at the repo root with a kebab-case filename. Prefix with the date when relevant: `./bloom/2025-05-13-sprint-44-status.html`.
+- Create `./bloom/` if it doesn't exist.
 
 ---
 
-## Construction rules (summary — full version in droids/html-effectiveness.md)
+## Construction rules (summary — full version in droids/bloom.md)
 
 Every `.html` file produced must:
 
@@ -156,11 +152,11 @@ Every `.html` file produced must:
 
 **On activation** (first time per session):
 
-> HTML Effectiveness mode is on. Artifacts will be written as self-contained `.html` files under `./artifacts/` (companion `.html` alongside any reserved `.md`). Say "html mode off" or `/html-off` to deactivate.
+> Bloom is on. Artifacts will be written as self-contained `.html` files under `./bloom/` (companion `.html` alongside any reserved `.md`). Say "bloom off" or `/bloom-off` to deactivate.
 
 **On deactivation:**
 
-> HTML Effectiveness mode is off. Returning to default markdown output.
+> Bloom is off. Returning to default markdown output.
 
 Do NOT produce an HTML splash screen on activation. The confirmation is a single plain-text line.
 
@@ -218,10 +214,10 @@ Every produced file uses this skeleton:
 
 ---
 
-## Self-check before responding (every turn, when active)
+## Self-check before responding (every turn, when bloom is on)
 
 - [ ] Is the response a substantial artifact? If yes → it goes in an `.html` file, not the chat.
-- [ ] Is the path under `./artifacts/` or a `.html` companion to an existing `.md`?
+- [ ] Is the path under `./bloom/` or a `.html` companion to an existing `.md`?
 - [ ] Did I keep the canonical `.md` in addition to the companion (for reserved filenames)?
 - [ ] Is my chat reply a single plain-text line pointing at the file?
-- [ ] Did the user's latest message contain a deactivation trigger? If yes → turn off the mode before responding.
+- [ ] Did the user's latest message contain a deactivation trigger? If yes → turn off bloom before responding.

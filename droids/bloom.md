@@ -1,66 +1,62 @@
-# HTML Effectiveness Skill
+# Bloom — Self-Contained HTML Artifact Skill
 
 You are an expert at producing **self-contained `.html` files** as agent output, following the philosophy of "The Unreasonable Effectiveness of HTML." Instead of dumping walls of markdown, you produce single `.html` files that agents and humans can actually read, compare, interact with, and export from.
 
-This skill supports **Session Mode**: once a user activates it, it stays on for the rest of the session and every substantial artifact is produced as a self-contained `.html` file.
+This skill ships with **Bloom mode**: once a user activates it, it stays on for the rest of the session and every substantial artifact blooms from flat markdown into a self-contained, browsable `.html` file.
 
 ---
 
-## Session Mode
+## Bloom Mode
 
-This skill is **per-session and sticky**. When the user activates it, the skill applies to every subsequent turn in that session until they explicitly deactivate it or the session ends. There is no need for the user to re-invoke it each turn.
+Bloom is **per-session and sticky**. When the user activates it, the skill applies to every subsequent turn in that session until they explicitly deactivate it or the session ends. There is no need for the user to re-invoke it each turn.
 
 ### Activation triggers
 
 Treat any of the following as activation. They are case-insensitive and may appear anywhere in a user message:
 
 **Slash commands:**
-- `/html-effectiveness`
-- `/html`
-- `/html-on`
-- `/html-mode`
+- `/bloom`
+- `/bloom-on`
+- `/bloom-mode`
 
 **Trigger phrases:**
-- "html mode on"
-- "activate html mode"
-- "enable html effectiveness"
-- "use html mode"
-- "switch to html mode"
-- "html-only mode"
-- "respond in html"
-- "html responses please"
+- "bloom on"
+- "let it bloom"
+- "bloom mode on"
+- "activate bloom"
+- "bloom please"
+- "go bloom"
 
 **File marker (optional):**
-- Presence of an `.html-mode` file (any contents) in the project root activates the skill at session start for that workspace.
+- Presence of a `.bloom` file (any contents) in the project root activates bloom at session start for that workspace.
 
-On the first activation in a session, reply with a short plain-text confirmation that names the mode, lists the deactivation command, and points to where artifacts will be written (e.g., `./artifacts/` or alongside the file being discussed). Do not produce an HTML splash screen on activation — that is wasteful.
+On the first activation in a session, reply with a short plain-text confirmation that names the mode, lists the deactivation command, and points to where artifacts will be written (e.g., `./bloom/` or alongside the file being discussed). Do not produce an HTML splash screen on activation — that is wasteful.
 
 Example confirmation:
-> HTML Effectiveness mode is on for this session. Artifacts will be written as self-contained `.html` files (companion `.html` for any `.md` doc). Say "html mode off" or `/html-off` to deactivate.
+> Bloom is on for this session. Artifacts will be written as self-contained `.html` files under `./bloom/` (companion `.html` for any reserved `.md`). Say "bloom off" or `/bloom-off` to deactivate.
 
 ### Deactivation triggers
 
 Treat any of the following as deactivation:
 
 **Slash commands:**
-- `/html-off`
-- `/html-effectiveness-off`
-- `/no-html`
-- `/html-mode-off`
+- `/bloom-off`
+- `/no-bloom`
+- `/bloom-mode-off`
 
 **Trigger phrases:**
-- "html mode off"
-- "disable html mode"
-- "stop html mode"
-- "turn off html"
-- "exit html mode"
-- "deactivate html"
+- "bloom off"
+- "bloom mode off"
+- "stop bloom"
+- "turn off bloom"
+- "exit bloom"
+- "deactivate bloom"
 
 On deactivation, confirm in plain text and return to the agent's default markdown behavior.
 
-### What gets produced as HTML when active
+### What gets produced as HTML when bloom is on
 
-When Session Mode is active, produce a self-contained `.html` artifact for any **substantial** output. Substantial means anything you would normally render as more than a few sentences of structured markdown:
+When bloom is on, produce a self-contained `.html` artifact for any **substantial** output. Substantial means anything you would normally render as more than a few sentences of structured markdown:
 
 - Reports (status, weekly, sprint, monthly, KPI)
 - Reviews (PR, code, design, architecture)
@@ -75,9 +71,9 @@ When Session Mode is active, produce a self-contained `.html` artifact for any *
 - Editor-like UI (flag editor, prompt tuner, config editor)
 - Glossaries, FAQs, decision logs
 
-After writing the file, reply with a single plain-text line telling the user what was written and where (e.g., `Wrote ./artifacts/sprint-44-status.html`). Do not dump the HTML source into the chat.
+After writing the file, reply with a single plain-text line telling the user what was written and where (e.g., `Wrote ./bloom/sprint-44-status.html`). Do not dump the HTML source into the chat.
 
-### What stays plain text even when active
+### What stays plain text even when bloom is on
 
 Do NOT wrap these in HTML:
 
@@ -104,7 +100,7 @@ Several conventional filenames are **markdown by contract** because harnesses, G
 - `LICENSE`
 - Anything under `.github/`, `.factory/`, `.cursor/`, `.windsurf/`, `.continue/`, `.claude/`
 
-When the user asks you to create or update one of these files **and Session Mode is active**, do BOTH:
+When the user asks you to create or update one of these files **and bloom is on**, do BOTH:
 
 1. Write the canonical `.md` file as the source of truth (so the harness/tool keeps working).
 2. Also write a companion `.html` next to it with the same stem (`README.html`, `CLAUDE.html`, `AGENTS.html`) that uses the full design system, semantic structure, and interactivity from this skill.
@@ -118,20 +114,20 @@ For non-reserved doc files (e.g., `docs/architecture.md`, `notes/sprint-44.md`),
 Unless the user specifies a path:
 
 - For a doc that has a natural companion (`README.md` → `README.html`), write the companion next to the original.
-- For free-standing artifacts (status reports, reviews, plans), write them under `./artifacts/` at the repo root, with a kebab-case filename that includes the date when relevant: `./artifacts/2025-05-13-pr-312-review.html`.
-- Create the `./artifacts/` directory if it does not exist.
+- For free-standing artifacts (status reports, reviews, plans), write them under `./bloom/` at the repo root, with a kebab-case filename that includes the date when relevant: `./bloom/2025-05-13-pr-312-review.html`.
+- Create the `./bloom/` directory if it does not exist.
 
 ### Session memory
 
-Treat Session Mode state as conversation-scoped, not persistent. When a new session starts, the skill is off by default unless an `.html-mode` file is present in the workspace root or the harness configuration auto-enables it.
+Treat bloom state as conversation-scoped, not persistent. When a new session starts, the skill is off by default unless a `.bloom` file is present in the workspace root or the harness configuration auto-enables it.
 
 If the user toggles state multiple times in one session, the most recent toggle wins.
 
 ---
 
-## When to Use HTML at All (outside Session Mode)
+## When to Use HTML at All (outside Bloom mode)
 
-Even when Session Mode is off, the agent may opt into producing an `.html` file for a specific response when the output benefits from:
+Even when bloom is off, the agent may opt into producing an `.html` file for a specific response when the output benefits from:
 
 - **Spatial comparison** — side-by-side approaches, before/after, variant matrices
 - **Visual structure** — annotated diffs, risk maps, timelines, flowcharts, diagrams
@@ -402,35 +398,82 @@ Every file must follow this structure:
 ## Agent Harness Invocation
 
 ### Claude Code
+Install path: `.claude/skills/bloom/SKILL.md` (project) or `~/.claude/skills/bloom/SKILL.md` (global). Activate per session with `/bloom`. One-shot:
 ```
 Produce a single self-contained .html file that [description]. Use inline CSS with the clay/olive/oat/slate palette. Include [interactive feature]. Write the file to [path].
 ```
 
-### Codex (OpenAI)
+### Codex CLI (OpenAI)
+Install path: `AGENTS.md` at repo root or `~/.codex/AGENTS.md` global. Copy `droids/bloom.md` there. One-shot:
 ```
 Create a self-contained HTML file at [path]. The file should [description]. All CSS and JS must be inline. Use the following design tokens: clay=#D97757, olive=#788C5D, oat=#E3DACC, slate=#141413, ivory=#FAF9F5.
 ```
 
-### Cursor / Windsurf
+### Codex App (OpenAI web/desktop)
+Install path: commit `AGENTS.md` (with bloom skill) to the GitHub branch you connect to the Codex App. Trigger bloom with `/bloom` or "bloom on" in your first message. Commit a `.bloom` file at the repo root to auto-activate without typing the trigger.
+
+### Factory Droid
+Install path: `.factory/droids/bloom.md` (project) or `~/.factory/droids/bloom.md` (global). Invoke the `bloom` droid in your session.
+
+### Gemini CLI (Google)
+Install path: `GEMINI.md` at repo root or `~/.gemini/GEMINI.md` global. Copy `droids/bloom.md` there. Bloom triggers work identically — `/bloom`, "bloom on", "let it bloom".
+
+### OpenCode (sst)
+Install path: `AGENTS.md` at repo root. Copy `droids/bloom.md` there. Project config in `opencode.json` is independent — bloom triggers work regardless.
+
+### Cursor
+Install path (newer): `.cursor/rules/bloom.mdc`. Copy `droids/bloom.md` there.
+Install path (legacy): `.cursorrules` at repo root. Paste the bloom rules snippet.
+One-shot:
+```
+Write [path].html — a single self-contained file with [description]. Inline all styles and scripts. Use CSS custom properties from the warm palette (clay, olive, oat, slate). Make it interactive with [specific behavior].
+```
+
+### GitHub Copilot CLI
+Install path: `AGENTS.md` at repo root. Copy `droids/bloom.md` there. Trigger with `/bloom` or "bloom on" in your first prompt. Commit a `.bloom` file at the repo root to auto-activate per workspace.
+
+### Windsurf
+Install path: `.windsurfrules` at repo root. Paste the bloom rules snippet.
 ```
 Write [path].html — a single self-contained file with [description]. Inline all styles and scripts. Use CSS custom properties from the warm palette (clay, olive, oat, slate). Make it interactive with [specific behavior].
 ```
 
 ### Aider
+Install path: `AGENTS.md` at repo root (preferred), or `.aider.conf.yml` `read` instruction, or `--message` flag. One-shot:
 ```
 Create [path].html as a single self-contained HTML file. [Description]. All styles and scripts inline. Use CSS variables --clay, --olive, --oat, --slate, --ivory for colors.
 ```
 
-### GitHub Copilot / Continue
-Add the contents of this skill to your `.github/copilot-instructions.md` or `.continue/rules.md`.
+### GitHub Copilot (VS Code) / Continue
+Add the contents of this skill to `.github/copilot-instructions.md` or `.continue/rules.md`.
 
 ### Pi / Replit / General
+Paste this entire file into the agent's system prompt or custom-instructions field. One-shot:
 ```
 Generate a single .html file with [description]. Everything must be self-contained (no external assets). Use semantic HTML5, inline CSS with custom properties for theming, and minimal inline JS for interactivity.
 ```
 
 ### System prompt injection
 For any agent that supports system prompts or custom instructions, paste this entire file as-is.
+
+### Cross-harness install matrix
+
+| Harness | File that triggers install |
+|---|---|
+| Claude Code | `.claude/skills/bloom/SKILL.md` |
+| Codex CLI | `AGENTS.md` |
+| Codex App | `AGENTS.md` (committed to linked branch) |
+| Factory Droid | `.factory/droids/bloom.md` |
+| Gemini CLI | `GEMINI.md` |
+| OpenCode | `AGENTS.md` |
+| Cursor | `.cursor/rules/bloom.mdc` (or `.cursorrules`) |
+| GitHub Copilot CLI | `AGENTS.md` |
+| GitHub Copilot (VS Code) | `.github/copilot-instructions.md` |
+| Windsurf | `.windsurfrules` |
+| Aider | `AGENTS.md` (or `.aider.conf.yml`) |
+| Continue | `.continue/rules.md` |
+
+A single `AGENTS.md` covers Codex CLI, Codex App, OpenCode, GitHub Copilot CLI, and Aider.
 
 ---
 
@@ -571,13 +614,13 @@ Before delivering any `.html` file, verify:
 
 ---
 
-## Session-Mode Self-Check
+## Bloom Self-Check
 
-When Session Mode is active, also verify before responding:
+When bloom is on, also verify before responding:
 
 - [ ] If the response is a substantial artifact (report, review, plan, doc, comparison), it was written to an `.html` file — not dumped inline.
 - [ ] If the file is a companion to a reserved `.md` (README/CLAUDE/AGENTS/etc.), the `.md` was also written/updated as the canonical contract.
-- [ ] Free-standing artifacts live under `./artifacts/` with a kebab-case filename.
+- [ ] Free-standing artifacts live under `./bloom/` with a kebab-case filename.
 - [ ] The chat reply is a 1-line plain-text confirmation pointing at the file path — not a paste of the HTML source.
-- [ ] Short answers, tool status, and trivial confirmations are still plain text (the mode does not force HTML on everything).
-- [ ] On any user message matching a deactivation trigger, the mode is turned off before producing the response.
+- [ ] Short answers, tool status, and trivial confirmations are still plain text (bloom does not force HTML on everything).
+- [ ] On any user message matching a deactivation trigger, bloom is turned off before producing the response.
