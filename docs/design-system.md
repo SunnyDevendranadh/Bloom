@@ -1,6 +1,6 @@
 # Design System Reference
 
-Complete token reference for all HTML Effectiveness templates.
+Complete token reference for all Bloom templates.
 
 ---
 

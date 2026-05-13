@@ -1,8 +1,8 @@
 # Harness Setup Guide
 
-How to install the HTML Effectiveness skill for every major AI coding agent.
+How to install **Bloom** (HTML.md's per-session sticky HTML skill) for every major AI coding agent.
 
-The skill ships with **Session Mode**: once activated, it stays sticky until the session ends or the user explicitly deactivates. Each harness section below shows the install path plus the activation/deactivation triggers that work in that environment.
+Bloom is sticky: once activated in a session, it stays on until the session ends or the user deactivates it. Each harness section below shows the install path plus the activation and deactivation triggers that work in that environment.
 
 ---
 
@@ -12,11 +12,11 @@ Once installed, any harness should recognize these in a user message:
 
 | Action | Slash | Phrase |
 |---|---|---|
-| Activate | `/html-effectiveness`, `/html`, `/html-on`, `/html-mode` | "html mode on", "use html mode", "respond in html", "enable html effectiveness" |
-| Deactivate | `/html-off`, `/html-effectiveness-off`, `/no-html`, `/html-mode-off` | "html mode off", "stop html mode", "exit html mode" |
-| Auto-activate at session start | — | Place an `.html-mode` file (any contents) at the repo root |
+| Activate | `/bloom`, `/bloom-on`, `/bloom-mode` | "bloom on", "let it bloom", "bloom mode on", "activate bloom" |
+| Deactivate | `/bloom-off`, `/no-bloom`, `/bloom-mode-off` | "bloom off", "bloom mode off", "stop bloom", "exit bloom" |
+| Auto-activate at session start | — | Place a `.bloom` file (any contents) at the repo root |
 
-The slashes are recognized by harnesses that natively support slash commands (Claude Code, Continue, etc.). The phrases are interpreted by the skill instructions themselves and work in every harness.
+Slashes are recognized by harnesses that natively support slash commands (Claude Code, Continue, etc.). The phrases are interpreted by the skill instructions themselves and work in every harness.
 
 ---
 
@@ -24,13 +24,13 @@ The slashes are recognized by harnesses that natively support slash commands (Cl
 
 ```bash
 # Personal — applies to all your projects
-cp droids/html-effectiveness.md ~/.factory/droids/
+cp droids/bloom.md ~/.factory/droids/
 
 # Project — applies to one project only
-cp droids/html-effectiveness.md .factory/droids/
+cp droids/bloom.md .factory/droids/
 ```
 
-Then invoke the `html-effectiveness` droid in your session.
+Then invoke the `bloom` droid in your session.
 
 ---
 
@@ -38,39 +38,39 @@ Then invoke the `html-effectiveness` droid in your session.
 
 **Recommended: install as a sticky session skill.**
 
-Copy the `.claude/skills/html-effectiveness/` directory into your project (or `~/.claude/skills/` for global use):
+Copy the `.claude/skills/bloom/` directory into your project (or `~/.claude/skills/` for global use):
 
 ```bash
 # Project skill (this repo only)
-cp -r .claude/skills/html-effectiveness/ /path/to/your-project/.claude/skills/
+cp -r .claude/skills/bloom/ /path/to/your-project/.claude/skills/
 
 # Global skill (all your Claude Code sessions)
-cp -r .claude/skills/html-effectiveness/ ~/.claude/skills/
+cp -r .claude/skills/bloom/ ~/.claude/skills/
 ```
 
 Then in any session:
 
 ```
-/html-effectiveness
+/bloom
 ```
 
-The mode stays sticky for the rest of the session. Substantial artifacts (reports, reviews, plans, docs) come back as `.html` files under `./artifacts/`. Reserved files like `README.md` / `CLAUDE.md` / `AGENTS.md` stay valid markdown and gain a companion `.html` next to them. Deactivate with `/html-off`.
+Bloom stays sticky for the rest of the session. Substantial artifacts (reports, reviews, plans, docs) come back as `.html` files under `./bloom/`. Reserved files like `README.md` / `CLAUDE.md` / `AGENTS.md` stay valid markdown and gain a companion `.html` next to them. Deactivate with `/bloom-off`.
 
 **Alternative: add to your `CLAUDE.md`** project file or `~/.claude/CLAUDE.md` global file:
 
 ```markdown
-## HTML Output Preference (Session Mode)
+## Bloom (sticky HTML mode)
 
-This project uses the HTML Effectiveness skill in Session Mode.
+This project uses Bloom — a per-session sticky HTML output mode.
 
 Activation triggers (case-insensitive, anywhere in a user message):
-- Slash: /html-effectiveness, /html, /html-on, /html-mode
-- Phrases: "html mode on", "use html mode", "respond in html"
-- File marker: presence of `.html-mode` at repo root auto-activates the mode at session start
+- Slash: /bloom, /bloom-on, /bloom-mode
+- Phrases: "bloom on", "let it bloom", "activate bloom"
+- File marker: presence of `.bloom` at repo root auto-activates at session start
 
-Once activated, the mode stays sticky for the rest of the session until /html-off (or "html mode off") fires.
+Once activated, bloom stays sticky for the rest of the session until /bloom-off (or "bloom off") fires.
 
-When active, produce a self-contained .html file for any substantial artifact (reports, reviews, plans, docs, comparisons, diagrams, postmortems, editor UI). Write free-standing artifacts under ./artifacts/ with kebab-case filenames. For reserved files (README.md, CLAUDE.md, AGENTS.md, CONTRIBUTING.md, CHANGELOG.md), keep the canonical .md and write a companion .html alongside.
+When bloom is on, produce a self-contained .html file for any substantial artifact (reports, reviews, plans, docs, comparisons, diagrams, postmortems, editor UI). Write free-standing artifacts under ./bloom/ with kebab-case filenames. For reserved files (README.md, CLAUDE.md, AGENTS.md, CONTRIBUTING.md, CHANGELOG.md), keep the canonical .md and write a companion .html alongside.
 
 Rules for every .html produced:
 - Single file, all CSS/JS inline, no external dependencies
@@ -91,14 +91,14 @@ Categories: exploration cards, annotated PRs, design systems, animation sandboxe
 Add to your `codex.md` or instructions:
 
 ```markdown
-This project uses the HTML Effectiveness skill in Session Mode.
+This project uses Bloom — a per-session sticky HTML output mode.
 
-Session Mode activates when the user message contains any of:
-- Slash: /html-effectiveness, /html, /html-on
-- Phrases: "html mode on", "use html mode", "respond in html"
-Deactivates with /html-off or "html mode off".
+Bloom activates when the user message contains any of:
+- Slash: /bloom, /bloom-on, /bloom-mode
+- Phrases: "bloom on", "let it bloom", "activate bloom"
+Deactivates with /bloom-off or "bloom off".
 
-While active, output a self-contained .html file for substantial artifacts (reports, reviews, plans, docs, comparisons, diagrams, postmortems, editor UI). Write free-standing artifacts to ./artifacts/<date>-<slug>.html. For reserved files (README.md, CLAUDE.md, AGENTS.md), keep the canonical .md and write a companion .html alongside. Keep one-liners, tool status, and errors as plain text.
+While bloom is on, output a self-contained .html file for substantial artifacts (reports, reviews, plans, docs, comparisons, diagrams, postmortems, editor UI). Write free-standing artifacts to ./bloom/<date>-<slug>.html. For reserved files (README.md, CLAUDE.md, AGENTS.md), keep the canonical .md and write a companion .html alongside. Keep one-liners, tool status, and errors as plain text.
 
 Requirements for every .html produced:
 - All CSS and JS must be inline in one .html file
@@ -116,11 +116,11 @@ Requirements for every .html produced:
 Add to `.cursorrules` in your project root:
 
 ```
-HTML Effectiveness skill in Session Mode.
+Bloom — per-session sticky HTML output mode.
 
-Activate when a user message contains /html-effectiveness, /html, /html-on, /html-mode, or phrases like "html mode on", "use html mode", "respond in html". Stay sticky for the rest of the session. Deactivate on /html-off, /no-html, or "html mode off". A `.html-mode` file at the repo root auto-activates at session start.
+Activate when a user message contains /bloom, /bloom-on, /bloom-mode, or phrases like "bloom on", "let it bloom", "activate bloom". Stay sticky for the rest of the session. Deactivate on /bloom-off, /no-bloom, or "bloom off". A `.bloom` file at the repo root auto-activates at session start.
 
-While active, generate a self-contained .html file for any substantial artifact (reports, reviews, plans, docs, comparisons, diagrams, postmortems, editor UI). Free-standing artifacts go under ./artifacts/<date>-<slug>.html. For reserved files (README.md, CLAUDE.md, AGENTS.md, CONTRIBUTING.md, CHANGELOG.md), keep the canonical .md and write a companion .html alongside. Keep short replies, tool status, errors, and commit messages as plain text.
+While bloom is on, generate a self-contained .html file for any substantial artifact (reports, reviews, plans, docs, comparisons, diagrams, postmortems, editor UI). Free-standing artifacts go under ./bloom/<date>-<slug>.html. For reserved files (README.md, CLAUDE.md, AGENTS.md, CONTRIBUTING.md, CHANGELOG.md), keep the canonical .md and write a companion .html alongside. Keep short replies, tool status, errors, and commit messages as plain text.
 
 For every .html produced:
 - Single file, all CSS/JS inline, zero external dependencies
@@ -139,11 +139,11 @@ For every .html produced:
 Add to `.windsurfrules` in your project root:
 
 ```
-HTML Effectiveness skill in Session Mode.
+Bloom — per-session sticky HTML output mode.
 
-Activate on /html-effectiveness, /html, /html-on, /html-mode, or phrases "html mode on", "use html mode", "respond in html". Stays sticky for the rest of the session. Deactivate on /html-off, /no-html, or "html mode off".
+Activate on /bloom, /bloom-on, /bloom-mode, or phrases "bloom on", "let it bloom", "activate bloom". Stays sticky for the rest of the session. Deactivate on /bloom-off, /no-bloom, or "bloom off".
 
-When active, produce a single .html file for substantial artifacts (reports, reviews, plans, docs, comparisons, postmortems, editor UI). Free-standing artifacts go under ./artifacts/<date>-<slug>.html. Reserved files (README.md, CLAUDE.md, AGENTS.md) stay as .md and get a companion .html sibling. Short answers, tool status, errors stay plain text.
+When bloom is on, produce a single .html file for substantial artifacts (reports, reviews, plans, docs, comparisons, postmortems, editor UI). Free-standing artifacts go under ./bloom/<date>-<slug>.html. Reserved files (README.md, CLAUDE.md, AGENTS.md) stay as .md and get a companion .html sibling. Short answers, tool status, errors stay plain text.
 
 For every .html produced:
 - Everything inline: CSS, JS, SVG all in one file
@@ -161,13 +161,13 @@ For every .html produced:
 Add to `.github/copilot-instructions.md`:
 
 ```markdown
-## HTML Generation Preference (Session Mode)
+## Bloom (sticky HTML mode)
 
-This project uses the HTML Effectiveness skill in Session Mode.
+This project uses Bloom — a per-session sticky HTML output mode.
 
-Activate on /html-effectiveness, /html, /html-on, or phrases "html mode on", "use html mode", "respond in html". Stays sticky for the rest of the session until /html-off or "html mode off". An `.html-mode` file at the repo root auto-activates.
+Activate on /bloom, /bloom-on, or phrases "bloom on", "let it bloom", "activate bloom". Stays sticky for the rest of the session until /bloom-off or "bloom off". A `.bloom` file at the repo root auto-activates.
 
-When active, generate a single self-contained .html file for any substantial artifact (visual comparisons, code reviews, status reports, architecture diagrams, plans, docs, postmortems, interactive tools). Free-standing artifacts go under ./artifacts/<date>-<slug>.html. For reserved files (README.md, CLAUDE.md, AGENTS.md), keep the canonical .md and write a companion .html alongside. Short replies, tool status, errors, and commit messages stay plain text.
+When bloom is on, generate a single self-contained .html file for any substantial artifact (visual comparisons, code reviews, status reports, architecture diagrams, plans, docs, postmortems, interactive tools). Free-standing artifacts go under ./bloom/<date>-<slug>.html. For reserved files (README.md, CLAUDE.md, AGENTS.md), keep the canonical .md and write a companion .html alongside. Short replies, tool status, errors, and commit messages stay plain text.
 
 Rules for every .html produced:
 - One file, inline CSS + JS, no external dependencies
@@ -184,13 +184,13 @@ Rules for every .html produced:
 Add to `.aider.conf.yml` or pass as an initial `--message`:
 
 ```yaml
-# HTML Effectiveness skill in Session Mode.
-# Activate on /html-effectiveness, /html, /html-on, or "html mode on", "use html mode", "respond in html".
-# Stays sticky for the rest of the session. Deactivate on /html-off or "html mode off".
-# An .html-mode file at the repo root auto-activates.
+# Bloom — per-session sticky HTML output mode.
+# Activate on /bloom, /bloom-on, or "bloom on", "let it bloom", "activate bloom".
+# Stays sticky for the rest of the session. Deactivate on /bloom-off or "bloom off".
+# A .bloom file at the repo root auto-activates.
 #
-# While active, produce single self-contained .html files for substantial artifacts.
-# Free-standing artifacts go under ./artifacts/<date>-<slug>.html.
+# While bloom is on, produce single self-contained .html files for substantial artifacts.
+# Free-standing artifacts go under ./bloom/<date>-<slug>.html.
 # Reserved files (README.md, CLAUDE.md, AGENTS.md) stay as .md; write a companion .html alongside.
 # Short answers, tool status, errors stay plain text.
 #
@@ -198,7 +198,7 @@ Add to `.aider.conf.yml` or pass as an initial `--message`:
 # all CSS/JS inline, no external dependencies, works from file://.
 ```
 
-Or pass as a message: `--message "Follow the HTML Effectiveness skill in Session Mode. Stay sticky once activated. Produce companion .html for reserved .md files."`
+Or pass as a message: `--message "Follow the Bloom skill. Stay sticky once activated. Produce companion .html for reserved .md files."`
 
 ---
 
@@ -207,11 +207,11 @@ Or pass as a message: `--message "Follow the HTML Effectiveness skill in Session
 Add to `.continue/rules.md`:
 
 ```markdown
-HTML Effectiveness skill in Session Mode (from the HTML.md repository).
+Bloom — per-session sticky HTML output mode (from the HTML.md repository).
 
-Activate on /html-effectiveness, /html, /html-on, or phrases "html mode on", "use html mode", "respond in html". Stays sticky for the rest of the session until /html-off or "html mode off". An `.html-mode` file at the repo root auto-activates.
+Activate on /bloom, /bloom-on, or phrases "bloom on", "let it bloom", "activate bloom". Stays sticky for the rest of the session until /bloom-off or "bloom off". A `.bloom` file at the repo root auto-activates.
 
-While active, produce a single self-contained .html file for substantial artifacts (visual comparisons, code reviews, architecture diagrams, plans, docs, postmortems, editor UI). Free-standing artifacts go under ./artifacts/<date>-<slug>.html. Reserved files (README.md, CLAUDE.md, AGENTS.md) stay as .md and get a companion .html sibling. Short replies, tool status, errors stay plain text.
+While bloom is on, produce a single self-contained .html file for substantial artifacts (visual comparisons, code reviews, architecture diagrams, plans, docs, postmortems, editor UI). Free-standing artifacts go under ./bloom/<date>-<slug>.html. Reserved files (README.md, CLAUDE.md, AGENTS.md) stay as .md and get a companion .html sibling. Short replies, tool status, errors stay plain text.
 
 For every .html produced:
 - One file, everything inline
@@ -228,11 +228,11 @@ For every .html produced:
 In your Replit project instructions:
 
 ```
-HTML Effectiveness skill in Session Mode.
+Bloom — per-session sticky HTML output mode.
 
-Activate on /html-effectiveness, /html, /html-on, or "html mode on", "use html mode", "respond in html". Stays sticky for the rest of the session. Deactivate on /html-off or "html mode off". An `.html-mode` file at the repo root auto-activates at session start.
+Activate on /bloom, /bloom-on, or "bloom on", "let it bloom", "activate bloom". Stays sticky for the rest of the session. Deactivate on /bloom-off or "bloom off". A `.bloom` file at the repo root auto-activates at session start.
 
-While active, generate a single self-contained .html file for substantial artifacts (visual comparisons, code reviews, design docs, plans, postmortems, interactive editors). Free-standing artifacts go under ./artifacts/<date>-<slug>.html. Reserved files (README.md, CLAUDE.md, AGENTS.md) stay as .md and get a companion .html sibling. Short replies, tool status, errors stay plain text.
+While bloom is on, generate a single self-contained .html file for substantial artifacts (visual comparisons, code reviews, design docs, plans, postmortems, interactive editors). Free-standing artifacts go under ./bloom/<date>-<slug>.html. Reserved files (README.md, CLAUDE.md, AGENTS.md) stay as .md and get a companion .html sibling. Short replies, tool status, errors stay plain text.
 
 Requirements for every .html produced:
 - One .html file with all CSS and JS inline
@@ -250,11 +250,11 @@ Requirements for every .html produced:
 Add to your system prompt:
 
 ```
-You have access to an HTML Effectiveness skill that supports Session Mode.
+You have access to the Bloom skill — a per-session sticky HTML output mode.
 
-Session Mode activates when the user message contains any of /html-effectiveness, /html, /html-on, /html-mode, or phrases "html mode on", "use html mode", "respond in html", "enable html effectiveness". Once active, it stays sticky for the rest of the session until /html-off, /no-html, or "html mode off" fires. A `.html-mode` file at the workspace root auto-activates at session start.
+Bloom activates when the user message contains any of /bloom, /bloom-on, /bloom-mode, or phrases "bloom on", "let it bloom", "activate bloom", "bloom please". Once active, it stays sticky for the rest of the session until /bloom-off, /no-bloom, or "bloom off" fires. A `.bloom` file at the workspace root auto-activates at session start.
 
-When Session Mode is active, generate a single self-contained .html file for any substantial artifact (reports, reviews, plans, docs, comparisons, diagrams, postmortems, editor UI). Free-standing artifacts go under ./artifacts/<date>-<slug>.html. For reserved files (README.md, CLAUDE.md, AGENTS.md, CONTRIBUTING.md, CHANGELOG.md), keep the canonical .md as the contract and write a companion .html alongside. One-line answers, tool status, errors, commit messages, and shell output stay plain text.
+When bloom is on, generate a single self-contained .html file for any substantial artifact (reports, reviews, plans, docs, comparisons, diagrams, postmortems, editor UI). Free-standing artifacts go under ./bloom/<date>-<slug>.html. For reserved files (README.md, CLAUDE.md, AGENTS.md, CONTRIBUTING.md, CHANGELOG.md), keep the canonical .md as the contract and write a companion .html alongside. One-line answers, tool status, errors, commit messages, and shell output stay plain text.
 
 The .html file must:
 1. Be a single .html file with all CSS and JS inline
@@ -274,9 +274,9 @@ After installation, test the activation lifecycle:
 
 **1. Verify activation.** Send:
 
-> `/html-effectiveness`
+> `/bloom`
 
-The agent should reply with a one-line plain-text confirmation naming the mode and how to deactivate. No HTML splash screen.
+The agent should reply with a one-line plain-text confirmation naming bloom and how to deactivate. No HTML splash screen.
 
 **2. Verify substantial artifact produces a file.** Send:
 
@@ -286,7 +286,7 @@ Or:
 
 > "Create a status report for this week's sprint with PRs merged, carryover items, and a velocity chart."
 
-The agent should write an `.html` file under `./artifacts/` (or alongside the relevant source) and reply with a single line pointing at the file path. Open the file — it should render correctly in a browser with no console errors and no network requests.
+The agent should write an `.html` file under `./bloom/` (or alongside the relevant source) and reply with a single line pointing at the file path. Open the file — it should render correctly in a browser with no console errors and no network requests.
 
 **3. Verify companion-file rule.** Send:
 
@@ -302,6 +302,6 @@ The agent should answer in one or two lines of plain text. No HTML artifact for 
 
 **5. Verify deactivation.** Send:
 
-> `/html-off`
+> `/bloom-off`
 
 The agent should confirm in plain text and return to default markdown behavior on the next turn.

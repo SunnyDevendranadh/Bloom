@@ -1,10 +1,10 @@
-# HTML.md
+# HTML.md — Bloom
 
 **The Unreasonable Effectiveness of HTML — as an open skill for every AI coding agent.**
 
-A production-grade, self-contained skill that teaches any AI coding agent (Claude Code, Codex, Cursor, Windsurf, Aider, Pi, Copilot, Continue, and others) to produce rich, interactive `.html` files instead of flat markdown — because diffs, diagrams, status reports, and design comparisons are **spatial** information that loses meaning when flattened into prose.
+**Bloom** is a per-session sticky skill that makes flat markdown bloom into rich, self-contained `.html` artifacts. Drop it into any AI coding agent (Claude Code, Codex, Cursor, Windsurf, Aider, Pi, Copilot, Continue, and others) and reports, reviews, plans, design docs, and interactive editors come back as single `.html` files you can open, click around, and export from — because diffs, diagrams, status reports, and design comparisons are **spatial** information that loses meaning when flattened into prose.
 
-Activate it once per session and every substantial artifact — reports, reviews, plans, docs, comparisons — becomes a self-contained `.html` file until you turn it off. Reserved files like `README.md`, `CLAUDE.md`, and `AGENTS.md` stay valid markdown and gain a richer `.html` companion next to them.
+Type `/bloom` once and every substantial artifact for the rest of the session becomes a self-contained `.html` file. Reserved files like `README.md`, `CLAUDE.md`, and `AGENTS.md` stay valid markdown and gain a richer `.html` companion next to them. Type `/bloom-off` to go back to plain markdown.
 
 ---
 
@@ -27,35 +27,35 @@ This skill captures the patterns from [The Unreasonable Effectiveness of HTML](h
 
 ### Option 1: Claude Code (sticky session skill)
 
-Copy the `.claude/skills/html-effectiveness/` directory into your project (or `~/.claude/skills/` for global):
+Copy the `.claude/skills/bloom/` directory into your project (or `~/.claude/skills/` for global):
 
 ```bash
 # Project skill (applies to this project only)
-cp -r .claude/skills/html-effectiveness/ /path/to/your-project/.claude/skills/
+cp -r .claude/skills/bloom/ /path/to/your-project/.claude/skills/
 
 # Global skill (applies to all your Claude Code sessions)
-cp -r .claude/skills/html-effectiveness/ ~/.claude/skills/
+cp -r .claude/skills/bloom/ ~/.claude/skills/
 ```
 
-Then in any session, activate with `/html-effectiveness` (or `/html`, `/html-on`) — the mode stays sticky until you run `/html-off`.
+Then in any session, type `/bloom` (or `/bloom-on`, or say "bloom on", "let it bloom"). Bloom stays sticky until you run `/bloom-off`.
 
 ### Option 2: Factory Droid
 
-Copy `droids/html-effectiveness.md` into your Factory droids directory:
+Copy `droids/bloom.md` into your Factory droids directory:
 
 ```bash
 # Personal droid (applies to all your projects)
-cp droids/html-effectiveness.md ~/.factory/droids/
+cp droids/bloom.md ~/.factory/droids/
 
 # Project droid (applies to one project)
-cp droids/html-effectiveness.md .factory/droids/
+cp droids/bloom.md .factory/droids/
 ```
 
-Then invoke it in your project.
+Then invoke `bloom` in your project.
 
 ### Option 3: Direct system prompt
 
-Copy the contents of [`droids/html-effectiveness.md`](droids/html-effectiveness.md) into your system prompt, custom instructions, or `.cursorrules` / `.windsurfrules` / `AGENTS.md` file.
+Copy the contents of [`droids/bloom.md`](droids/bloom.md) into your system prompt, custom instructions, or `.cursorrules` / `.windsurfrules` / `AGENTS.md` file.
 
 ### Option 4: Agent-specific setup
 
@@ -63,30 +63,29 @@ See [`docs/harness-setup.md`](docs/harness-setup.md) for per-harness configurati
 
 ---
 
-## Session Mode
+## Bloom Mode
 
-Once activated, the skill is **sticky for the rest of the session**. You don't re-invoke it per turn — every substantial artifact comes back as an `.html` file until you deactivate.
+Once activated, bloom is **sticky for the rest of the session**. You don't re-invoke it per turn — every substantial artifact comes back as an `.html` file until you deactivate.
 
 **Activate (any of these)**
 
 | Slash | Phrase | File marker |
 |---|---|---|
-| `/html-effectiveness` | "html mode on" | `.html-mode` file at repo root |
-| `/html` | "use html mode" | (auto-enables at session start) |
-| `/html-on` | "respond in html" | |
-| `/html-mode` | "enable html effectiveness" | |
+| `/bloom` | "bloom on" | `.bloom` file at repo root |
+| `/bloom-on` | "let it bloom" | (auto-enables at session start) |
+| `/bloom-mode` | "activate bloom" | |
 
 **Deactivate (any of these)**
 
 | Slash | Phrase |
 |---|---|
-| `/html-off` | "html mode off" |
-| `/no-html` | "stop html mode" |
-| `/html-mode-off` | "exit html mode" |
+| `/bloom-off` | "bloom off" |
+| `/no-bloom` | "stop bloom" |
+| `/bloom-mode-off` | "exit bloom" |
 
 **Where artifacts land**
 
-- Free-standing artifacts (status reports, reviews, plans) → `./artifacts/<date>-<slug>.html`
+- Free-standing artifacts (status reports, reviews, plans) → `./bloom/<date>-<slug>.html`
 - Companion to a reserved `.md` (e.g., `README.md`) → sibling `.html` next to it (`README.html`)
 - The `.md` stays canonical so harnesses and GitHub keep working
 
@@ -96,7 +95,7 @@ Reports, reviews, comparisons, documentation, plans, explainers, diagrams, slide
 
 **What stays plain text**
 
-One-line answers, tool status updates, errors, short clarifying questions, commit messages, shell output. The mode adds richness where it helps and stays out of the way where it doesn't.
+One-line answers, tool status updates, errors, short clarifying questions, commit messages, shell output. Bloom adds richness where it helps and stays out of the way where it doesn't.
 
 ---
 
@@ -108,10 +107,10 @@ HTML.md/
 ├── LICENSE                                      # MIT
 ├── .claude/
 │   └── skills/
-│       └── html-effectiveness/
-│           └── SKILL.md                         # Claude Code session skill
+│       └── bloom/
+│           └── SKILL.md                         # Claude Code session skill (/bloom)
 ├── droids/
-│   └── html-effectiveness.md                    # The canonical skill (Factory droid + universal)
+│   └── bloom.md                                 # The canonical skill (Factory droid + universal)
 ├── docs/
 │   ├── harness-setup.md                         # Per-agent setup guides
 │   ├── categories.md                            # The 9 document categories explained
