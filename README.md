@@ -4,6 +4,8 @@
 
 A production-grade, self-contained skill that teaches any AI coding agent (Claude Code, Codex, Cursor, Windsurf, Aider, Pi, Copilot, Continue, and others) to produce rich, interactive `.html` files instead of flat markdown — because diffs, diagrams, status reports, and design comparisons are **spatial** information that loses meaning when flattened into prose.
 
+Activate it once per session and every substantial artifact — reports, reviews, plans, docs, comparisons — becomes a self-contained `.html` file until you turn it off. Reserved files like `README.md`, `CLAUDE.md`, and `AGENTS.md` stay valid markdown and gain a richer `.html` companion next to them.
+
 ---
 
 ## Why
@@ -23,7 +25,21 @@ This skill captures the patterns from [The Unreasonable Effectiveness of HTML](h
 
 ## Quick start
 
-### Option 1: Factory Droid (recommended)
+### Option 1: Claude Code (sticky session skill)
+
+Copy the `.claude/skills/html-effectiveness/` directory into your project (or `~/.claude/skills/` for global):
+
+```bash
+# Project skill (applies to this project only)
+cp -r .claude/skills/html-effectiveness/ /path/to/your-project/.claude/skills/
+
+# Global skill (applies to all your Claude Code sessions)
+cp -r .claude/skills/html-effectiveness/ ~/.claude/skills/
+```
+
+Then in any session, activate with `/html-effectiveness` (or `/html`, `/html-on`) — the mode stays sticky until you run `/html-off`.
+
+### Option 2: Factory Droid
 
 Copy `droids/html-effectiveness.md` into your Factory droids directory:
 
@@ -37,13 +53,50 @@ cp droids/html-effectiveness.md .factory/droids/
 
 Then invoke it in your project.
 
-### Option 2: Direct system prompt
+### Option 3: Direct system prompt
 
 Copy the contents of [`droids/html-effectiveness.md`](droids/html-effectiveness.md) into your system prompt, custom instructions, or `.cursorrules` / `.windsurfrules` / `AGENTS.md` file.
 
-### Option 3: Agent-specific setup
+### Option 4: Agent-specific setup
 
 See [`docs/harness-setup.md`](docs/harness-setup.md) for per-harness configuration (Claude Code, Codex, Cursor, Copilot, Aider, etc.).
+
+---
+
+## Session Mode
+
+Once activated, the skill is **sticky for the rest of the session**. You don't re-invoke it per turn — every substantial artifact comes back as an `.html` file until you deactivate.
+
+**Activate (any of these)**
+
+| Slash | Phrase | File marker |
+|---|---|---|
+| `/html-effectiveness` | "html mode on" | `.html-mode` file at repo root |
+| `/html` | "use html mode" | (auto-enables at session start) |
+| `/html-on` | "respond in html" | |
+| `/html-mode` | "enable html effectiveness" | |
+
+**Deactivate (any of these)**
+
+| Slash | Phrase |
+|---|---|
+| `/html-off` | "html mode off" |
+| `/no-html` | "stop html mode" |
+| `/html-mode-off` | "exit html mode" |
+
+**Where artifacts land**
+
+- Free-standing artifacts (status reports, reviews, plans) → `./artifacts/<date>-<slug>.html`
+- Companion to a reserved `.md` (e.g., `README.md`) → sibling `.html` next to it (`README.html`)
+- The `.md` stays canonical so harnesses and GitHub keep working
+
+**What gets produced as HTML**
+
+Reports, reviews, comparisons, documentation, plans, explainers, diagrams, slide decks, postmortems, triage boards, flag/prompt editors — anything you'd otherwise dump as a wall of markdown.
+
+**What stays plain text**
+
+One-line answers, tool status updates, errors, short clarifying questions, commit messages, shell output. The mode adds richness where it helps and stays out of the way where it doesn't.
 
 ---
 
@@ -51,16 +104,20 @@ See [`docs/harness-setup.md`](docs/harness-setup.md) for per-harness configurati
 
 ```
 HTML.md/
-├── README.md                        # This file
-├── LICENSE                          # MIT
+├── README.md                                    # This file
+├── LICENSE                                      # MIT
+├── .claude/
+│   └── skills/
+│       └── html-effectiveness/
+│           └── SKILL.md                         # Claude Code session skill
 ├── droids/
-│   └── html-effectiveness.md        # The skill itself
+│   └── html-effectiveness.md                    # The canonical skill (Factory droid + universal)
 ├── docs/
-│   ├── harness-setup.md             # Per-agent setup guides
-│   ├── categories.md                # The 9 document categories explained
-│   ├── design-system.md             # Full token reference
-│   ├── construction-rules.md        # The 12 rules for producing HTML
-│   └── security.md                   # Security hardening guide
+│   ├── harness-setup.md                         # Per-agent setup guides
+│   ├── categories.md                            # The 9 document categories explained
+│   ├── design-system.md                         # Full token reference
+│   ├── construction-rules.md                    # The 12 rules for producing HTML
+│   └── security.md                              # Security hardening guide
 ├── templates/
 │   ├── exploration-code-approaches.html
 │   ├── annotated-pr-review.html
