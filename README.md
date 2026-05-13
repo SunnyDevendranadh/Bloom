@@ -36,43 +36,145 @@ This skill captures the patterns from [The Unreasonable Effectiveness of HTML](h
 
 ---
 
-## Quick start
+## Installation
 
-### Option 1: Claude Code (sticky session skill)
+Installation differs by harness. If you use more than one, install Bloom separately for each one. Each install is sticky once activated in a session and stays on until you turn it off or the session ends.
 
-Copy the `.claude/skills/bloom/` directory into your project (or `~/.claude/skills/` for global):
+### Claude Code
 
-```bash
-# Project skill (applies to this project only)
-cp -r .claude/skills/bloom/ /path/to/your-project/.claude/skills/
+Bloom is shipped as a Claude Code plugin via the **HTML.md marketplace** and is queued for submission to Anthropic's official plugin marketplace.
 
-# Global skill (applies to all your Claude Code sessions)
-cp -r .claude/skills/bloom/ ~/.claude/skills/
+**Anthropic Official Marketplace** (after submission lands)
+
+- Install the plugin from Anthropic's official marketplace:
+
+```
+/plugin install bloom@claude-plugins-official
 ```
 
-Then in any session, type `/bloom` (or `/bloom-on`, or say "bloom on", "let it bloom"). Bloom stays sticky until you run `/bloom-off`.
+**HTML.md Marketplace**
 
-### Option 2: Factory Droid
+The HTML.md marketplace provides Bloom and any future related plugins for Claude Code.
 
-Copy `droids/bloom.md` into your Factory droids directory:
+- Register the marketplace:
 
-```bash
-# Personal droid (applies to all your projects)
-cp droids/bloom.md ~/.factory/droids/
-
-# Project droid (applies to one project)
-cp droids/bloom.md .factory/droids/
+```
+/plugin marketplace add SunnyDevendranadh/HTML.md
 ```
 
-Then invoke `bloom` in your project.
+- Install the plugin from this marketplace:
 
-### Option 3: Direct system prompt
+```
+/plugin install bloom@html-md
+```
 
-Copy the contents of [`droids/bloom.md`](droids/bloom.md) into your system prompt, custom instructions, or `.cursorrules` / `.windsurfrules` / `AGENTS.md` file.
+Activate per session with `/bloom`, `/bloom-on`, or by saying "bloom on" / "let it bloom" in any message. Deactivate with `/bloom-off`.
 
-### Option 4: Agent-specific setup
+### Codex CLI
 
-See [`docs/harness-setup.md`](docs/harness-setup.md) for per-harness configuration (Claude Code, Codex, Cursor, Copilot, Aider, etc.).
+Bloom is queued for submission to the [official Codex plugin marketplace](https://github.com/openai/plugins).
+
+- Open the plugin search interface:
+
+```
+/plugins
+```
+
+- Search for Bloom:
+
+```
+bloom
+```
+
+- Select `Install Plugin`.
+
+**Manual install** (works today): copy `droids/bloom.md` to your repo's `AGENTS.md` or `~/.codex/AGENTS.md`.
+
+### Codex App
+
+Bloom is queued for submission to the [official Codex plugin marketplace](https://github.com/openai/plugins).
+
+- In the Codex app, click on **Plugins** in the sidebar.
+- You should see `Bloom` in the Coding section.
+- Click the `+` next to Bloom and follow the prompts.
+
+**Manual install** (works today): commit `AGENTS.md` (copied from `droids/bloom.md`) to the GitHub branch you connect to Codex.
+
+### Factory Droid
+
+- Register the marketplace:
+
+```
+droid plugin marketplace add https://github.com/SunnyDevendranadh/HTML.md
+```
+
+- Install the plugin:
+
+```
+droid plugin install bloom@html-md
+```
+
+**Manual install** (works today): `cp droids/bloom.md ~/.factory/droids/` (personal) or `.factory/droids/` (project).
+
+### Gemini CLI
+
+- Install the extension:
+
+```
+gemini extensions install https://github.com/SunnyDevendranadh/HTML.md
+```
+
+- Update later:
+
+```
+gemini extensions update bloom
+```
+
+**Manual install** (works today): copy `droids/bloom.md` to `GEMINI.md` at the repo root or `~/.gemini/GEMINI.md` global.
+
+### OpenCode
+
+OpenCode uses its own plugin install; install Bloom separately even if you already use it in another harness.
+
+- Tell OpenCode:
+
+```
+Fetch and follow instructions from https://raw.githubusercontent.com/SunnyDevendranadh/HTML.md/main/plugins/bloom/INSTALL.opencode.md
+```
+
+**Manual install** (works today): copy `droids/bloom.md` to your repo's `AGENTS.md`.
+
+### Cursor
+
+- In Cursor Agent chat, install from the marketplace:
+
+```
+/add-plugin bloom
+```
+
+- Or search for "bloom" in the plugin marketplace.
+
+**Manual install** (works today): copy `droids/bloom.md` to `.cursor/rules/bloom.mdc` or paste the bloom snippet into `.cursorrules`.
+
+### GitHub Copilot CLI
+
+- Register the marketplace:
+
+```
+copilot plugin marketplace add SunnyDevendranadh/HTML.md
+```
+
+- Install the plugin:
+
+```
+copilot plugin install bloom@html-md
+```
+
+**Manual install** (works today): copy `droids/bloom.md` to your repo's `AGENTS.md`.
+
+### Other harnesses
+
+See [`docs/harness-setup.md`](docs/harness-setup.md) for Windsurf, Aider, GitHub Copilot for VS Code, Continue, Replit Agent, Pi, and any system-prompt-aware agent. The same trigger commands (`/bloom`, "bloom on", `/bloom-off`) work everywhere once the skill text is loaded into the harness.
 
 ---
 
@@ -118,10 +220,20 @@ One-line answers, tool status updates, errors, short clarifying questions, commi
 HTML.md/
 ├── README.md                                    # This file
 ├── LICENSE                                      # MIT
+├── .claude-plugin/
+│   └── marketplace.json                         # HTML.md marketplace listing
+├── plugins/
+│   └── bloom/
+│       ├── .claude-plugin/
+│       │   └── plugin.json                      # Bloom plugin manifest
+│       ├── skills/
+│       │   └── bloom/
+│       │       └── SKILL.md                     # Plugin-packaged skill
+│       └── INSTALL.opencode.md                  # OpenCode install instructions
 ├── .claude/
 │   └── skills/
 │       └── bloom/
-│           └── SKILL.md                         # Claude Code session skill (/bloom)
+│           └── SKILL.md                         # Claude Code skill (manual install / self-use)
 ├── droids/
 │   └── bloom.md                                 # The canonical skill (Factory droid + universal)
 ├── docs/

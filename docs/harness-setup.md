@@ -2,7 +2,26 @@
 
 How to install **Bloom** (HTML.md's per-session sticky HTML skill) for every major AI coding agent.
 
-Bloom is sticky: once activated in a session, it stays on until the session ends or the user deactivates it. Each harness section below shows the install path plus the activation and deactivation triggers that work in that environment.
+Bloom is sticky: once activated in a session, it stays on until the session ends or the user deactivates it. Each harness section below shows the marketplace install command (where available), the manual install path as a fallback, plus the activation and deactivation triggers.
+
+---
+
+## Marketplace install (recommended)
+
+For harnesses with a plugin/extension marketplace, the cleanest install is via the marketplace command. The README has the per-harness one-liners; this section is the deep reference for each.
+
+| Harness | Marketplace install |
+|---|---|
+| Claude Code | `/plugin install bloom@claude-plugins-official` (official, after submission) or `/plugin marketplace add SunnyDevendranadh/HTML.md` + `/plugin install bloom@html-md` |
+| Codex CLI | `/plugins` → search "bloom" → Install (after submission to openai/plugins) |
+| Codex App | Sidebar → Plugins → click `+` on Bloom (after submission to openai/plugins) |
+| Factory Droid | `droid plugin marketplace add https://github.com/SunnyDevendranadh/HTML.md` + `droid plugin install bloom@html-md` |
+| Gemini CLI | `gemini extensions install https://github.com/SunnyDevendranadh/HTML.md` |
+| OpenCode | "Fetch and follow https://raw.githubusercontent.com/SunnyDevendranadh/HTML.md/main/plugins/bloom/INSTALL.opencode.md" |
+| Cursor | `/add-plugin bloom` (after marketplace listing) |
+| GitHub Copilot CLI | `copilot plugin marketplace add SunnyDevendranadh/HTML.md` + `copilot plugin install bloom@html-md` |
+
+If a marketplace listing isn't live yet for your harness, every harness also has a manual install — see its section below.
 
 ---
 
@@ -73,9 +92,25 @@ That snippet is what the per-harness sections below repeat. If you've already do
 
 ## Claude Code
 
-**Recommended: install as a sticky session skill.**
+**Recommended: install via plugin marketplace.**
 
-Copy the `.claude/skills/bloom/` directory into your project (or `~/.claude/skills/` for global use):
+Bloom ships as a Claude Code plugin and is queued for submission to Anthropic's official plugin marketplace.
+
+```
+# After submission lands
+/plugin install bloom@claude-plugins-official
+```
+
+Or install from the HTML.md marketplace today:
+
+```
+/plugin marketplace add SunnyDevendranadh/HTML.md
+/plugin install bloom@html-md
+```
+
+The plugin packages the bloom skill so it loads automatically into every Claude Code session in workspaces that have it installed. Activate per session with `/bloom`, `/bloom-on`, or by saying "bloom on" / "let it bloom". Deactivate with `/bloom-off`.
+
+**Alternative: install as a raw skill** (no plugin system). Copy the `.claude/skills/bloom/` directory into your project (or `~/.claude/skills/` for global use):
 
 ```bash
 # Project skill (this repo only)
@@ -85,21 +120,21 @@ cp -r .claude/skills/bloom/ /path/to/your-project/.claude/skills/
 cp -r .claude/skills/bloom/ ~/.claude/skills/
 ```
 
-Then in any session:
-
-```
-/bloom
-```
-
-Bloom stays sticky for the rest of the session. Substantial artifacts (reports, reviews, plans, docs) come back as `.html` files under `./bloom/`. Reserved files like `README.md` / `CLAUDE.md` / `AGENTS.md` stay valid markdown and gain a companion `.html` next to them. Deactivate with `/bloom-off`.
-
 **Alternative: add to `CLAUDE.md`** (project) or `~/.claude/CLAUDE.md` (global). Paste the AGENTS.md snippet from the universal section above.
 
 ---
 
 ## Codex CLI (OpenAI)
 
-The Codex CLI reads `AGENTS.md` at the repo root and `~/.codex/AGENTS.md` for global instructions.
+**Recommended: install via the [official Codex plugin marketplace](https://github.com/openai/plugins)** (after submission lands):
+
+```
+/plugins
+```
+
+Search for `bloom` and select **Install Plugin**.
+
+**Manual install** (works today): the Codex CLI reads `AGENTS.md` at the repo root and `~/.codex/AGENTS.md` for global instructions.
 
 ```bash
 # Project-level bloom (this repo only)
@@ -116,7 +151,13 @@ If `AGENTS.md` already exists in either location, append the universal AGENTS.md
 
 ## Codex App (OpenAI web / desktop)
 
-The Codex App reads `AGENTS.md` from the GitHub repository it's connected to.
+**Recommended: install via the [official Codex plugin marketplace](https://github.com/openai/plugins)** (after submission lands):
+
+- In the Codex App, click on **Plugins** in the sidebar.
+- You should see `Bloom` in the Coding section.
+- Click the `+` next to Bloom and follow the prompts.
+
+**Manual install** (works today): the Codex App reads `AGENTS.md` from the GitHub repository it's connected to.
 
 1. Commit `AGENTS.md` to your repo root (copy `droids/bloom.md` or paste the universal snippet).
 2. Push to the branch you connect to Codex.
@@ -127,6 +168,15 @@ Bloom stays sticky for the rest of that Codex App task. To auto-activate without
 ---
 
 ## Factory Droid
+
+**Recommended: install via the Factory Droid plugin marketplace.**
+
+```
+droid plugin marketplace add https://github.com/SunnyDevendranadh/HTML.md
+droid plugin install bloom@html-md
+```
+
+**Manual install** (works today):
 
 ```bash
 # Personal — applies to all your projects
@@ -142,7 +192,19 @@ Then invoke the `bloom` droid in your session.
 
 ## Gemini CLI (Google)
 
-The Gemini CLI reads `GEMINI.md` at the repo root and `~/.gemini/GEMINI.md` for global instructions.
+**Recommended: install via the Gemini CLI extensions system.**
+
+```
+gemini extensions install https://github.com/SunnyDevendranadh/HTML.md
+```
+
+Update later with:
+
+```
+gemini extensions update bloom
+```
+
+**Manual install** (works today): the Gemini CLI reads `GEMINI.md` at the repo root and `~/.gemini/GEMINI.md` for global instructions.
 
 ```bash
 # Project-level bloom
@@ -159,7 +221,15 @@ If `GEMINI.md` already exists, paste the universal AGENTS.md snippet from above 
 
 ## OpenCode (sst)
 
-OpenCode reads `AGENTS.md` at the repo root. Install the same way as the Codex CLI section:
+OpenCode uses its own plugin install. Install Bloom separately even if you already use it in another harness.
+
+**Recommended: tell OpenCode to fetch the install doc:**
+
+```
+Fetch and follow instructions from https://raw.githubusercontent.com/SunnyDevendranadh/HTML.md/main/plugins/bloom/INSTALL.opencode.md
+```
+
+Or use the same flow as the Codex CLI manual install — OpenCode reads `AGENTS.md` at the repo root:
 
 ```bash
 # Project-level
@@ -172,14 +242,22 @@ If you also use OpenCode's `opencode.json` for project config, the AGENTS.md ins
 
 ## Cursor
 
-**Newer Cursor (`.cursor/rules/*.mdc`):**
+**Recommended: install via the Cursor plugin marketplace** (after listing lands):
+
+```
+/add-plugin bloom
+```
+
+Or search for "bloom" in the Cursor plugin marketplace.
+
+**Manual install — newer Cursor (`.cursor/rules/*.mdc`):**
 
 ```bash
 mkdir -p /path/to/your-project/.cursor/rules
 cp droids/bloom.md /path/to/your-project/.cursor/rules/bloom.mdc
 ```
 
-**Legacy Cursor (`.cursorrules` at the repo root):**
+**Manual install — legacy Cursor (`.cursorrules` at the repo root):**
 
 Paste this snippet into `.cursorrules`:
 
@@ -204,7 +282,14 @@ For every .html produced:
 
 ## GitHub Copilot CLI
 
-The GitHub Copilot CLI reads `AGENTS.md` at the repo root. Install:
+**Recommended: install via the GitHub Copilot CLI plugin marketplace.**
+
+```
+copilot plugin marketplace add SunnyDevendranadh/HTML.md
+copilot plugin install bloom@html-md
+```
+
+**Manual install** (works today): the GitHub Copilot CLI reads `AGENTS.md` at the repo root. Copy `droids/bloom.md` there:
 
 ```bash
 cp droids/bloom.md /path/to/your-project/AGENTS.md
