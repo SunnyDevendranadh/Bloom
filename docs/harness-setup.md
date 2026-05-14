@@ -1,6 +1,6 @@
 # Harness Setup Guide
 
-How to install **Bloom** (HTML.md's per-session sticky HTML skill) for every major AI coding agent.
+How to install **Bloom** — the per-session sticky HTML skill — for every major AI coding agent.
 
 Bloom is sticky: once activated in a session, it stays on until the session ends or the user deactivates it. Each harness section below shows the marketplace install command (where available), the manual install path as a fallback, plus the activation and deactivation triggers.
 
@@ -12,14 +12,14 @@ For harnesses with a plugin/extension marketplace, the cleanest install is via t
 
 | Harness | Marketplace install |
 |---|---|
-| Claude Code | `/plugin install bloom@claude-plugins-official` (official, after submission) or `/plugin marketplace add SunnyDevendranadh/HTML.md` + `/plugin install bloom@html-md` |
+| Claude Code | `/plugin install bloom@claude-plugins-official` (official, after submission) or `/plugin marketplace add SunnyDevendranadh/Bloom` + `/plugin install bloom@bloom` |
 | Codex CLI | `/plugins` → search "bloom" → Install (after submission to openai/plugins) |
 | Codex App | Sidebar → Plugins → click `+` on Bloom (after submission to openai/plugins) |
-| Factory Droid | `droid plugin marketplace add https://github.com/SunnyDevendranadh/HTML.md` + `droid plugin install bloom@html-md` |
-| Gemini CLI | `gemini extensions install https://github.com/SunnyDevendranadh/HTML.md` |
-| OpenCode | "Fetch and follow https://raw.githubusercontent.com/SunnyDevendranadh/HTML.md/main/plugins/bloom/INSTALL.opencode.md" |
+| Factory Droid | `droid plugin marketplace add https://github.com/SunnyDevendranadh/Bloom` + `droid plugin install bloom@bloom` |
+| Gemini CLI | `gemini extensions install https://github.com/SunnyDevendranadh/Bloom` |
+| OpenCode | "Fetch and follow https://raw.githubusercontent.com/SunnyDevendranadh/Bloom/main/plugins/bloom/INSTALL.opencode.md" |
 | Cursor | `/add-plugin bloom` (after marketplace listing) |
-| GitHub Copilot CLI | `copilot plugin marketplace add SunnyDevendranadh/HTML.md` + `copilot plugin install bloom@html-md` |
+| GitHub Copilot CLI | `copilot plugin marketplace add SunnyDevendranadh/Bloom` + `copilot plugin install bloom@bloom` |
 
 If a marketplace listing isn't live yet for your harness, every harness also has a manual install — see its section below.
 
@@ -56,7 +56,7 @@ If you already have an `AGENTS.md`, paste the snippet below at the top — it's 
 ## Bloom (sticky HTML output mode)
 
 This project uses Bloom — a per-session sticky HTML output mode from
-https://github.com/SunnyDevendranadh/HTML.md.
+https://github.com/SunnyDevendranadh/Bloom.
 
 Activation triggers (case-insensitive, anywhere in a user message):
 - Slash: /bloom, /bloom-on, /bloom-mode
@@ -101,11 +101,11 @@ Bloom ships as a Claude Code plugin and is queued for submission to Anthropic's 
 /plugin install bloom@claude-plugins-official
 ```
 
-Or install from the HTML.md marketplace today:
+Or install from the Bloom marketplace today:
 
 ```
-/plugin marketplace add SunnyDevendranadh/HTML.md
-/plugin install bloom@html-md
+/plugin marketplace add SunnyDevendranadh/Bloom
+/plugin install bloom@bloom
 ```
 
 The plugin packages the bloom skill so it loads automatically into every Claude Code session in workspaces that have it installed. Activate per session with `/bloom`, `/bloom-on`, or by saying "bloom on" / "let it bloom". Deactivate with `/bloom-off`.
@@ -172,8 +172,8 @@ Bloom stays sticky for the rest of that Codex App task. To auto-activate without
 **Recommended: install via the Factory Droid plugin marketplace.**
 
 ```
-droid plugin marketplace add https://github.com/SunnyDevendranadh/HTML.md
-droid plugin install bloom@html-md
+droid plugin marketplace add https://github.com/SunnyDevendranadh/Bloom
+droid plugin install bloom@bloom
 ```
 
 **Manual install** (works today):
@@ -195,7 +195,7 @@ Then invoke the `bloom` droid in your session.
 **Recommended: install via the Gemini CLI extensions system.**
 
 ```
-gemini extensions install https://github.com/SunnyDevendranadh/HTML.md
+gemini extensions install https://github.com/SunnyDevendranadh/Bloom
 ```
 
 Update later with:
@@ -226,7 +226,7 @@ OpenCode uses its own plugin install. Install Bloom separately even if you alrea
 **Recommended: tell OpenCode to fetch the install doc:**
 
 ```
-Fetch and follow instructions from https://raw.githubusercontent.com/SunnyDevendranadh/HTML.md/main/plugins/bloom/INSTALL.opencode.md
+Fetch and follow instructions from https://raw.githubusercontent.com/SunnyDevendranadh/Bloom/main/plugins/bloom/INSTALL.opencode.md
 ```
 
 Or use the same flow as the Codex CLI manual install — OpenCode reads `AGENTS.md` at the repo root:
@@ -285,8 +285,8 @@ For every .html produced:
 **Recommended: install via the GitHub Copilot CLI plugin marketplace.**
 
 ```
-copilot plugin marketplace add SunnyDevendranadh/HTML.md
-copilot plugin install bloom@html-md
+copilot plugin marketplace add SunnyDevendranadh/Bloom
+copilot plugin install bloom@bloom
 ```
 
 **Manual install** (works today): the GitHub Copilot CLI reads `AGENTS.md` at the repo root. Copy `droids/bloom.md` there:
@@ -367,7 +367,7 @@ You can also drop the universal snippet into `.aider.conf.yml` as the `read` ins
 Add to `.continue/rules.md`:
 
 ```markdown
-Bloom — per-session sticky HTML output mode (from the HTML.md repository).
+Bloom — per-session sticky HTML output mode (from the Bloom repository).
 
 Activate on /bloom, /bloom-on, or phrases "bloom on", "let it bloom", "activate bloom". Stays sticky for the rest of the session until /bloom-off or "bloom off". A `.bloom` file at the repo root auto-activates.
 

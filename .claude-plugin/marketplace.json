@@ -1,17 +1,17 @@
 {
-  "name": "html-md",
+  "name": "bloom",
   "owner": {
     "name": "Sunny Devendranadh",
     "url": "https://github.com/SunnyDevendranadh"
   },
-  "description": "Marketplace for Bloom — the per-session sticky HTML output skill from HTML.md.",
+  "description": "Marketplace for Bloom — the per-session sticky HTML output skill.",
   "plugins": [
     {
       "name": "bloom",
       "source": "./plugins/bloom",
       "description": "Per-session sticky mode that makes markdown bloom into rich, self-contained .html artifacts — reports, reviews, plans, docs, comparisons, diagrams, editor UI.",
       "version": "1.0.0",
-      "homepage": "https://github.com/SunnyDevendranadh/HTML.md",
+      "homepage": "https://github.com/SunnyDevendranadh/Bloom",
       "keywords": ["html", "artifacts", "session-mode", "bloom", "markdown", "reports", "code-review"]
     }
   ]
