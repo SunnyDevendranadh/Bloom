@@ -7,7 +7,7 @@ Bloom is a per-session sticky HTML output mode. Once activated, every substantia
 Append the canonical Bloom skill into your project's `AGENTS.md`. If `AGENTS.md` doesn't exist yet, create it.
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/SunnyDevendranadh/HTML.md/main/droids/bloom.md >> AGENTS.md
+curl -fsSL https://raw.githubusercontent.com/SunnyDevendranadh/Bloom/main/droids/bloom.md >> AGENTS.md
 ```
 
 If `AGENTS.md` already has content, that command appends Bloom after the existing instructions. Either order works — Bloom's activation logic is keyed to trigger phrases and slash commands, not document position.
@@ -57,5 +57,5 @@ In any session, type `/bloom-off` or say "bloom off". OpenCode returns to defaul
 
 ## See also
 
-- Canonical skill: [`droids/bloom.md`](https://github.com/SunnyDevendranadh/HTML.md/blob/main/droids/bloom.md)
-- Full setup guide for every harness: [`docs/harness-setup.md`](https://github.com/SunnyDevendranadh/HTML.md/blob/main/docs/harness-setup.md)
+- Canonical skill: [`droids/bloom.md`](https://github.com/SunnyDevendranadh/Bloom/blob/main/droids/bloom.md)
+- Full setup guide for every harness: [`docs/harness-setup.md`](https://github.com/SunnyDevendranadh/Bloom/blob/main/docs/harness-setup.md)

@@ -7,7 +7,7 @@ description: Per-session sticky mode that makes markdown bloom into rich, self-c
 
 **Bloom** puts the current session into a sticky HTML-output mode. Once activated, every substantial artifact (status report, PR review, plan, doc, comparison, diagram, editor UI) blooms into a self-contained `.html` file using the warm clay/olive/oat/slate palette, semantic HTML5, inline CSS + JS, and zero external dependencies.
 
-The canonical reference for the skill lives at `droids/bloom.md` in the HTML.md repo. The rules below are the Claude-Code-specific operating instructions.
+The canonical reference for the skill lives at `droids/bloom.md` in the Bloom repo. The rules below are the Claude-Code-specific operating instructions.
 
 ---
 

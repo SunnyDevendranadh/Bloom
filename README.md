@@ -1,4 +1,4 @@
-# HTML.md — Bloom
+# Bloom
 
 **The Unreasonable Effectiveness of HTML — as an open skill for every AI coding agent.**
 
@@ -42,7 +42,7 @@ Installation differs by harness. If you use more than one, install Bloom separat
 
 ### Claude Code
 
-Bloom is shipped as a Claude Code plugin via the **HTML.md marketplace** and is queued for submission to Anthropic's official plugin marketplace.
+Bloom is shipped as a Claude Code plugin via the **Bloom marketplace** and is queued for submission to Anthropic's official plugin marketplace.
 
 **Anthropic Official Marketplace** (after submission lands)
 
@@ -52,20 +52,20 @@ Bloom is shipped as a Claude Code plugin via the **HTML.md marketplace** and is 
 /plugin install bloom@claude-plugins-official
 ```
 
-**HTML.md Marketplace**
+**Bloom Marketplace**
 
-The HTML.md marketplace provides Bloom and any future related plugins for Claude Code.
+The Bloom marketplace provides Bloom and any future related plugins for Claude Code.
 
 - Register the marketplace:
 
 ```
-/plugin marketplace add SunnyDevendranadh/HTML.md
+/plugin marketplace add SunnyDevendranadh/Bloom
 ```
 
 - Install the plugin from this marketplace:
 
 ```
-/plugin install bloom@html-md
+/plugin install bloom@bloom
 ```
 
 Activate per session with `/bloom`, `/bloom-on`, or by saying "bloom on" / "let it bloom" in any message. Deactivate with `/bloom-off`.
@@ -105,13 +105,13 @@ Bloom is queued for submission to the [official Codex plugin marketplace](https:
 - Register the marketplace:
 
 ```
-droid plugin marketplace add https://github.com/SunnyDevendranadh/HTML.md
+droid plugin marketplace add https://github.com/SunnyDevendranadh/Bloom
 ```
 
 - Install the plugin:
 
 ```
-droid plugin install bloom@html-md
+droid plugin install bloom@bloom
 ```
 
 **Manual install** (works today): `cp droids/bloom.md ~/.factory/droids/` (personal) or `.factory/droids/` (project).
@@ -121,7 +121,7 @@ droid plugin install bloom@html-md
 - Install the extension:
 
 ```
-gemini extensions install https://github.com/SunnyDevendranadh/HTML.md
+gemini extensions install https://github.com/SunnyDevendranadh/Bloom
 ```
 
 - Update later:
@@ -139,7 +139,7 @@ OpenCode uses its own plugin install; install Bloom separately even if you alrea
 - Tell OpenCode:
 
 ```
-Fetch and follow instructions from https://raw.githubusercontent.com/SunnyDevendranadh/HTML.md/main/plugins/bloom/INSTALL.opencode.md
+Fetch and follow instructions from https://raw.githubusercontent.com/SunnyDevendranadh/Bloom/main/plugins/bloom/INSTALL.opencode.md
 ```
 
 **Manual install** (works today): copy `droids/bloom.md` to your repo's `AGENTS.md`.
@@ -161,13 +161,13 @@ Fetch and follow instructions from https://raw.githubusercontent.com/SunnyDevend
 - Register the marketplace:
 
 ```
-copilot plugin marketplace add SunnyDevendranadh/HTML.md
+copilot plugin marketplace add SunnyDevendranadh/Bloom
 ```
 
 - Install the plugin:
 
 ```
-copilot plugin install bloom@html-md
+copilot plugin install bloom@bloom
 ```
 
 **Manual install** (works today): copy `droids/bloom.md` to your repo's `AGENTS.md`.
@@ -217,11 +217,11 @@ One-line answers, tool status updates, errors, short clarifying questions, commi
 ## What's included
 
 ```
-HTML.md/
+Bloom/
 ├── README.md                                    # This file
 ├── LICENSE                                      # MIT
 ├── .claude-plugin/
-│   └── marketplace.json                         # HTML.md marketplace listing
+│   └── marketplace.json                         # Bloom marketplace listing
 ├── plugins/
 │   └── bloom/
 │       ├── .claude-plugin/
