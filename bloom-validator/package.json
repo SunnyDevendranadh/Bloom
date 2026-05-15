@@ -1,0 +1,19 @@
+{
+  "name": "bloom-validator",
+  "version": "1.0.0",
+  "description": "Validates .html files against Bloom's 12 construction rules and 8 security rules",
+  "type": "module",
+  "bin": {
+    "bloom-validate": "./src/index.ts"
+  },
+  "scripts": {
+    "start": "node src/index.ts",
+    "test": "node --test tests/validator.test.ts",
+    "test:fixtures": "node src/index.ts tests/fixtures/valid.html"
+  },
+  "engines": {
+    "node": ">=22.6.0"
+  },
+  "keywords": ["bloom", "html", "validator", "linter", "design-system"],
+  "license": "MIT"
+}
