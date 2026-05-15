@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Acme — Sprint 44 Status</title>
+<style>
+:root {
+  --ivory: #FAF9F5;
+  --slate: #141413;
+  --clay: #D97757;
+  --gray-300: #D1CFC5;
+  --serif: ui-serif, Georgia, serif;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--ivory);
+  color: var(--slate);
+  font-family: var(--serif);
+  padding: 56px 24px;
+}
+.page { max-width: 860px; margin: 0 auto; }
+.card { border: 1.5px solid var(--gray-300); padding: 20px; }
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <h1>Sprint 44 — Acme</h1>
+  </header>
+  <main>
+    <section>
+      <h2>Highlights</h2>
+      <p>Shipped onboarding empty-state rewrite.</p>
+      <h3>Sub-detail</h3>
+      <p>Mira Okafor led the redesign.</p>
+    </section>
+    <section>
+      <h2>Risks</h2>
+      <article>
+        <p>Webhook timeout in OAuth handler is medium risk.</p>
+      </article>
+    </section>
+  </main>
+</div>
+<script>
+document.querySelectorAll('.card').forEach(function (card) {
+  card.addEventListener('click', function () {
+    card.classList.toggle('expanded');
+  });
+});
+</script>
+</body>
+</html>

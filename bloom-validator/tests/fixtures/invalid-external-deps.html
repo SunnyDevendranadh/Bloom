@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Broken — External deps</title>
+<link rel="stylesheet" href="https://cdn.example.com/tailwind.css">
+<script src="https://cdn.example.com/react.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css?family=Inter');
+:root { --slate: #141413; }
+body { color: var(--slate); }
+</style>
+</head>
+<body>
+<header><h1>Has external deps</h1></header>
+<main>
+<section>
+<h2>Stuff</h2>
+<script>
+import { thing } from "./other.js";
+</script>
+</section>
+</main>
+</body>
+</html>

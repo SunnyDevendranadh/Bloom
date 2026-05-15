@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Acme — Sprint 44 Status Report</title>
+<style>
+:root {
+  --ivory: #FAF9F5;
+  --slate: #141413;
+  --clay: #D97757;
+  --oat: #E3DACC;
+  --olive: #788C5D;
+  --rust: #B04A3F;
+  --gray-100: #F0EEE6;
+  --gray-300: #D1CFC5;
+  --gray-500: #87867F;
+  --gray-700: #3D3D3A;
+  --white: #FFFFFF;
+  --serif: ui-serif, Georgia, "Times New Roman", serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --shadow-sm: 0 1px 2px rgba(20,20,19,0.06);
+  --shadow-md: 0 4px 10px rgba(20,20,19,0.08);
+  --shadow-lg: 0 12px 28px rgba(20,20,19,0.12);
+  --backdrop: rgba(20,20,19,0.45);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ivory: #1A1A18;
+    --slate: #F5F4F0;
+    --white: #232320;
+    --gray-100: #2A2A27;
+    --gray-300: #4A4A45;
+    --gray-500: #9A998F;
+    --gray-700: #C5C3BC;
+    --oat: #3A352D;
+    --clay: #E08868;
+    --olive: #94A573;
+    --rust: #C5604F;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.35);
+    --shadow-md: 0 4px 10px rgba(0,0,0,0.45);
+    --shadow-lg: 0 12px 28px rgba(0,0,0,0.55);
+    --backdrop: rgba(0,0,0,0.62);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--ivory);
+  color: var(--gray-700);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.6;
+  padding: 56px 24px 120px;
+  -webkit-font-smoothing: antialiased;
+}
+.page { max-width: 860px; margin: 0 auto; }
+header.page-head { margin-bottom: 40px; }
+.header-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+h1 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 38px;
+  letter-spacing: -0.01em;
+  color: var(--slate);
+  margin: 0;
+}
+.auto-pill {
+  font-family: var(--mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--gray-500);
+  background: var(--gray-100);
+  border: 1.5px solid var(--gray-300);
+  border-radius: 999px;
+  padding: 5px 11px;
+}
+.date-range { color: var(--gray-500); font-size: 14px; }
+section { margin-bottom: 52px; }
+h2 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 24px;
+  letter-spacing: -0.01em;
+  color: var(--slate);
+  margin: 0 0 6px;
+}
+hr.rule { border: none; border-top: 1px solid var(--gray-300); margin: 0 0 22px; }
+.summary-band {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+@media (max-width: 720px) { .summary-band { grid-template-columns: repeat(2, 1fr); } }
+.stat-card {
+  background: var(--white);
+  border: 1.5px solid var(--gray-300);
+  border-radius: 12px;
+  padding: 20px 22px 18px;
+  transition: transform var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out);
+}
+.stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.stat-card.warn { border-left: 4px solid var(--clay); padding-left: 19px; }
+.stat-num {
+  font-family: var(--serif);
+  font-size: 44px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--slate);
+  margin-bottom: 8px;
+}
+.stat-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gray-500);
+}
+.stat-delta { font-family: var(--mono); font-size: 11px; margin-top: 6px; color: var(--gray-500); }
+.stat-delta.up { color: var(--olive); }
+.stat-delta.down { color: var(--rust); }
+.highlights { list-style: none; padding: 0; }
+.highlights li {
+  position: relative;
+  padding: 0 0 14px 26px;
+  font-size: 15px;
+  color: var(--gray-700);
+}
+.highlights li::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 8px;
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  background: var(--clay);
+}
+.highlights li strong { color: var(--slate); font-weight: 600; }
+.tab-list {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1.5px solid var(--gray-300);
+  margin-bottom: 22px;
+}
+.tab {
+  position: relative;
+  appearance: none;
+  background: transparent;
+  border: none;
+  padding: 12px 18px 14px;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--gray-500);
+  cursor: pointer;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+.tab:hover { color: var(--gray-700); }
+.tab:focus-visible { outline: 2px solid var(--clay); outline-offset: -2px; border-radius: 6px 6px 0 0; }
+.tab[aria-selected="true"] { color: var(--slate); }
+.tab[aria-selected="true"]::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: -1.5px;
+  height: 2.5px;
+  background: var(--clay);
+  border-radius: 2px 2px 0 0;
+}
+.tab-panel[hidden] { display: none; }
+.tab-panel {
+  animation: tab-fade var(--duration-normal) var(--ease-out);
+}
+@keyframes tab-fade {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--white);
+  border: 1.5px solid var(--gray-300);
+  border-radius: 12px;
+  overflow: hidden;
+}
+thead th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--gray-500);
+  background: var(--gray-100);
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--gray-300);
+}
+tbody td {
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--gray-100);
+  font-size: 14px;
+  vertical-align: middle;
+  color: var(--gray-700);
+}
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: var(--ivory); }
+.pr-link { font-family: var(--mono); font-size: 13px; color: var(--clay); text-decoration: none; }
+.pr-link:hover { text-decoration: underline; }
+.risk { display: inline-flex; align-items: center; gap: 7px; font-size: 12px; color: var(--gray-500); }
+.risk-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.risk-dot.low  { background: var(--olive); }
+.risk-dot.med  { background: var(--oat); border: 1px solid var(--gray-500); }
+.risk-dot.high { background: var(--clay); }
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  padding: 0 14px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 8px;
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out);
+}
+.btn-primary { background: var(--clay); color: var(--white); }
+.btn-secondary { background: var(--white); color: var(--slate); border-color: var(--gray-300); }
+.btn-secondary:hover { background: var(--gray-100); }
+.modal {
+  border: none;
+  border-radius: 12px;
+  padding: 0;
+  max-width: 520px;
+  width: calc(100vw - 48px);
+  background: var(--white);
+  color: var(--gray-700);
+  box-shadow: var(--shadow-lg);
+  animation: modal-in var(--duration-normal) var(--ease-out);
+}
+.modal::backdrop {
+  background: var(--backdrop);
+  animation: backdrop-in var(--duration-normal) var(--ease-out);
+}
+.modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 22px;
+  background: var(--clay);
+  color: var(--white);
+  border-radius: 12px 12px 0 0;
+}
+.modal-head h2 { color: var(--white); font-size: 20px; }
+.modal-close {
+  appearance: none;
+  background: transparent;
+  border: none;
+  color: var(--white);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+.modal-close:hover { background: rgba(255,255,255,0.18); }
+.modal-close:focus-visible { outline: 2px solid var(--white); outline-offset: 1px; }
+.modal-body { padding: 20px 22px; font-size: 14px; line-height: 1.6; }
+.modal-body strong { color: var(--slate); }
+.modal-foot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 14px 22px 18px;
+  border-top: 1px solid var(--gray-100);
+}
+@keyframes modal-in {
+  from { opacity: 0; transform: translateY(-12px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes backdrop-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.open-modal-btn {
+  font-family: var(--mono);
+  font-size: 12px;
+  background: transparent;
+  border: 1px solid var(--gray-300);
+  color: var(--gray-700);
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.open-modal-btn:hover { background: var(--gray-100); }
+@media print {
+  body { padding: 0; background: var(--white); }
+  .page { max-width: 100%; }
+  .open-modal-btn, dialog { display: none; }
+  section { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="page-head">
+    <div class="header-top">
+      <h1 data-template="title">Acme — Sprint 44</h1>
+      <span class="auto-pill">auto-generated</span>
+    </div>
+    <div class="date-range" data-template="date-range">May 6 – May 12, 2026</div>
+  </header>
+
+  <main>
+    <section aria-label="Summary metrics">
+      <div class="summary-band">
+        <div class="stat-card">
+          <div class="stat-num" data-template="stat-1-value">14</div>
+          <div class="stat-label" data-template="stat-1-label">PRs merged</div>
+          <div class="stat-delta up" data-template="stat-1-delta">+3 vs last week</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" data-template="stat-2-value">2.4d</div>
+          <div class="stat-label" data-template="stat-2-label">Cycle time</div>
+          <div class="stat-delta" data-template="stat-2-delta">flat</div>
+        </div>
+        <div class="stat-card warn">
+          <div class="stat-num" data-template="stat-3-value">3</div>
+          <div class="stat-label" data-template="stat-3-label">Open blockers</div>
+          <div class="stat-delta down" data-template="stat-3-delta">+1 since Monday</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" data-template="stat-4-value">98.7%</div>
+          <div class="stat-label" data-template="stat-4-label">Uptime</div>
+          <div class="stat-delta up" data-template="stat-4-delta">+0.2 pp</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Highlights</h2>
+      <hr class="rule">
+      <ul class="highlights">
+        <li><strong data-template="highlight-1-title">Onboarding empty state shipped.</strong> <span data-template="highlight-1-body">Mira Okafor's rewrite cut sign-up drop-off by 9% in the canary cohort.</span></li>
+        <li><strong data-template="highlight-2-title">OAuth webhook timeout under investigation.</strong> <span data-template="highlight-2-body">95th-percentile latency now 1.8s above SLA — see Blocked tab for owner and ETA.</span></li>
+        <li><strong data-template="highlight-3-title">Billing migration round 2 complete.</strong> <span data-template="highlight-3-body">42 of 48 legacy accounts moved; remaining six need manual reconciliation.</span></li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Work breakdown</h2>
+      <hr class="rule">
+      <div class="tabs">
+        <div class="tab-list" role="tablist" aria-label="Work status">
+          <button id="tab-shipped" class="tab" role="tab" aria-selected="true" aria-controls="panel-shipped" tabindex="0">Shipped</button>
+          <button id="tab-progress" class="tab" role="tab" aria-selected="false" aria-controls="panel-progress" tabindex="-1">In Progress</button>
+          <button id="tab-blocked" class="tab" role="tab" aria-selected="false" aria-controls="panel-blocked" tabindex="-1">Blocked</button>
+        </div>
+
+        <article id="panel-shipped" class="tab-panel" role="tabpanel" aria-labelledby="tab-shipped">
+          <table>
+            <thead><tr><th style="width:90px">PR</th><th>Title</th><th style="width:140px">Author</th><th style="width:100px">Risk</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><a href="#pr-2841" class="pr-link">#2841</a></td>
+                <td>Rewrite onboarding empty state</td>
+                <td>Mira Okafor</td>
+                <td><span class="risk"><span class="risk-dot low"></span>Low</span></td>
+              </tr>
+              <tr>
+                <td><a href="#pr-2837" class="pr-link">#2837</a></td>
+                <td>Move 42 legacy accounts to billing v2</td>
+                <td>Jules Halberg</td>
+                <td><span class="risk"><span class="risk-dot med"></span>Med</span></td>
+              </tr>
+              <tr>
+                <td><a href="#pr-2829" class="pr-link">#2829</a></td>
+                <td>Add structured logging to auth middleware</td>
+                <td>Priya Sundaram</td>
+                <td><span class="risk"><span class="risk-dot low"></span>Low</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </article>
+
+        <article id="panel-progress" class="tab-panel" role="tabpanel" aria-labelledby="tab-progress" hidden>
+          <table>
+            <thead><tr><th style="width:90px">PR</th><th>Title</th><th style="width:140px">Author</th><th style="width:100px">Stage</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><a href="#pr-2848" class="pr-link">#2848</a></td>
+                <td>Trial-to-paid conversion analytics</td>
+                <td>Devon Reyes</td>
+                <td><span class="risk"><span class="risk-dot med"></span>Review</span></td>
+              </tr>
+              <tr>
+                <td><a href="#pr-2851" class="pr-link">#2851</a></td>
+                <td>Replace JWT signing key rotation cron</td>
+                <td>Priya Sundaram</td>
+                <td><span class="risk"><span class="risk-dot low"></span>Draft</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </article>
+
+        <article id="panel-blocked" class="tab-panel" role="tabpanel" aria-labelledby="tab-blocked" hidden>
+          <table>
+            <thead><tr><th>Issue</th><th style="width:140px">Owner</th><th style="width:140px">Blocked on</th><th style="width:60px"></th></tr></thead>
+            <tbody>
+              <tr>
+                <td>OAuth webhook timeout (95p 1.8s over SLA)</td>
+                <td>Sasha Lin</td>
+                <td>Vendor support reply</td>
+                <td><button class="open-modal-btn" id="open-risk" aria-haspopup="dialog">details</button></td>
+              </tr>
+              <tr>
+                <td>Last 6 legacy billing accounts</td>
+                <td>Jules Halberg</td>
+                <td>Manual reconciliation w/ finance</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </article>
+      </div>
+    </section>
+  </main>
+</div>
+
+<dialog id="risk-modal" class="modal" aria-labelledby="risk-modal-title">
+  <header class="modal-head">
+    <h2 id="risk-modal-title">OAuth webhook timeout</h2>
+    <button class="modal-close" aria-label="Close" id="risk-modal-close">×</button>
+  </header>
+  <div class="modal-body">
+    <p><strong>Owner:</strong> Sasha Lin · <strong>First seen:</strong> May 8, 14:22 UTC</p>
+    <p>The vendor's webhook endpoint exceeds the 2.0s SLA by 1.8s on the 95th percentile. Affects ~3% of OAuth sign-ins, no failed auths logged. Workaround: client-side retry already deployed in #2829.</p>
+    <p><strong>Next step:</strong> awaiting vendor RCA, expected May 15.</p>
+  </div>
+  <footer class="modal-foot">
+    <button class="btn btn-secondary" id="risk-modal-cancel">Close</button>
+  </footer>
+</dialog>
+
+<script>
+(function () {
+  var list = document.querySelector('.tab-list');
+  if (list) {
+    var tabs = Array.prototype.slice.call(list.querySelectorAll('[role="tab"]'));
+    var activate = function (target) {
+      tabs.forEach(function (t) {
+        var on = t === target;
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+        t.setAttribute('tabindex', on ? '0' : '-1');
+        var p = document.getElementById(t.getAttribute('aria-controls'));
+        if (p) p.hidden = !on;
+      });
+      target.focus();
+    };
+    list.addEventListener('click', function (e) {
+      var t = e.target.closest('[role="tab"]');
+      if (t) activate(t);
+    });
+    list.addEventListener('keydown', function (e) {
+      var i = tabs.indexOf(document.activeElement);
+      if (i === -1) return;
+      if (e.key === 'ArrowRight') activate(tabs[(i + 1) % tabs.length]);
+      else if (e.key === 'ArrowLeft') activate(tabs[(i - 1 + tabs.length) % tabs.length]);
+      else if (e.key === 'Home') activate(tabs[0]);
+      else if (e.key === 'End') activate(tabs[tabs.length - 1]);
+    });
+  }
+  var modal = document.getElementById('risk-modal');
+  var open = document.getElementById('open-risk');
+  if (modal && open) {
+    open.addEventListener('click', function () { modal.showModal(); });
+    document.getElementById('risk-modal-close').addEventListener('click', function () { modal.close(); });
+    document.getElementById('risk-modal-cancel').addEventListener('click', function () { modal.close(); });
+    modal.addEventListener('click', function (e) {
+      var r = modal.getBoundingClientRect();
+      if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) modal.close();
+    });
+  }
+  var data = null;
+  if (typeof window.BLOOM_FILL === 'object' && window.BLOOM_FILL) data = window.BLOOM_FILL;
+  if (!data) {
+    var raw = document.documentElement.getAttribute('data-bloom-fill') || new URLSearchParams(window.location.search).get('bloom-fill');
+    if (raw) { try { data = JSON.parse(decodeURIComponent(raw)); } catch (e) { data = null; } }
+  }
+  if (data) {
+    document.querySelectorAll('[data-template]').forEach(function (el) {
+      var k = el.getAttribute('data-template');
+      if (Object.prototype.hasOwnProperty.call(data, k) && data[k] != null) el.textContent = String(data[k]);
+    });
+  }
+})();
+</script>
+</body>
+</html>

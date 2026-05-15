@@ -1,0 +1,108 @@
+import { strict as assert } from "node:assert";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
+import { describe, it } from "node:test";
+import { validate } from "../src/index.ts";
+
+const HERE = dirname(fileURLToPath(import.meta.url));
+const FIXTURES = join(HERE, "fixtures");
+
+function load(name: string): { path: string; source: string } {
+  const path = join(FIXTURES, name);
+  return { path, source: readFileSync(path, "utf8") };
+}
+
+describe("bloom-validator", () => {
+  it("passes on a clean fixture", () => {
+    const { path, source } = load("valid.html");
+    const report = validate(path, source);
+    assert.equal(report.passed, true, `expected pass, got: ${JSON.stringify(report.issues, null, 2)}`);
+    assert.equal(report.errorCount, 0);
+  });
+
+  it("flags external script/link/import (Rule 1, Rule 4)", () => {
+    const { path, source } = load("invalid-external-deps.html");
+    const report = validate(path, source);
+    assert.equal(report.passed, false);
+    const rules = new Set(report.issues.map((i) => i.ruleName));
+    assert.ok(rules.has("no-external-deps"), `missing no-external-deps in ${[...rules].join(",")}`);
+    const messages = report.issues.map((i) => i.message).join("\n");
+    assert.match(messages, /script src/i);
+    assert.match(messages, /stylesheet/i);
+    assert.match(messages, /@import/i);
+    assert.match(messages, /import\/export/i);
+  });
+
+  it("flags hard-coded hex outside :root (Rule 2)", () => {
+    const { path, source } = load("invalid-hex.html");
+    const report = validate(path, source);
+    assert.equal(report.passed, false);
+    const hexIssues = report.issues.filter((i) => i.ruleName === "no-hardcoded-hex");
+    assert.ok(hexIssues.length >= 3, `expected ≥3 hex issues, got ${hexIssues.length}`);
+    for (const issue of hexIssues) {
+      assert.doesNotMatch(issue.message, /D97757/, "tokens in :root should not be flagged");
+    }
+  });
+
+  it("flags missing semantic landmarks (Rule 3)", () => {
+    const { path, source } = load("invalid-semantic.html");
+    const report = validate(path, source);
+    assert.equal(report.passed, false);
+    const semantic = report.issues.filter((i) => i.ruleName === "semantic-html");
+    assert.ok(semantic.length >= 2, `expected ≥2 semantic issues, got ${semantic.length}`);
+    const messages = semantic.map((i) => i.message).join("\n");
+    assert.match(messages, /<header>/);
+    assert.match(messages, /<main>/);
+  });
+
+  it("flags heading hierarchy violations (Rule 8)", () => {
+    const { path, source } = load("invalid-heading.html");
+    const report = validate(path, source);
+    assert.equal(report.passed, false);
+    const heading = report.issues.filter((i) => i.ruleName === "heading-hierarchy");
+    const messages = heading.map((i) => i.message).join("\n");
+    assert.match(messages, /skipped/i, "should detect h1→h3 skip");
+    assert.match(messages, /2 <h1>/, "should detect duplicate h1");
+  });
+
+  it("flags security violations (S2/S3/S4/S5/S6/S8)", () => {
+    const { path, source } = load("invalid-security.html");
+    const report = validate(path, source);
+    assert.equal(report.passed, false);
+    const rules = new Set(report.issues.map((i) => i.ruleName));
+    for (const expected of [
+      "no-eval",
+      "no-function-ctor",
+      "no-string-timer",
+      "no-network",
+      "innerHTML-with-variable",
+      "no-inline-handlers",
+      "no-javascript-uri",
+      "no-data-html-uri",
+    ]) {
+      assert.ok(rules.has(expected), `missing security rule: ${expected} (found: ${[...rules].join(", ")})`);
+    }
+  });
+
+  it("emits JSON-serializable issues with line numbers", () => {
+    const { path, source } = load("invalid-hex.html");
+    const report = validate(path, source);
+    const json = JSON.stringify(report);
+    const parsed = JSON.parse(json);
+    assert.ok(Array.isArray(parsed.issues));
+    for (const issue of parsed.issues) {
+      assert.equal(typeof issue.line, "number");
+      assert.ok(issue.line >= 1, `line should be ≥1, got ${issue.line}`);
+    }
+  });
+
+  it("returns passed:true with errorCount:0 on valid file", () => {
+    const { path, source } = load("valid.html");
+    const report = validate(path, source);
+    assert.deepEqual(
+      { passed: report.passed, errorCount: report.errorCount },
+      { passed: true, errorCount: 0 },
+    );
+  });
+});
