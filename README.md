@@ -239,9 +239,20 @@ Bloom/
 ├── docs/
 │   ├── harness-setup.md                         # Per-agent setup guides
 │   ├── categories.md                            # The 9 document categories explained
-│   ├── design-system.md                         # Full token reference
-│   ├── construction-rules.md                    # The 12 rules for producing HTML
+│   ├── design-system.md                         # Full token reference (v1)
+│   ├── design-system-v2.md                      # Dark mode, motion tokens, Tabs, Modal
+│   ├── construction-rules.md                    # The 12 rules for producing HTML (v1)
+│   ├── construction-rules-v2.md                 # Rule 9 revision for templates
 │   └── security.md                              # Security hardening guide
+├── bloom-validator/                             # Zero-dep TypeScript CLI for the 12+8 rules
+│   ├── README.md
+│   ├── package.json
+│   ├── src/
+│   │   ├── index.ts                             # CLI entry (bloom-validate)
+│   │   ├── parser.ts
+│   │   ├── reporter.ts
+│   │   └── rules/                               # One file per rule
+│   └── tests/                                   # node:test suite + fixtures
 ├── templates/
 │   ├── exploration-code-approaches.html
 │   ├── annotated-pr-review.html
@@ -251,6 +262,7 @@ Bloom/
 │   ├── slide-deck.html
 │   ├── feature-explainer.html
 │   ├── status-report.html
+│   ├── status-report-v2.html                    # Worked v2 example (data-template slots)
 │   ├── incident-timeline.html
 │   ├── triage-board.html
 │   ├── feature-flag-editor.html
@@ -281,7 +293,7 @@ Bloom/
 
 ## Design system
 
-All templates use CSS custom properties from the same warm palette:
+All templates use CSS custom properties from the same warm palette. See [`docs/design-system.md`](docs/design-system.md) for the full v1 reference and [`docs/design-system-v2.md`](docs/design-system-v2.md) for dark-mode tokens (via `prefers-color-scheme`), motion tokens (durations + easings), and the Tabs / Modal component patterns.
 
 | Token | Value | Usage |
 |---|---|---|
@@ -320,9 +332,23 @@ All templates follow the security guidelines in [`docs/security.md`](docs/securi
 
 ---
 
+## Validation
+
+[`bloom-validator/`](bloom-validator/) is a zero-dependency TypeScript CLI that checks any `.html` file against Bloom's construction and security rules. It uses Node ≥ 22.6 native TypeScript type-stripping — no build step.
+
+```bash
+node bloom-validator/src/index.ts path/to/file.html
+node bloom-validator/src/index.ts path/to/file.html --json
+node bloom-validator/src/index.ts a.html b.html c.html
+```
+
+Exit codes: `0` clean, `1` errors found, `2` invalid usage. See [`bloom-validator/README.md`](bloom-validator/README.md) for the full rule table and JSON output shape.
+
+---
+
 ## Construction rules
 
-See [`docs/construction-rules.md`](docs/construction-rules.md) for the full 12-rule checklist. Summary:
+See [`docs/construction-rules.md`](docs/construction-rules.md) for the full 12-rule checklist, and [`docs/construction-rules-v2.md`](docs/construction-rules-v2.md) for the Rule 9 revision that lets templates ship plausible default content with `data-template="<slot>"` markers instead of `[BRACKET]` placeholders. Summary:
 
 1. **Single file** — All HTML, CSS, JS in one `.html` file
 2. **CSS custom properties** — Use the palette tokens, never hard-code colors
