@@ -38,15 +38,19 @@ const SCRIPT_CHECKS: SecCheck[] = [
     message: "Network APIs (fetch/XMLHttpRequest/WebSocket/EventSource) are forbidden (S4)",
     scope: "script",
   },
-  {
-    id: "S3",
-    ruleName: "innerHTML-with-variable",
-    re: /\.innerHTML\s*(?:\+)?=\s*(?!["'`])[^;\n]+/g,
-    message:
-      ".innerHTML assigned from a variable — use textContent or createElement for untrusted data (S3)",
-    scope: "script",
-  },
 ];
+
+const INNER_HTML_RE = /\.innerHTML\s*(?:\+)?=\s*([^;\n]+)/g;
+
+function isSafeInnerHtmlRhs(rawRhs: string): boolean {
+  const rhs = rawRhs.trim();
+  // Single or double quoted string literal with no embedded interpolation.
+  if (/^"(?:[^"\\]|\\.)*"$/.test(rhs)) return true;
+  if (/^'(?:[^'\\]|\\.)*'$/.test(rhs)) return true;
+  // Template literal with NO ${...} interpolation is also safe.
+  if (/^`[^`]*`$/.test(rhs) && !rhs.includes("${")) return true;
+  return false;
+}
 
 const SOURCE_CHECKS: SecCheck[] = [
   {
@@ -94,6 +98,25 @@ export const securityHardening: Rule = {
             snippet: snippet(ctx.lines, line),
           });
         }
+      }
+      INNER_HTML_RE.lastIndex = 0;
+      let im: RegExpExecArray | null;
+      while ((im = INNER_HTML_RE.exec(block.content)) !== null) {
+        const rhs = im[1] ?? "";
+        if (isSafeInnerHtmlRhs(rhs)) continue;
+        const line = lineFromOffsetInBlock(block, im.index);
+        const reason = rhs.trim().startsWith("`")
+          ? "template literal with interpolation"
+          : "non-literal expression";
+        issues.push({
+          rule: "S3",
+          ruleName: "innerHTML-with-variable",
+          severity: "error",
+          line,
+          message:
+            `.innerHTML assigned from ${reason} — use textContent or createElement for untrusted data (S3)`,
+          snippet: snippet(ctx.lines, line),
+        });
       }
     }
 

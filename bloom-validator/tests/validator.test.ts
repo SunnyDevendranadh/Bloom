@@ -14,11 +14,28 @@ function load(name: string): { path: string; source: string } {
 }
 
 describe("bloom-validator", () => {
-  it("passes on a clean fixture", () => {
+  it("valid.html has zero issues across all rules", () => {
     const { path, source } = load("valid.html");
     const report = validate(path, source);
-    assert.equal(report.passed, true, `expected pass, got: ${JSON.stringify(report.issues, null, 2)}`);
+    assert.equal(
+      report.issues.length,
+      0,
+      `expected zero issues, got ${report.issues.length}: ${JSON.stringify(report.issues, null, 2)}`,
+    );
+    assert.equal(report.passed, true);
     assert.equal(report.errorCount, 0);
+    assert.equal(report.warningCount, 0);
+  });
+
+  it("valid-with-urls.html does not false-positive on hex inside url() or strings", () => {
+    const { path, source } = load("valid-with-urls.html");
+    const report = validate(path, source);
+    const hexIssues = report.issues.filter((i) => i.ruleName === "no-hardcoded-hex");
+    assert.equal(
+      hexIssues.length,
+      0,
+      `expected zero hex issues, got: ${JSON.stringify(hexIssues, null, 2)}`,
+    );
   });
 
   it("flags external script/link/import (Rule 1, Rule 4)", () => {
@@ -32,6 +49,7 @@ describe("bloom-validator", () => {
     assert.match(messages, /stylesheet/i);
     assert.match(messages, /@import/i);
     assert.match(messages, /import\/export/i);
+    assert.match(messages, /Dynamic import/i, "should flag await import(...) dynamic import");
   });
 
   it("flags hard-coded hex outside :root (Rule 2)", () => {
@@ -83,6 +101,15 @@ describe("bloom-validator", () => {
     ]) {
       assert.ok(rules.has(expected), `missing security rule: ${expected} (found: ${[...rules].join(", ")})`);
     }
+    const innerHtmlIssues = report.issues.filter((i) => i.ruleName === "innerHTML-with-variable");
+    const messages = innerHtmlIssues.map((i) => i.message).join("\n");
+    assert.match(messages, /template literal with interpolation/i, "should flag `${x}` template literals");
+    assert.match(messages, /non-literal expression/i, "should flag bare variable assignments");
+    assert.equal(
+      innerHtmlIssues.length,
+      2,
+      "should flag variable + template-with-interp but NOT the static string literal",
+    );
   });
 
   it("emits JSON-serializable issues with line numbers", () => {

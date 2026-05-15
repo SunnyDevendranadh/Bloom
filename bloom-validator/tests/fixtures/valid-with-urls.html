@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Valid — hex-like strings inside url() and quotes</title>
+<style>
+:root {
+  --slate: #141413;
+  --clay: #D97757;
+}
+body { background: var(--slate); color: var(--clay); }
+.icon { background: url("/assets/icon-3f4a2b.png") no-repeat; }
+.svg-filter { filter: url("#blur-a1b2c3"); }
+.bg { background-image: url('https://example.com/p#abc123'); }
+.before::before { content: "see #abc123 in docs"; }
+</style>
+</head>
+<body>
+<header><h1>URL hex-like strings should not false-positive</h1></header>
+<main>
+<section>
+<p>This page should pass: no real hex outside :root.</p>
+</section>
+</main>
+</body>
+</html>
