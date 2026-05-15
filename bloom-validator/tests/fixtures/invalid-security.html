@@ -26,6 +26,8 @@ setTimeout("doThing()", 100);
 fetch("/api/data").then(function (r) { return r.json(); });
 var userInput = window.location.hash;
 document.body.innerHTML = userInput;
+document.body.innerHTML = `<div>${userInput}</div>`;
+document.body.innerHTML = "<div>safe static literal</div>";
 </script>
 </body>
 </html>
