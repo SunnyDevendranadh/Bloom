@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  validator:
+    name: bloom-validator tests + artifact validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Run validator unit tests
+        working-directory: bloom-validator
+        run: npm test
+
+      - name: Validate templates
+        run: node bloom-validator/src/index.ts templates/*.html
+
+      - name: Validate skeletons
+        run: node bloom-validator/src/index.ts templates/skeletons/*.html
+
+      - name: Validate examples
+        run: node bloom-validator/src/index.ts examples/*.html
