@@ -20,11 +20,6 @@ jobs:
         working-directory: bloom-validator
         run: npm test
 
-      - name: Validate templates
-        run: node bloom-validator/src/index.ts templates/*.html
-
-      - name: Validate skeletons
-        run: node bloom-validator/src/index.ts templates/skeletons/*.html
-
-      - name: Validate examples
-        run: node bloom-validator/src/index.ts examples/*.html
+      - name: Validate every template, skeleton, and example
+        working-directory: bloom-validator
+        run: npm run validate-all

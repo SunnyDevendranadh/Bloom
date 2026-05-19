@@ -80,10 +80,18 @@ When multiple files are passed, the top level is an array of these objects.
 ## Running tests
 
 ```bash
-node --test tests/validator.test.ts
+npm test
 ```
 
 12 tests under [`tests/`](tests/) cover one passing file (`valid.html`), one false-positive guard (`valid-with-urls.html`), and one targeted failure fixture per rule family.
+
+## Validating every template, skeleton, and example
+
+```bash
+npm run validate-all
+```
+
+This runs [`scripts/validate-all.mjs`](scripts/validate-all.mjs), which resolves the artifact list in Node (not via shell globbing) and shells out to `bloom-validate` once with every file. It works identically on Bash, Zsh, PowerShell, and CMD — useful for Windows contributors, and the single canonical command CI uses too.
 
 ## Notes on the inline template `<script>`
 

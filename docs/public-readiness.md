@@ -51,13 +51,12 @@ Every public release must pass every item below. If an item is failing, fix the 
 
 ```bash
 # 1. Validator unit tests
-cd bloom-validator && npm test && cd ..
+cd bloom-validator && npm test
 
-# 2. All artifacts
-node bloom-validator/src/index.ts \
-  templates/*.html \
-  templates/skeletons/*.html \
-  examples/*.html
+# 2. All artifacts (templates, skeletons, examples) — Node resolves the file list
+#    so this works identically on Bash, Zsh, PowerShell, and CMD.
+npm run validate-all
+cd ..
 
 # 3. Repo-tree drift check (manual)
 git ls-files templates/ examples/ docs/ bloom-validator/src/rules/

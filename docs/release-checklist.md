@@ -17,8 +17,7 @@ The process for tagging a new Bloom release.
 Run the full public-readiness audit (see [`public-readiness.md`](public-readiness.md)) and confirm every item is green.
 
 ```bash
-cd bloom-validator && npm test && cd ..
-node bloom-validator/src/index.ts templates/*.html templates/skeletons/*.html examples/*.html
+cd bloom-validator && npm test && npm run validate-all && cd ..
 grep -RIn --include='*.html' -E '\b(Lorem|placeholder date|TODO|Template for)' templates/ examples/ || echo "clean"
 ```
 

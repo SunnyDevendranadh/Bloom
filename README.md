@@ -361,8 +361,9 @@ node bloom-validator/src/index.ts path/to/file.html --json
 # Multiple files at once
 node bloom-validator/src/index.ts a.html b.html c.html
 
-# Validate every template and example in this repo
-node bloom-validator/src/index.ts templates/*.html templates/skeletons/*.html examples/*.html
+# Validate every template, skeleton, and example in this repo
+# (Node resolves the file list, so this works on Bash, Zsh, PowerShell, and CMD.)
+cd bloom-validator && npm run validate-all
 ```
 
 Exit codes: `0` clean, `1` errors found, `2` invalid usage.
@@ -408,9 +409,9 @@ See [`docs/construction-rules.md`](docs/construction-rules.md) for the full chec
 1. Fork this repo
 2. Create a feature branch
 3. Add or improve templates, docs, or the skill itself
-4. Run the validator against any HTML you change:
+4. Run the validator against every template, skeleton, and example:
    ```bash
-   node bloom-validator/src/index.ts templates/*.html examples/*.html
+   cd bloom-validator && npm run validate-all
    ```
 5. Run the validator's own tests:
    ```bash
