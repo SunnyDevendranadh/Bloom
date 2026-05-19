@@ -273,7 +273,8 @@ Bloom/
 ├── examples/                                    # Fully worked artifacts
 │   ├── pr-review-example.html
 │   ├── incident-report-example.html
-│   └── design-system-example.html
+│   ├── design-system-example.html
+│   └── feature-flag-editor-example.html
 └── .github/
     └── workflows/
         └── ci.yml                               # Validator tests + artifact validation
@@ -368,7 +369,7 @@ cd bloom-validator && npm run validate-all
 
 Exit codes: `0` clean, `1` errors found, `2` invalid usage.
 
-The validator currently enforces 10 rules:
+The validator currently enforces 13 rules:
 
 - `no-external-deps`
 - `no-hardcoded-hex`
@@ -379,6 +380,9 @@ The validator currently enforces 10 rules:
 - `no-dialog-apis`
 - `lang-attribute`
 - `focus-visible`
+- `responsive-images`
+- `no-empty-elements`
+- `no-inline-styles-except-root`
 - `security-hardening` (bundles `no-eval`, `innerHTML-with-variable`, `no-network`, `no-inline-handlers`, `no-data-html-uri`, `no-javascript-uri`, and two more — see [`bloom-validator/README.md`](bloom-validator/README.md))
 
 Every template under `templates/` and every artifact under `examples/` passes this validator on every push (see [`.github/workflows/ci.yml`](.github/workflows/ci.yml)).

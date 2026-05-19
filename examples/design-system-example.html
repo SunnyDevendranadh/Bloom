@@ -72,6 +72,16 @@ h2 {
   border: 1px solid rgba(20,20,19,0.08);
   margin-bottom: 12px;
 }
+.chip.ivory { background: var(--ivory); }
+.chip.slate { background: var(--slate); }
+.chip.clay { background: var(--clay); }
+.chip.oat { background: var(--oat); }
+.chip.olive { background: var(--olive); }
+.chip.rust { background: var(--rust); }
+.chip.gray-100 { background: var(--gray-100); }
+.chip.gray-300 { background: var(--gray-300); }
+.chip.gray-500 { background: var(--gray-500); }
+.chip.gray-700 { background: var(--gray-700); }
 .swatch .name { font-weight: 600; color: var(--slate); font-size: 14px; }
 .swatch .var, .swatch .hex {
   font-family: var(--mono);
@@ -213,16 +223,16 @@ button:focus-visible, a:focus-visible, input:focus-visible {
     <h2>Colors</h2>
     <p class="sec-note">Tap a swatch's <code>copy</code> button to copy the <code>var(--token)</code> reference to your clipboard.</p>
     <div class="swatches">
-      <div class="swatch"><div class="chip" style="background:var(--ivory)"></div><div class="name">Ivory</div><span class="var">var(--ivory)</span><span class="hex">#FAF9F5</span><button class="copy" data-token="var(--ivory)">copy var</button></div>
-      <div class="swatch"><div class="chip" style="background:var(--slate)"></div><div class="name">Slate</div><span class="var">var(--slate)</span><span class="hex">#141413</span><button class="copy" data-token="var(--slate)">copy var</button></div>
-      <div class="swatch"><div class="chip" style="background:var(--clay)"></div><div class="name">Clay</div><span class="var">var(--clay)</span><span class="hex">#D97757</span><button class="copy" data-token="var(--clay)">copy var</button></div>
-      <div class="swatch"><div class="chip" style="background:var(--oat)"></div><div class="name">Oat</div><span class="var">var(--oat)</span><span class="hex">#E3DACC</span><button class="copy" data-token="var(--oat)">copy var</button></div>
-      <div class="swatch"><div class="chip" style="background:var(--olive)"></div><div class="name">Olive</div><span class="var">var(--olive)</span><span class="hex">#788C5D</span><button class="copy" data-token="var(--olive)">copy var</button></div>
-      <div class="swatch"><div class="chip" style="background:var(--rust)"></div><div class="name">Rust</div><span class="var">var(--rust)</span><span class="hex">#B04A3F</span><button class="copy" data-token="var(--rust)">copy var</button></div>
-      <div class="swatch"><div class="chip" style="background:var(--gray-100)"></div><div class="name">Gray 100</div><span class="var">var(--gray-100)</span><span class="hex">#F0EEE6</span><button class="copy" data-token="var(--gray-100)">copy var</button></div>
-      <div class="swatch"><div class="chip" style="background:var(--gray-300)"></div><div class="name">Gray 300</div><span class="var">var(--gray-300)</span><span class="hex">#D1CFC5</span><button class="copy" data-token="var(--gray-300)">copy var</button></div>
-      <div class="swatch"><div class="chip" style="background:var(--gray-500)"></div><div class="name">Gray 500</div><span class="var">var(--gray-500)</span><span class="hex">#87867F</span><button class="copy" data-token="var(--gray-500)">copy var</button></div>
-      <div class="swatch"><div class="chip" style="background:var(--gray-700)"></div><div class="name">Gray 700</div><span class="var">var(--gray-700)</span><span class="hex">#3D3D3A</span><button class="copy" data-token="var(--gray-700)">copy var</button></div>
+      <div class="swatch"><div class="chip ivory"></div><div class="name">Ivory</div><span class="var">var(--ivory)</span><span class="hex">#FAF9F5</span><button class="copy" data-token="var(--ivory)">copy var</button></div>
+      <div class="swatch"><div class="chip slate"></div><div class="name">Slate</div><span class="var">var(--slate)</span><span class="hex">#141413</span><button class="copy" data-token="var(--slate)">copy var</button></div>
+      <div class="swatch"><div class="chip clay"></div><div class="name">Clay</div><span class="var">var(--clay)</span><span class="hex">#D97757</span><button class="copy" data-token="var(--clay)">copy var</button></div>
+      <div class="swatch"><div class="chip oat"></div><div class="name">Oat</div><span class="var">var(--oat)</span><span class="hex">#E3DACC</span><button class="copy" data-token="var(--oat)">copy var</button></div>
+      <div class="swatch"><div class="chip olive"></div><div class="name">Olive</div><span class="var">var(--olive)</span><span class="hex">#788C5D</span><button class="copy" data-token="var(--olive)">copy var</button></div>
+      <div class="swatch"><div class="chip rust"></div><div class="name">Rust</div><span class="var">var(--rust)</span><span class="hex">#B04A3F</span><button class="copy" data-token="var(--rust)">copy var</button></div>
+      <div class="swatch"><div class="chip gray-100"></div><div class="name">Gray 100</div><span class="var">var(--gray-100)</span><span class="hex">#F0EEE6</span><button class="copy" data-token="var(--gray-100)">copy var</button></div>
+      <div class="swatch"><div class="chip gray-300"></div><div class="name">Gray 300</div><span class="var">var(--gray-300)</span><span class="hex">#D1CFC5</span><button class="copy" data-token="var(--gray-300)">copy var</button></div>
+      <div class="swatch"><div class="chip gray-500"></div><div class="name">Gray 500</div><span class="var">var(--gray-500)</span><span class="hex">#87867F</span><button class="copy" data-token="var(--gray-500)">copy var</button></div>
+      <div class="swatch"><div class="chip gray-700"></div><div class="name">Gray 700</div><span class="var">var(--gray-700)</span><span class="hex">#3D3D3A</span><button class="copy" data-token="var(--gray-700)">copy var</button></div>
     </div>
   </section>
 

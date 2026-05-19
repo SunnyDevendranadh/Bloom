@@ -45,6 +45,9 @@ h2 { font-family: var(--serif); font-weight: 500; font-size: 21px; color: var(--
 .legend { margin-top: 12px; font-size: 12px; color: var(--gray-500); display: flex; flex-wrap: wrap; gap: 18px; }
 .legend span { display: inline-flex; align-items: center; gap: 6px; }
 .legend .dot { width: 8px; height: 8px; border-radius: 50%; }
+.legend .dot.safe { background: var(--olive); }
+.legend .dot.medium { background: var(--sand); }
+.legend .dot.attention { background: var(--clay); }
 .file-card { border: 1.5px solid var(--gray-300); border-radius: 12px; background: var(--white); margin-bottom: 24px; overflow: hidden; scroll-margin-top: 20px; }
 .file-head { padding: 16px 20px; border-bottom: 1.5px solid var(--gray-100); display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .file-path { font-family: var(--mono); font-size: 13.5px; color: var(--slate); }
@@ -115,9 +118,9 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
       <a class="chip safe" href="#file-tests"><span class="dot"></span>internal/oauth/token_store_test.go</a>
     </div>
     <div class="legend">
-      <span><span class="dot" style="background:var(--olive)"></span> safe — tests or trivial change</span>
-      <span><span class="dot" style="background:var(--sand)"></span> worth a look — verify edge cases</span>
-      <span><span class="dot" style="background:var(--clay)"></span> needs attention — could regress prod</span>
+      <span><span class="dot safe"></span> safe — tests or trivial change</span>
+      <span><span class="dot medium"></span> worth a look — verify edge cases</span>
+      <span><span class="dot attention"></span> needs attention — could regress prod</span>
     </div>
   </section>
 

@@ -24,9 +24,12 @@ h1 { font-family: var(--serif); font-weight: 500; font-size: 30px; color: var(--
 .avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--oat); color: var(--slate); display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; border: 1.5px solid var(--gray-300); }
 .branch { font-family: var(--mono); font-size: 12.5px; color: var(--gray-700); background: var(--gray-100); border: 1.5px solid var(--gray-300); border-radius: 8px; padding: 6px 10px; }
 .branch .arrow { color: var(--gray-500); margin: 0 6px; }
-.stat { font-family: var(--mono); font-size: 13px; }
-.stat .add { color: var(--olive); font-weight: 600; }
-.stat .del { color: var(--rust); font-weight: 600; }
+  .stat { font-family: var(--mono); font-size: 13px; }
+  .stat .add { color: var(--olive); font-weight: 600; }
+  .stat .del { color: var(--rust); font-weight: 600; }
+  .byline-meta, .stat-files { color: var(--gray-500); }
+  .byline-meta { font-size: 12px; }
+  .stat-files { margin-left: 10px; }
 section { margin-bottom: 40px; }
 h2 { font-family: var(--serif); font-weight: 500; font-size: 21px; color: var(--slate); margin-bottom: 14px; }
 .risk-map { display: flex; flex-wrap: wrap; gap: 10px; }
@@ -39,11 +42,15 @@ h2 { font-family: var(--serif); font-weight: 500; font-size: 21px; color: var(--
 .chip.medium .dot { background: var(--sand); }
 .chip.attention { background: rgba(217,119,87,0.12); border-color: rgba(217,119,87,0.55); }
 .chip.attention .dot { background: var(--clay); }
-.legend { margin-top: 12px; font-size: 12px; color: var(--gray-500); display: flex; gap: 18px; }
-.legend span { display: inline-flex; align-items: center; gap: 6px; }
-.legend .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .legend { margin-top: 12px; font-size: 12px; color: var(--gray-500); display: flex; gap: 18px; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .legend .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .legend .dot.safe { background: var(--olive); }
+  .legend .dot.medium { background: var(--sand); }
+  .legend .dot.attention { background: var(--clay); }
 .file-card { border: 1.5px solid var(--gray-300); border-radius: 12px; background: var(--white); margin-bottom: 24px; overflow: hidden; scroll-margin-top: 20px; }
-.file-head { padding: 16px 20px; border-bottom: 1.5px solid var(--gray-100); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .file-head { padding: 16px 20px; border-bottom: 1.5px solid var(--gray-100); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .file-head-actions { display: flex; align-items: center; gap: 12px; }
 .file-path { font-family: var(--mono); font-size: 13.5px; color: var(--slate); }
 .risk-tag { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; padding: 3px 8px; border-radius: 6px; font-weight: 600; }
 .risk-tag.safe { background: rgba(120,140,93,0.15); color: var(--olive); }
@@ -101,9 +108,9 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
     <h1>[PR TITLE]</h1>
     <div class="meta-row">
       <div class="avatar">[INITIALS]</div>
-      <div><strong>[AUTHOR]</strong><br><span style="font-size:12px;color:var(--gray-500)">[OPENED WHEN]</span></div>
+      <div><strong>[AUTHOR]</strong><br><span class="byline-meta">[OPENED WHEN]</span></div>
       <div class="branch">[BRANCH] <span class="arrow">→</span> main</div>
-      <div class="stat"><span class="add">+[NUM]</span> / <span class="del">−[NUM]</span> <span style="color:var(--gray-500);margin-left:10px">[NUM] files changed</span></div>
+      <div class="stat"><span class="add">+[NUM]</span> / <span class="del">−[NUM]</span> <span class="stat-files">[NUM] files changed</span></div>
     </div>
   </header>
   <main>
@@ -114,9 +121,9 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
       <!-- Add chips per file, linked to #file-id sections -->
     </div>
     <div class="legend">
-      <span><span class="dot" style="background:var(--olive)"></span> safe</span>
-      <span><span class="dot" style="background:var(--sand)"></span> worth a look</span>
-      <span><span class="dot" style="background:var(--clay)"></span> needs attention</span>
+      <span><span class="dot safe"></span> safe</span>
+      <span><span class="dot medium"></span> worth a look</span>
+      <span><span class="dot attention"></span> needs attention</span>
     </div>
   </section>
 
@@ -126,7 +133,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
     <article class="file-card" id="file-[NAME]">
       <div class="file-head">
         <div><div class="file-path">[PATH]</div></div>
-        <div style="display:flex;align-items:center;gap:12px">
+        <div class="file-head-actions">
           <span class="risk-tag [LEVEL]">[RISK LEVEL]</span>
         </div>
       </div>

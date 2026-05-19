@@ -103,6 +103,10 @@ h2 {
   margin: 0 0 6px;
 }
 hr.rule { border: none; border-top: 1px solid var(--gray-300); margin: 0 0 22px; }
+.col-pr { width: 90px; }
+.col-author, .col-owner, .col-blocked { width: 140px; }
+.col-risk, .col-stage { width: 100px; }
+.col-action { width: 60px; }
 .summary-band {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -378,7 +382,7 @@ tbody tr:hover { background: var(--ivory); }
 
         <article id="panel-shipped" class="tab-panel" role="tabpanel" aria-labelledby="tab-shipped">
           <table>
-            <thead><tr><th style="width:90px">PR</th><th>Title</th><th style="width:140px">Author</th><th style="width:100px">Risk</th></tr></thead>
+            <thead><tr><th class="col-pr">PR</th><th>Title</th><th class="col-author">Author</th><th class="col-risk">Risk</th></tr></thead>
             <tbody>
               <tr>
                 <td><span class="pr-link">#2841</span></td>
@@ -404,7 +408,7 @@ tbody tr:hover { background: var(--ivory); }
 
         <article id="panel-progress" class="tab-panel" role="tabpanel" aria-labelledby="tab-progress" hidden>
           <table>
-            <thead><tr><th style="width:90px">PR</th><th>Title</th><th style="width:140px">Author</th><th style="width:100px">Stage</th></tr></thead>
+            <thead><tr><th class="col-pr">PR</th><th>Title</th><th class="col-author">Author</th><th class="col-stage">Stage</th></tr></thead>
             <tbody>
               <tr>
                 <td><span class="pr-link">#2848</span></td>
@@ -424,7 +428,7 @@ tbody tr:hover { background: var(--ivory); }
 
         <article id="panel-blocked" class="tab-panel" role="tabpanel" aria-labelledby="tab-blocked" hidden>
           <table>
-            <thead><tr><th>Issue</th><th style="width:140px">Owner</th><th style="width:140px">Blocked on</th><th style="width:60px"></th></tr></thead>
+            <thead><tr><th>Issue</th><th class="col-owner">Owner</th><th class="col-blocked">Blocked on</th><th class="col-action"></th></tr></thead>
             <tbody>
               <tr>
                 <td>OAuth webhook timeout (95p 1.8s over SLA)</td>

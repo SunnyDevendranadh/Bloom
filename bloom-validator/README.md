@@ -18,7 +18,7 @@ Exit codes:
 
 ## Rules implemented
 
-The validator currently enforces 10 rules. Each rule is a single file under [`src/rules/`](src/rules/) and is registered in [`src/rule-registry.ts`](src/rule-registry.ts).
+The validator currently enforces 13 rules. Each rule is a single file under [`src/rules/`](src/rules/) and is registered in [`src/rule-registry.ts`](src/rule-registry.ts).
 
 | ID | Name | Severity | Description |
 |---|---|---|---|
@@ -31,6 +31,9 @@ The validator currently enforces 10 rules. Each rule is a single file under [`sr
 | `rule-12` | `no-dialog-apis` | error | No `alert()`, `prompt()`, or `confirm()` calls in inline `<script>` |
 | `rule-13` | `lang-attribute` | error | `<html>` must have a non-empty `lang` attribute |
 | `rule-14` | `focus-visible` | warning | Warns when interactive elements exist but no `:focus`/`:focus-visible` style is defined |
+| `rule-15` | `responsive-images` | warning | Warns when `<img>` elements exist but no responsive `img { max-width: 100%; ... }` style is defined |
+| `rule-16` | `no-empty-elements` | warning | Warns on empty `<div>`, `<span>`, and `<p>` elements unless marked with `data-template` or `aria-hidden` |
+| `rule-17` | `no-inline-styles-except-root` | error | No inline `style=` attributes; move styles into the document stylesheet and use tokens |
 | `security` | `security-hardening` | error | Bundle of S2/S3/S4/S5/S6/S8 checks — see below |
 
 The `security-hardening` rule emits issues under these `ruleName`s, all classified under rule id `security`:
@@ -46,11 +49,8 @@ The `security-hardening` rule emits issues under these `ruleName`s, all classifi
 
 The following are part of Bloom's published construction rules but are not yet implemented in the validator. They are tracked roadmap items, not silent stubs:
 
-- `responsive-images` — `<img>` should declare `max-width`
 - `aria-landmarks` — landmark role coverage
 - `contrast-minimum` — token-pair contrast heuristic
-- `no-empty-elements` — empty `<div>`/`<span>`/`<p>`
-- `no-inline-styles-except-root` — `style=` attribute outside `<style>` blocks
 
 If you'd like to implement one, drop a file under `src/rules/`, export a `Rule`, and add it to `src/rule-registry.ts`.
 
@@ -83,7 +83,7 @@ When multiple files are passed, the top level is an array of these objects.
 npm test
 ```
 
-12 tests under [`tests/`](tests/) cover one passing file (`valid.html`), one false-positive guard (`valid-with-urls.html`), and one targeted failure fixture per rule family.
+13 tests under [`tests/`](tests/) cover one passing file (`valid.html`), one false-positive guard (`valid-with-urls.html`), and one targeted failure fixture per rule family.
 
 ## Validating every template, skeleton, and example
 
