@@ -1,7 +1,7 @@
 {
   "name": "bloom-validator",
   "version": "1.0.0",
-  "description": "Validates .html files against Bloom's 12 construction rules and 8 security rules",
+  "description": "Validates self-contained Bloom .html artifacts against active construction and security rules",
   "type": "module",
   "bin": {
     "bloom-validate": "./src/index.ts"

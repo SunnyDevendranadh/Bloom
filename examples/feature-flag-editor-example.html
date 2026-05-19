@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Checkout Feature Flag Editor</title>
+<style>
+:root {
+  --ivory: #FAF9F5;
+  --slate: #141413;
+  --clay: #D97757;
+  --oat: #E3DACC;
+  --olive: #788C5D;
+  --rust: #B04A3F;
+  --gray-100: #F0EEE6;
+  --gray-300: #D1CFC5;
+  --gray-500: #87867F;
+  --gray-700: #3D3D3A;
+  --white: #FFFFFF;
+  --serif: ui-serif, Georgia, "Times New Roman", serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--ivory);
+  color: var(--gray-700);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.6;
+  padding: 48px 24px 96px;
+}
+.page { max-width: 1100px; margin: 0 auto; }
+header { display: grid; gap: 12px; margin-bottom: 32px; }
+.eyebrow { color: var(--clay); font-family: var(--mono); font-size: 12px; text-transform: uppercase; }
+h1, h2, h3 { color: var(--slate); line-height: 1.15; }
+h1 { font-family: var(--serif); font-size: 38px; font-weight: 500; }
+h2 { font-size: 20px; margin-bottom: 12px; }
+h3 { font-size: 15px; }
+.layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 20px; align-items: start; }
+.flag-list, aside { display: grid; gap: 14px; }
+.flag-card, .panel {
+  background: var(--white);
+  border: 1px solid var(--gray-300);
+  border-radius: 8px;
+  padding: 18px;
+}
+.flag-card { display: grid; gap: 14px; }
+.flag-top { display: flex; align-items: start; justify-content: space-between; gap: 16px; }
+.meta { color: var(--gray-500); font-size: 13px; }
+.chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  background: var(--gray-100);
+  border: 1px solid var(--gray-300);
+  border-radius: 999px;
+  color: var(--gray-700);
+  font-size: 12px;
+  padding: 3px 8px;
+}
+.chip.risk { background: var(--oat); color: var(--slate); }
+.toggle {
+  align-items: center;
+  background: var(--gray-100);
+  border: 1px solid var(--gray-300);
+  border-radius: 999px;
+  cursor: pointer;
+  display: inline-flex;
+  flex: 0 0 auto;
+  height: 34px;
+  padding: 3px;
+  width: 62px;
+}
+.knob {
+  background: var(--white);
+  border: 1px solid var(--gray-300);
+  border-radius: 50%;
+  height: 26px;
+  transition: transform 160ms ease;
+  width: 26px;
+}
+.toggle[aria-pressed="true"] { background: var(--olive); border-color: var(--olive); }
+.toggle[aria-pressed="true"] .knob { transform: translateX(28px); }
+.dependency {
+  border-left: 3px solid var(--clay);
+  color: var(--gray-700);
+  padding-left: 10px;
+}
+.actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+button.copy {
+  background: var(--slate);
+  border: 0;
+  border-radius: 6px;
+  color: var(--white);
+  cursor: pointer;
+  font: inherit;
+  padding: 8px 12px;
+}
+button.secondary { background: var(--gray-100); color: var(--slate); border: 1px solid var(--gray-300); }
+button:focus-visible, .toggle:focus-visible { outline: 3px solid var(--clay); outline-offset: 3px; }
+.diff { background: var(--slate); border-radius: 8px; color: var(--gray-100); font-family: var(--mono); font-size: 12px; overflow-x: auto; padding: 14px; white-space: pre-wrap; }
+.empty-state { color: var(--gray-500); }
+dl { display: grid; gap: 10px; }
+dt { color: var(--slate); font-weight: 700; }
+dd { color: var(--gray-700); }
+@media (max-width: 860px) {
+  .layout { grid-template-columns: 1fr; }
+  aside { order: -1; }
+}
+@media print {
+  body { background: var(--white); color: var(--slate); padding: 24px; }
+  .actions, .toggle { display: none; }
+  .layout { grid-template-columns: 1fr; }
+  .flag-card, .panel { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <p class="eyebrow">Custom editor example</p>
+    <h1>Checkout Feature Flag Editor</h1>
+    <p>Review rollout state for the checkout modernization project, inspect dependencies, and copy the pending flag diff for a change request.</p>
+  </header>
+
+  <main class="layout">
+    <section class="flag-list" aria-label="Feature flags">
+      <article class="flag-card" data-flag="checkout_redesign" data-label="Checkout redesign" data-initial="true">
+        <div class="flag-top">
+          <div>
+            <h2>Checkout redesign</h2>
+            <p class="meta">Owner: Payments Platform | Cohort: 35 percent US web traffic</p>
+          </div>
+          <button class="toggle" type="button" aria-pressed="true" aria-label="Toggle Checkout redesign"><span class="knob"></span></button>
+        </div>
+        <p>Routes eligible users to the React checkout shell while payment authorization still runs through the legacy service.</p>
+        <div class="chip-row">
+          <span class="chip">Experiment</span>
+          <span class="chip risk">Guarded by fraud fallback</span>
+        </div>
+      </article>
+
+      <article class="flag-card" data-flag="wallet_save_card" data-label="Save card wallet" data-initial="false">
+        <div class="flag-top">
+          <div>
+            <h2>Save card wallet</h2>
+            <p class="meta">Owner: Consumer Billing | Cohort: internal staff only</p>
+          </div>
+          <button class="toggle" type="button" aria-pressed="false" aria-label="Toggle Save card wallet"><span class="knob"></span></button>
+        </div>
+        <p>Adds a saved-card step after successful purchase. The flag should stay disabled until token-vault rotation completes.</p>
+        <p class="dependency">Dependency: token vault rotation must reach 100 percent before external rollout.</p>
+        <div class="chip-row">
+          <span class="chip risk">Dependency blocked</span>
+          <span class="chip">Internal only</span>
+        </div>
+      </article>
+
+      <article class="flag-card" data-flag="risk_step_up" data-label="Risk step-up challenge" data-initial="true">
+        <div class="flag-top">
+          <div>
+            <h2>Risk step-up challenge</h2>
+            <p class="meta">Owner: Trust Engineering | Cohort: high-risk payment attempts</p>
+          </div>
+          <button class="toggle" type="button" aria-pressed="true" aria-label="Toggle Risk step-up challenge"><span class="knob"></span></button>
+        </div>
+        <p>Prompts for a second verification factor when fraud score crosses the configured threshold.</p>
+        <div class="chip-row">
+          <span class="chip">Safety critical</span>
+          <span class="chip">Rollback tested</span>
+        </div>
+      </article>
+    </section>
+
+    <aside aria-label="Pending changes">
+      <section class="panel">
+        <h2>Pending diff</h2>
+        <pre class="diff" id="diff-output">No changes selected.</pre>
+        <div class="actions">
+          <button class="copy" type="button" id="copy-json">Copy JSON</button>
+          <button class="copy secondary" type="button" id="copy-markdown">Copy markdown</button>
+        </div>
+      </section>
+      <section class="panel">
+        <h2>Release notes</h2>
+        <dl>
+          <dt>Rollback owner</dt>
+          <dd>Payments Platform on-call</dd>
+          <dt>Monitoring window</dt>
+          <dd>First 90 minutes after cohort increase</dd>
+          <dt>Primary metric</dt>
+          <dd>Authorization success rate must stay above 98.6 percent</dd>
+        </dl>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+var flags = Array.prototype.slice.call(document.querySelectorAll('[data-flag]'));
+var diffOutput = document.getElementById('diff-output');
+var copyJson = document.getElementById('copy-json');
+var copyMarkdown = document.getElementById('copy-markdown');
+
+function collectChanges() {
+  return flags.map(function (card) {
+    var toggle = card.querySelector('.toggle');
+    return {
+      key: card.getAttribute('data-flag'),
+      label: card.getAttribute('data-label'),
+      from: card.getAttribute('data-initial') === 'true',
+      to: toggle.getAttribute('aria-pressed') === 'true'
+    };
+  }).filter(function (flag) {
+    return flag.from !== flag.to;
+  });
+}
+
+function renderDiff() {
+  var changes = collectChanges();
+  if (changes.length === 0) {
+    diffOutput.textContent = 'No changes selected.';
+    return;
+  }
+  diffOutput.textContent = JSON.stringify({ flags: changes }, null, 2);
+}
+
+function markdownForChanges() {
+  var changes = collectChanges();
+  if (changes.length === 0) return 'No feature flag changes selected.';
+  return changes.map(function (flag) {
+    return '- ' + flag.label + ': ' + String(flag.from) + ' -> ' + String(flag.to);
+  }).join('\n');
+}
+
+function copyText(text, button) {
+  function flash() {
+    var original = button.textContent;
+    button.textContent = 'Copied';
+    window.setTimeout(function () {
+      button.textContent = original;
+    }, 900);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(flash, function () {
+      fallbackCopy(text);
+      flash();
+    });
+  } else {
+    fallbackCopy(text);
+    flash();
+  }
+}
+
+function fallbackCopy(text) {
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  ta.setAttribute('readonly', '');
+  ta.className = 'copy-buffer';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); } catch (err) {}
+  document.body.removeChild(ta);
+}
+
+flags.forEach(function (card) {
+  var toggle = card.querySelector('.toggle');
+  toggle.addEventListener('click', function () {
+    var next = toggle.getAttribute('aria-pressed') !== 'true';
+    toggle.setAttribute('aria-pressed', String(next));
+    renderDiff();
+  });
+});
+
+copyJson.addEventListener('click', function () {
+  copyText(diffOutput.textContent, copyJson);
+});
+copyMarkdown.addEventListener('click', function () {
+  copyText(markdownForChanges(), copyMarkdown);
+});
+renderDiff();
+</script>
+</body>
+</html>

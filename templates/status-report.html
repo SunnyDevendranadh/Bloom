@@ -31,11 +31,13 @@ hr.rule{border:none;border-top:1px solid var(--gray-300);margin:0 0 22px}
 .stat-delta{font-family:var(--mono);font-size:11px;margin-top:6px}
 .stat-delta.up{color:var(--olive)}
 table{width:100%;border-collapse:separate;border-spacing:0;background:var(--white);border:1.5px solid var(--gray-300);border-radius:12px;overflow:hidden}
-thead th{text-align:left;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--gray-500);background:var(--gray-100);padding:12px 16px;border-bottom:1px solid var(--gray-300)}
-tbody td{padding:13px 16px;border-bottom:1px solid var(--gray-100);font-size:14px;vertical-align:middle}
+  thead th{text-align:left;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--gray-500);background:var(--gray-100);padding:12px 16px;border-bottom:1px solid var(--gray-300)}
+  .col-pr{width:90px}.col-author{width:140px}.col-risk{width:100px}
+  tbody td{padding:13px 16px;border-bottom:1px solid var(--gray-100);font-size:14px;vertical-align:middle}
 tbody tr:last-child td{border-bottom:none}
 tbody tr:hover{background:var(--ivory)}
-.risk{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--gray-500)}
+  .risk{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--gray-500)}
+  .pr-link{font-family:var(--mono);font-size:13px;color:var(--clay);text-decoration:none}.author-cell{font-size:13px;color:var(--gray-700)}
 .risk-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
 .risk-dot.low{background:var(--olive)}.risk-dot.med{background:var(--sand)}.risk-dot.high{background:var(--clay)}
 .highlights{list-style:none;padding:0}
@@ -83,9 +85,9 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--clay);outline-offse
     <h2>Shipped</h2>
     <hr class="rule">
     <table>
-      <thead><tr><th style="width:90px">PR</th><th>Title</th><th style="width:140px">Author</th><th style="width:100px">Risk</th></tr></thead>
+      <thead><tr><th class="col-pr">PR</th><th>Title</th><th class="col-author">Author</th><th class="col-risk">Risk</th></tr></thead>
       <tbody>
-        <tr><td><a href="#" style="font-family:var(--mono);font-size:13px;color:var(--clay);text-decoration:none">#[NUM]</a></td><td>[TITLE]</td><td style="font-size:13px;color:var(--gray-700)">[AUTHOR]</td><td><span class="risk"><span class="risk-dot med"></span>Med</span></td></tr>
+        <tr><td><a class="pr-link" href="#">#[NUM]</a></td><td>[TITLE]</td><td class="author-cell">[AUTHOR]</td><td><span class="risk"><span class="risk-dot med"></span>Med</span></td></tr>
       </tbody>
     </table>
   </section>

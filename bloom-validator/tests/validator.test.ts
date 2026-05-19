@@ -174,4 +174,21 @@ describe("bloom-validator", () => {
       assert.equal(issue.severity, "warning");
     }
   });
+
+  it("flags unresponsive images, empty elements, and inline styles", () => {
+    const { path, source } = load("invalid-responsive-empty-inline-style.html");
+    const report = validate(path, source);
+    assert.equal(report.passed, false);
+
+    const rules = new Set(report.issues.map((i) => i.ruleName));
+    assert.ok(rules.has("responsive-images"), `missing responsive-images in ${[...rules].join(", ")}`);
+    assert.ok(rules.has("no-empty-elements"), `missing no-empty-elements in ${[...rules].join(", ")}`);
+    assert.ok(
+      rules.has("no-inline-styles-except-root"),
+      `missing no-inline-styles-except-root in ${[...rules].join(", ")}`,
+    );
+
+    const inlineStyle = report.issues.find((i) => i.ruleName === "no-inline-styles-except-root");
+    assert.equal(inlineStyle?.severity, "error");
+  });
 });
