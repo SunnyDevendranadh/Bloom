@@ -1,17 +1,36 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Test</title>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Broken — Dialog APIs</title>
 <style>
-:root{--brand:#D97757;--bg:#FAF9F5;--fg:#141413}
-body{background:var(--bg);color:var(--fg);font-family:system-ui,sans-serif;max-width:800px;margin:0 auto;padding:2rem}
+:root { --slate: #141413; --ivory: #FAF9F5; }
+body { background: var(--ivory); color: var(--slate); font-family: system-ui, sans-serif; padding: 2rem; }
+:focus-visible { outline: 2px solid var(--slate); outline-offset: 2px; }
+@media print { body { padding: 0; } }
 </style>
 </head>
 <body>
 <header><h1>Dialog API Test</h1></header>
 <main>
-  <button onclick="alert('hello world')">Alert test</button>
-  <button onclick="let x=prompt('enter name')">Prompt test</button>
-  <button onclick="if(confirm('sure?')) console.log('ok')">Confirm test</button>
+  <section>
+    <button id="a">Alert</button>
+    <button id="b">Prompt</button>
+    <button id="c">Confirm</button>
+  </section>
 </main>
+<script>
+document.getElementById('a').addEventListener('click', function () {
+  alert('hello world');
+});
+document.getElementById('b').addEventListener('click', function () {
+  var name = prompt('enter name');
+  console.log(name);
+});
+document.getElementById('c').addEventListener('click', function () {
+  if (confirm('sure?')) console.log('ok');
+});
+</script>
 </body>
 </html>

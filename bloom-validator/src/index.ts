@@ -3,24 +3,10 @@ import { readFileSync, statSync } from "node:fs";
 import { resolve } from "node:path";
 import { buildContext } from "./parser.ts";
 import { renderJson, renderText } from "./reporter.ts";
-import { headingHierarchy } from "./rules/heading-hierarchy.ts";
-import { noDialogApis } from "./rules/no-dialog-apis.ts";
-import { noExternalDeps } from "./rules/no-external-deps.ts";
-import { noHardcodedHex } from "./rules/no-hardcoded-hex.ts";
-import { securityHardening } from "./rules/security-hardening.ts";
-import { semanticHtml } from "./rules/semantic-html.ts";
-import { viewportMeta } from "./rules/viewport-meta.ts";
-import type { Issue, Rule, ValidationReport } from "./types.ts";
+import { ALL_RULES } from "./rule-registry.ts";
+import type { Issue, ValidationReport } from "./types.ts";
 
-const ALL_RULES: Rule[] = [
-  noExternalDeps,
-  noHardcodedHex,
-  semanticHtml,
-  headingHierarchy,
-  viewportMeta,
-  securityHardening,
-  noDialogApis,
-];
+export { ALL_RULES };
 
 export function validate(filePath: string, source: string): ValidationReport {
   const ctx = buildContext(filePath, source);
