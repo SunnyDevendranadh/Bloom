@@ -150,4 +150,28 @@ describe("bloom-validator", () => {
       { passed: true, errorCount: 0 },
     );
   });
+
+  it("flags missing lang attribute on <html> (Rule 13)", () => {
+    const { path, source } = load("invalid-lang.html");
+    const report = validate(path, source);
+    assert.equal(report.passed, false);
+    const langIssues = report.issues.filter((i) => i.ruleName === "lang-attribute");
+    assert.equal(langIssues.length, 1, `expected 1 lang issue, got ${langIssues.length}`);
+    assert.match(langIssues[0]!.message, /missing a lang attribute/);
+  });
+
+  it("warns when no @media print and no :focus styles (Rules 7, 14)", () => {
+    const { path, source } = load("invalid-print-focus.html");
+    const report = validate(path, source);
+    // Both rules emit warnings, not errors, so passed should still be true.
+    assert.equal(report.errorCount, 0, `expected 0 errors, got ${report.errorCount}`);
+    const printIssues = report.issues.filter((i) => i.ruleName === "print-media-query");
+    const focusIssues = report.issues.filter((i) => i.ruleName === "focus-visible");
+    assert.equal(printIssues.length, 1, "expected exactly 1 print-media-query warning");
+    assert.equal(printIssues[0]!.severity, "warning");
+    assert.ok(focusIssues.length >= 1, "expected at least 1 focus-visible warning");
+    for (const issue of focusIssues) {
+      assert.equal(issue.severity, "warning");
+    }
+  });
 });

@@ -9,7 +9,8 @@
   "scripts": {
     "start": "node src/index.ts",
     "test": "node --test tests/validator.test.ts",
-    "test:fixtures": "node src/index.ts tests/fixtures/valid.html"
+    "test:fixtures": "node src/index.ts tests/fixtures/valid.html",
+    "validate-all": "node scripts/validate-all.mjs"
   },
   "engines": {
     "node": ">=22.6.0"

@@ -1,0 +1,56 @@
+<!--
+Bloom skeleton template.
+Purpose: starter structure only, not a production-quality example.
+Production examples live in ../ (alongside other production templates)
+or in ../../examples/. Replace data-template slots with real content
+before publishing.
+-->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Weekly Digest — Bloom skeleton</title>
+<style>
+:root{
+  --ivory:#FAF9F5;--slate:#141413;--clay:#D97757;--oat:#E3DACC;--olive:#788C5D;
+  --white:#FFFFFF;--gray-100:#F0EEE6;--gray-300:#D1CFC5;--gray-500:#87867F;--gray-700:#3D3D3A;
+  --serif:ui-serif,Georgia,serif;--sans:system-ui,-apple-system,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}
+body{background:var(--ivory);color:var(--slate);font-family:var(--sans);max-width:900px;margin:0 auto;padding:2rem;line-height:1.6}
+header{border-bottom:2px solid var(--gray-300);padding-bottom:1rem;margin-bottom:2rem}
+h1{font-family:var(--serif);font-weight:500;font-size:2rem;color:var(--slate);margin:0 0 .25rem}
+.date{font-family:var(--mono);font-size:.85rem;color:var(--gray-500)}
+.card{background:var(--white);border:1px solid var(--gray-300);border-radius:8px;padding:1.5rem;margin:1rem 0}
+h2{font-family:var(--serif);font-weight:500;font-size:1.25rem;margin:0 0 .5rem;color:var(--slate)}
+p{margin:0 0 .75rem}
+.skeleton-note{background:var(--oat);color:var(--gray-700);border-radius:6px;padding:.75rem 1rem;font-size:.85rem;margin-bottom:1.5rem;border-left:3px solid var(--clay)}
+.skeleton-note strong{color:var(--slate)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--clay);outline-offset:2px;border-radius:4px}
+@media print{
+  body{background:var(--ivory);color:var(--slate);padding:1rem}
+  .skeleton-note{display:none}
+  .card{break-inside:avoid;border:1px solid var(--gray-500)}
+}
+</style>
+</head>
+<body>
+<header>
+  <h1 data-template="title">Weekly Digest</h1>
+  <p class="date" data-template="generated-date">Replace with a real date — e.g. May 19, 2026</p>
+</header>
+<main>
+  <p class="skeleton-note"><strong>Skeleton template.</strong> Replace each <code>data-template</code> slot with project-specific content before publishing. See <code>../../docs/construction-rules.md</code> for the rules every Bloom artifact must satisfy.</p>
+  <section class="card">
+    <h2 data-template="section-title">Overview</h2>
+    <p data-template="summary">Replace this starter summary with a one-paragraph description of what this weekly digest covers, who it is for, and the time window it reports on.</p>
+  </section>
+  <section class="card">
+    <h2 data-template="section-title">Details</h2>
+    <p data-template="details">Replace this paragraph with the substantive body of the weekly digest. Use semantic markup — lists, tables, sections — instead of flat prose.</p>
+  </section>
+</main>
+</body>
+</html>

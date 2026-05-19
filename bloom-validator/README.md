@@ -1,10 +1,8 @@
 # bloom-validator
 
-A zero-dependency TypeScript CLI that validates `.html` files against Bloom's 12 construction rules and 8 security rules.
+A zero-dependency TypeScript CLI that validates `.html` files against Bloom's construction and security rules. Runs on Node ≥ 22.6 using native TypeScript type-stripping — no build step, no dependencies.
 
 ## Quick start
-
-Requires Node ≥ 22.6 (uses native TypeScript type-stripping — no build step).
 
 ```bash
 node src/index.ts path/to/file.html
@@ -20,19 +18,41 @@ Exit codes:
 
 ## Rules implemented
 
+The validator currently enforces 10 rules. Each rule is a single file under [`src/rules/`](src/rules/) and is registered in [`src/rule-registry.ts`](src/rule-registry.ts).
+
 | ID | Name | Severity | Description |
 |---|---|---|---|
-| `rule-1` | `no-external-deps` | error | No `<script src>`, `<link rel="stylesheet">`, `@import`, ES module `import`/`export` |
+| `rule-1` | `no-external-deps` | error | No `<script src>`, `<link rel="stylesheet">`, `@import`, or ES module `import`/`export` |
 | `rule-2` | `no-hardcoded-hex` | error | No `#RRGGBB`/`#RGB`/`#RRGGBBAA` outside `:root` blocks |
 | `rule-3` | `semantic-html` | error+warn | Requires `<header>` and `<main>` in `<body>`; warns when no `<section>`/`<article>`/`<nav>`/`<aside>` are used |
-| `rule-8` | `heading-hierarchy` | error | Exactly one `<h1>`; no skipped levels |
+| `rule-7` | `print-media-query` | warning | Warns when no `@media print` block is defined in any `<style>` |
+| `rule-8` | `heading-hierarchy` | error | Exactly one `<h1>`; no skipped levels (h1 → h3) |
 | `rule-10` | `viewport-meta` | error | `<meta name="viewport">` required in `<head>` |
-| `S2` | `no-eval`, `no-function-ctor`, `no-string-timer` | error | No `eval()`, `new Function()`, string-based timers |
-| `S3` | `innerHTML-with-variable` | error | `.innerHTML` may only be assigned a string literal |
-| `S4` | `no-network` | error | No `fetch`, `XMLHttpRequest`, `WebSocket`, `EventSource` |
-| `S5` | `no-inline-handlers` | error | No `on*=` attributes — use `addEventListener` |
-| `S6` | `no-data-html-uri` | error | No `data:text/html` or `data:text/javascript` URIs |
-| `S8` | `no-javascript-uri` | error | No `javascript:` in `href`, `src`, `action` |
+| `rule-12` | `no-dialog-apis` | error | No `alert()`, `prompt()`, or `confirm()` calls in inline `<script>` |
+| `rule-13` | `lang-attribute` | error | `<html>` must have a non-empty `lang` attribute |
+| `rule-14` | `focus-visible` | warning | Warns when interactive elements exist but no `:focus`/`:focus-visible` style is defined |
+| `security` | `security-hardening` | error | Bundle of S2/S3/S4/S5/S6/S8 checks — see below |
+
+The `security-hardening` rule emits issues under these `ruleName`s, all classified under rule id `security`:
+
+- `no-eval`, `no-function-ctor`, `no-string-timer` (S2) — `eval()`, `new Function()`, `setTimeout("...")`, `setInterval("...")`
+- `innerHTML-with-variable` (S3) — `.innerHTML = ` from anything but a plain string/template literal
+- `no-network` (S4) — `fetch`, `XMLHttpRequest`, `WebSocket`, `EventSource`
+- `no-inline-handlers` (S5) — `onclick=`, `onload=`, any inline `on*=` attribute
+- `no-data-html-uri` (S6) — `href="data:text/html"` or `data:text/javascript`
+- `no-javascript-uri` (S8) — `javascript:` in `href`, `src`, `action`, `formaction`
+
+### Planned (not yet enforced)
+
+The following are part of Bloom's published construction rules but are not yet implemented in the validator. They are tracked roadmap items, not silent stubs:
+
+- `responsive-images` — `<img>` should declare `max-width`
+- `aria-landmarks` — landmark role coverage
+- `contrast-minimum` — token-pair contrast heuristic
+- `no-empty-elements` — empty `<div>`/`<span>`/`<p>`
+- `no-inline-styles-except-root` — `style=` attribute outside `<style>` blocks
+
+If you'd like to implement one, drop a file under `src/rules/`, export a `Rule`, and add it to `src/rule-registry.ts`.
 
 ## JSON output shape
 
@@ -60,15 +80,19 @@ When multiple files are passed, the top level is an array of these objects.
 ## Running tests
 
 ```bash
-node --test tests/validator.test.ts
+npm test
 ```
 
-The fixtures under `tests/fixtures/` cover one passing file and one targeted failure per rule family.
+12 tests under [`tests/`](tests/) cover one passing file (`valid.html`), one false-positive guard (`valid-with-urls.html`), and one targeted failure fixture per rule family.
+
+## Validating every template, skeleton, and example
+
+```bash
+npm run validate-all
+```
+
+This runs [`scripts/validate-all.mjs`](scripts/validate-all.mjs), which resolves the artifact list in Node (not via shell globbing) and shells out to `bloom-validate` once with every file. It works identically on Bash, Zsh, PowerShell, and CMD — useful for Windows contributors, and the single canonical command CI uses too.
 
 ## Notes on the inline template `<script>`
 
-Bloom templates themselves must include inline JavaScript (not TypeScript) because Rule 1 forbids any build step — the file has to run from `file://`. This validator is the only place in the Bloom repo where TypeScript runs at all, and it runs in Node, not the browser.
-
-
-### Rule 12: no-dialog-apis
-Flags `alert()`, `prompt()`, and `confirm()` calls in `<script>` blocks. These blocking dialog APIs violate progressive enhancement — use inline UI instead.
+Bloom templates themselves use inline JavaScript (not TypeScript) because Rule 1 forbids any build step — every artifact has to run from `file://`. This validator is the only place in the Bloom repo where TypeScript runs at all, and it runs in Node, not the browser.

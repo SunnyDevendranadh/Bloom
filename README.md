@@ -4,7 +4,7 @@
 
 **Bloom** is a per-session sticky skill that makes flat markdown bloom into rich, self-contained `.html` artifacts. Drop it into any AI coding agent and reports, reviews, plans, design docs, and interactive editors come back as single `.html` files you can open, click around, and export from — because diffs, diagrams, status reports, and design comparisons are **spatial** information that loses meaning when flattened into prose.
 
-Supported harnesses:
+Supported harnesses (the skill is a single markdown file; copy it to whatever your agent reads):
 
 - **Claude Code** — `.claude/skills/bloom/` (sticky session skill)
 - **Codex CLI** (OpenAI) — `AGENTS.md`
@@ -34,143 +34,140 @@ Type `/bloom` once and every substantial artifact for the rest of the session be
 
 This skill captures the patterns from [The Unreasonable Effectiveness of HTML](https://thariqs.github.io/html-effectiveness/) and makes them reproducible across every agent harness.
 
+See [`examples/`](examples/) for worked artifacts:
+
+- [`pr-review-example.html`](examples/pr-review-example.html) — annotated PR review with risk chips, per-file cards, and a next-steps checklist
+- [`incident-report-example.html`](examples/incident-report-example.html) — SEV-2 postmortem with timeline, root cause, impact, and action items
+- [`design-system-example.html`](examples/design-system-example.html) — living token reference with copyable color chips and a composed preview
+
 ---
 
 ## Installation
 
 Installation differs by harness. If you use more than one, install Bloom separately for each one. Each install is sticky once activated in a session and stays on until you turn it off or the session ends.
 
+**Every harness section below leads with the manual install — it works today, with no marketplace dependency.** A "Planned marketplace install" subsection is included where one is being prepared, clearly marked as not yet live.
+
 ### Claude Code
 
-Bloom is shipped as a Claude Code plugin via the **Bloom marketplace** and is queued for submission to Anthropic's official plugin marketplace.
+**Works today: manual install**
 
-**Anthropic Official Marketplace** (after submission lands)
+Copy the packaged skill into your project (or `~/.claude/skills/`):
 
-- Install the plugin from Anthropic's official marketplace:
-
-```
-/plugin install bloom@claude-plugins-official
+```bash
+cp -r .claude/skills/bloom /path/to/your-project/.claude/skills/bloom
 ```
 
-**Bloom Marketplace**
+Or drop the whole plugin into a project that uses `.claude-plugin/`:
 
-The Bloom marketplace provides Bloom and any future related plugins for Claude Code.
-
-- Register the marketplace:
-
-```
-/plugin marketplace add SunnyDevendranadh/Bloom
+```bash
+cp -r plugins/bloom /path/to/your-project/.claude/plugins/bloom
 ```
 
-- Install the plugin from this marketplace:
+Activate per session with `/bloom`, `/bloom-on`, or by saying "bloom on" / "let it bloom". Deactivate with `/bloom-off`.
 
-```
-/plugin install bloom@bloom
-```
+**Planned marketplace install** — not yet live
 
-Activate per session with `/bloom`, `/bloom-on`, or by saying "bloom on" / "let it bloom" in any message. Deactivate with `/bloom-off`.
+Bloom is queued for submission to Anthropic's official plugin marketplace. Until then, prefer the manual install above. The local Bloom marketplace listing also exists (`.claude-plugin/marketplace.json`); once Anthropic's marketplace ingestion is live for community plugins, this will be a one-liner. Do not paste speculative `/plugin install` commands until that listing is verified.
 
 ### Codex CLI
 
-Bloom is queued for submission to the [official Codex plugin marketplace](https://github.com/openai/plugins).
+**Works today: manual install**
 
-- Open the plugin search interface:
-
-```
-/plugins
-```
-
-- Search for Bloom:
-
-```
-bloom
+```bash
+cp droids/bloom.md /path/to/your-project/AGENTS.md
+# or, globally:
+cp droids/bloom.md ~/.codex/AGENTS.md
 ```
 
-- Select `Install Plugin`.
+If you already have an `AGENTS.md`, append the contents of `droids/bloom.md` to it instead of replacing it.
 
-**Manual install** (works today): copy `droids/bloom.md` to your repo's `AGENTS.md` or `~/.codex/AGENTS.md`.
+**Planned marketplace install** — not yet live
+
+Bloom is planned for submission to the [openai/plugins](https://github.com/openai/plugins) marketplace. Until that listing exists, use the manual install above.
 
 ### Codex App
 
-Bloom is queued for submission to the [official Codex plugin marketplace](https://github.com/openai/plugins).
+**Works today: manual install**
 
-- In the Codex app, click on **Plugins** in the sidebar.
-- You should see `Bloom` in the Coding section.
-- Click the `+` next to Bloom and follow the prompts.
+Commit `AGENTS.md` (copied from `droids/bloom.md`) to the GitHub branch you connect to the Codex app:
 
-**Manual install** (works today): commit `AGENTS.md` (copied from `droids/bloom.md`) to the GitHub branch you connect to Codex.
+```bash
+cp droids/bloom.md AGENTS.md
+git add AGENTS.md && git commit -m "Add Bloom skill" && git push
+```
+
+**Planned marketplace install** — not yet live
+
+Once Bloom is listed in the Codex app's plugin sidebar, install will be a single click. Until then, use the manual install above.
 
 ### Factory Droid
 
-- Register the marketplace:
+**Works today: manual install**
 
-```
-droid plugin marketplace add https://github.com/SunnyDevendranadh/Bloom
-```
-
-- Install the plugin:
-
-```
-droid plugin install bloom@bloom
+```bash
+# Project-scoped:
+mkdir -p .factory/droids && cp droids/bloom.md .factory/droids/
+# Personal:
+mkdir -p ~/.factory/droids && cp droids/bloom.md ~/.factory/droids/
 ```
 
-**Manual install** (works today): `cp droids/bloom.md ~/.factory/droids/` (personal) or `.factory/droids/` (project).
+**Planned marketplace install** — not yet live
+
+Once Bloom is published to a Factory plugin marketplace, register and install will be a two-liner. Not live yet.
 
 ### Gemini CLI
 
-- Install the extension:
+**Works today: manual install**
 
-```
-gemini extensions install https://github.com/SunnyDevendranadh/Bloom
-```
-
-- Update later:
-
-```
-gemini extensions update bloom
+```bash
+cp droids/bloom.md GEMINI.md
+# or globally:
+cp droids/bloom.md ~/.gemini/GEMINI.md
 ```
 
-**Manual install** (works today): copy `droids/bloom.md` to `GEMINI.md` at the repo root or `~/.gemini/GEMINI.md` global.
+**Planned marketplace install** — not yet live
+
+`gemini extensions install <repo>` may work for some Gemini CLI builds, but the install path has not been validated against the current Gemini CLI release. Until verified, use the manual install above.
 
 ### OpenCode
 
-OpenCode uses its own plugin install; install Bloom separately even if you already use it in another harness.
+**Works today: manual install**
 
-- Tell OpenCode:
-
-```
-Fetch and follow instructions from https://raw.githubusercontent.com/SunnyDevendranadh/Bloom/main/plugins/bloom/INSTALL.opencode.md
+```bash
+cp droids/bloom.md /path/to/your-project/AGENTS.md
 ```
 
-**Manual install** (works today): copy `droids/bloom.md` to your repo's `AGENTS.md`.
+Optional helper: ask OpenCode itself to follow [`plugins/bloom/INSTALL.opencode.md`](plugins/bloom/INSTALL.opencode.md).
+
+**Planned marketplace install** — not yet live
+
+OpenCode's plugin marketplace ingestion is evolving; once a verified install exists, it will replace this manual step.
 
 ### Cursor
 
-- In Cursor Agent chat, install from the marketplace:
+**Works today: manual install**
 
+```bash
+mkdir -p .cursor/rules && cp droids/bloom.md .cursor/rules/bloom.mdc
+# or paste the contents of droids/bloom.md into .cursorrules
 ```
-/add-plugin bloom
-```
 
-- Or search for "bloom" in the plugin marketplace.
+**Planned marketplace install** — not yet live
 
-**Manual install** (works today): copy `droids/bloom.md` to `.cursor/rules/bloom.mdc` or paste the bloom snippet into `.cursorrules`.
+If/when Cursor exposes a `/add-plugin bloom` command, it will be added here. Not live yet.
 
 ### GitHub Copilot CLI
 
-- Register the marketplace:
+**Works today: manual install**
 
-```
-copilot plugin marketplace add SunnyDevendranadh/Bloom
-```
-
-- Install the plugin:
-
-```
-copilot plugin install bloom@bloom
+```bash
+cp droids/bloom.md /path/to/your-project/AGENTS.md
 ```
 
-**Manual install** (works today): copy `droids/bloom.md` to your repo's `AGENTS.md`.
+**Planned marketplace install** — not yet live
+
+Copilot's plugin marketplace install path has not been verified. Use the manual install above.
 
 ### Other harnesses
 
@@ -233,45 +230,61 @@ Bloom/
 ├── .claude/
 │   └── skills/
 │       └── bloom/
-│           └── SKILL.md                         # Claude Code skill (manual install / self-use)
+│           └── SKILL.md                         # Claude Code skill (manual install)
 ├── droids/
-│   └── bloom.md                                 # The canonical skill (Factory droid + universal)
+│   └── bloom.md                                 # Canonical cross-harness skill
 ├── docs/
 │   ├── harness-setup.md                         # Per-agent setup guides
 │   ├── categories.md                            # The 9 document categories explained
-│   ├── design-system.md                         # Full token reference (v1)
+│   ├── design-system.md                         # Token reference (v1)
 │   ├── design-system-v2.md                      # Dark mode, motion tokens, Tabs, Modal
-│   ├── construction-rules.md                    # The 12 rules for producing HTML (v1)
+│   ├── construction-rules.md                    # The 12 rules for producing HTML
 │   ├── construction-rules-v2.md                 # Rule 9 revision for templates
-│   └── security.md                              # Security hardening guide
-├── bloom-validator/                             # Zero-dep TypeScript CLI for the 12+8 rules
+│   ├── security.md                              # Security hardening guide
+│   ├── public-readiness.md                      # Public-readiness checklist
+│   └── release-checklist.md                     # Release process
+├── bloom-validator/                             # Zero-dep TypeScript CLI
 │   ├── README.md
 │   ├── package.json
 │   ├── src/
 │   │   ├── index.ts                             # CLI entry (bloom-validate)
 │   │   ├── parser.ts
 │   │   ├── reporter.ts
+│   │   ├── rule-registry.ts                     # All active rules in one place
 │   │   └── rules/                               # One file per rule
 │   └── tests/                                   # node:test suite + fixtures
-├── templates/
-│   ├── exploration-code-approaches.html
+├── templates/                                   # Production-quality templates
 │   ├── annotated-pr-review.html
-│   ├── design-system-reference.html
-│   ├── animation-sandbox.html
-│   ├── annotated-flowchart.html
-│   ├── slide-deck.html
-│   ├── feature-explainer.html
-│   ├── status-report.html
-│   ├── status-report-v2.html                    # Worked v2 example (data-template slots)
+│   ├── exploration-code-approaches.html
 │   ├── incident-timeline.html
-│   ├── triage-board.html
-│   ├── feature-flag-editor.html
-│   └── prompt-tuner.html
-└── examples/
-    ├── pr-review-example.html
-    ├── incident-report-example.html
-    └── design-system-example.html
+│   ├── status-report.html
+│   ├── status-report-v2.html
+│   └── skeletons/                               # Starter scaffolds (clearly labeled)
+│       ├── accessibility-report.html
+│       ├── api-documentation.html
+│       ├── architecture-decision.html
+│       ├── dependency-audit.html
+│       ├── design-review.html
+│       ├── migration-plan.html
+│       ├── monthly-review.html
+│       ├── onboarding-guide.html
+│       ├── sprint-retro.html
+│       └── weekly-digest.html
+├── examples/                                    # Fully worked artifacts
+│   ├── pr-review-example.html
+│   ├── incident-report-example.html
+│   └── design-system-example.html
+└── .github/
+    └── workflows/
+        └── ci.yml                               # Validator tests + artifact validation
 ```
+
+Templates and skeletons are different:
+
+- **Templates** (`templates/*.html`) are production-quality. Real semantic structure, print styles, focus styles, ready to drop content into.
+- **Skeletons** (`templates/skeletons/*.html`) are starter scaffolds. Each opens with a comment marking it as a skeleton and uses `data-template="<slot>"` markers instead of placeholder text. Replace the slots before publishing.
+
+Every file in `templates/` and `examples/` passes [`bloom-validator`](bloom-validator/).
 
 ---
 
@@ -293,7 +306,7 @@ Bloom/
 
 ## Design system
 
-All templates use CSS custom properties from the same warm palette. See [`docs/design-system.md`](docs/design-system.md) for the full v1 reference and [`docs/design-system-v2.md`](docs/design-system-v2.md) for dark-mode tokens (via `prefers-color-scheme`), motion tokens (durations + easings), and the Tabs / Modal component patterns.
+All templates use CSS custom properties from the same warm palette. See [`docs/design-system.md`](docs/design-system.md) for the full reference and [`docs/design-system-v2.md`](docs/design-system-v2.md) for dark-mode tokens (via `prefers-color-scheme`), motion tokens (durations + easings), and the Tabs / Modal component patterns.
 
 | Token | Value | Usage |
 |---|---|---|
@@ -330,25 +343,51 @@ All templates follow the security guidelines in [`docs/security.md`](docs/securi
 - No `data:` URIs for executable content
 - All event handlers use `addEventListener`, not inline `on*` attributes
 
+The validator enforces all of these via the `security-hardening` rule.
+
 ---
 
 ## Validation
 
-[`bloom-validator/`](bloom-validator/) is a zero-dependency TypeScript CLI that checks any `.html` file against Bloom's construction and security rules. It uses Node ≥ 22.6 native TypeScript type-stripping — no build step.
+[`bloom-validator/`](bloom-validator/) is a zero-dependency TypeScript CLI that checks any `.html` file against Bloom's construction and security rules. It uses Node ≥ 22.6 native TypeScript type-stripping — no build step, no dependencies.
 
 ```bash
+# Validate a single file
 node bloom-validator/src/index.ts path/to/file.html
+
+# JSON output
 node bloom-validator/src/index.ts path/to/file.html --json
+
+# Multiple files at once
 node bloom-validator/src/index.ts a.html b.html c.html
+
+# Validate every template, skeleton, and example in this repo
+# (Node resolves the file list, so this works on Bash, Zsh, PowerShell, and CMD.)
+cd bloom-validator && npm run validate-all
 ```
 
-Exit codes: `0` clean, `1` errors found, `2` invalid usage. See [`bloom-validator/README.md`](bloom-validator/README.md) for the full rule table and JSON output shape.
+Exit codes: `0` clean, `1` errors found, `2` invalid usage.
+
+The validator currently enforces 10 rules:
+
+- `no-external-deps`
+- `no-hardcoded-hex`
+- `semantic-html`
+- `print-media-query`
+- `heading-hierarchy`
+- `viewport-meta`
+- `no-dialog-apis`
+- `lang-attribute`
+- `focus-visible`
+- `security-hardening` (bundles `no-eval`, `innerHTML-with-variable`, `no-network`, `no-inline-handlers`, `no-data-html-uri`, `no-javascript-uri`, and two more — see [`bloom-validator/README.md`](bloom-validator/README.md))
+
+Every template under `templates/` and every artifact under `examples/` passes this validator on every push (see [`.github/workflows/ci.yml`](.github/workflows/ci.yml)).
 
 ---
 
 ## Construction rules
 
-See [`docs/construction-rules.md`](docs/construction-rules.md) for the full 12-rule checklist, and [`docs/construction-rules-v2.md`](docs/construction-rules-v2.md) for the Rule 9 revision that lets templates ship plausible default content with `data-template="<slot>"` markers instead of `[BRACKET]` placeholders. Summary:
+See [`docs/construction-rules.md`](docs/construction-rules.md) for the full checklist, and [`docs/construction-rules-v2.md`](docs/construction-rules-v2.md) for the Rule 9 revision that lets templates ship plausible default content with `data-template="<slot>"` markers instead of `[BRACKET]` placeholders. Summary:
 
 1. **Single file** — All HTML, CSS, JS in one `.html` file
 2. **CSS custom properties** — Use the palette tokens, never hard-code colors
@@ -356,9 +395,9 @@ See [`docs/construction-rules.md`](docs/construction-rules.md) for the full 12-r
 4. **Inline JS only** — Minimal, no frameworks, no build step
 5. **Responsive** — `max-width` wrappers, `clamp()` type, `@media` breakpoints
 6. **Export mechanism** — "Copy as markdown/JSON/diff" button on every editor
-7. **Print-friendly** — Key content readable without JS
+7. **Print-friendly** — Key content readable without JS; `@media print` block
 8. **Accessible** — `aria-label`, `role`, heading hierarchy, focus states
-9. **No placeholder content** — Every word specific and real
+9. **No placeholder content** — Every word specific and real (or marked via `data-template=`)
 10. **Viewport meta** — Always include `<meta name="viewport">`
 11. **Progressive enhancement** — Core content visible without JS
 12. **No `alert()`/`prompt()`/`confirm()`** — Use inline UI
@@ -370,8 +409,17 @@ See [`docs/construction-rules.md`](docs/construction-rules.md) for the full 12-r
 1. Fork this repo
 2. Create a feature branch
 3. Add or improve templates, docs, or the skill itself
-4. Make sure templates pass the construction rules checklist
-5. Open a PR
+4. Run the validator against every template, skeleton, and example:
+   ```bash
+   cd bloom-validator && npm run validate-all
+   ```
+5. Run the validator's own tests:
+   ```bash
+   cd bloom-validator && npm test
+   ```
+6. Open a PR
+
+See [`docs/public-readiness.md`](docs/public-readiness.md) for the checklist this repo holds itself to, and [`docs/release-checklist.md`](docs/release-checklist.md) for the per-release process.
 
 ---
 
