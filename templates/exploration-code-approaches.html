@@ -16,6 +16,7 @@
   --gray-500: #87867F;
   --gray-700: #3D3D3A;
   --white:    #FFFFFF;
+  --code-fg:  #E8E6DE;
   --serif: ui-serif, Georgia, "Times New Roman", serif;
   --sans:  system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --mono:  ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
@@ -107,7 +108,7 @@ h1 {
   font-family: var(--mono);
   font-size: 12.5px;
   line-height: 1.65;
-  color: #E8E6DE;
+  color: var(--code-fg);
   white-space: pre;
 }
 .tradeoffs {
@@ -174,6 +175,16 @@ h1 {
 @media (max-width: 1100px) {
   .approaches { grid-template-columns: 1fr; }
 }
+a:focus-visible, button:focus-visible, .approach:focus-visible {
+  outline: 2px solid var(--clay); outline-offset: 2px; border-radius: 4px;
+}
+@media print {
+  body { background: var(--ivory); color: var(--slate); padding: 24px; }
+  .approaches { grid-template-columns: 1fr; }
+  .approach { break-inside: avoid; }
+  .code { background: var(--gray-100); }
+  .code pre { color: var(--slate); }
+}
 </style>
 </head>
 <body>
@@ -186,6 +197,7 @@ h1 {
       [PROMPT TEXT]
     </div>
   </header>
+  <main>
   <section class="approaches">
     <!-- Approach 1 -->
     <article class="approach">
@@ -210,6 +222,7 @@ h1 {
     <h2>Recommendation</h2>
     <p>[RECOMMENDATION WITH RATIONALE]</p>
   </aside>
+  </main>
 </div>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>[PROJECT] — [TITLE]</title>
+<title>acme — INC-2026-0143 OAuth webhook timeouts</title>
 <style>
 :root {
   --ivory:#FAF9F5;--slate:#141413;--clay:#D97757;--oat:#E3DACC;--olive:#788C5D;
@@ -20,7 +20,9 @@ header{margin-bottom:32px}
 h1{font-family:var(--serif);font-weight:500;font-size:36px;letter-spacing:-0.01em;margin:0 0 18px;line-height:1.2}
 .meta-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px}
 .pill{display:inline-flex;align-items:baseline;gap:6px;font-size:12px;font-weight:600;border-radius:999px;padding:5px 12px;line-height:1}
-.pill.sev{background:var(--clay);color:var(--white)}.pill.resolved{background:var(--olive);color:var(--white)}.pill.neutral{background:var(--gray-100);color:var(--gray-700);border:1.5px solid var(--gray-300)}
+.pill.sev{background:var(--clay);color:var(--white)}
+.pill.resolved{background:var(--olive);color:var(--white)}
+.pill.neutral{background:var(--gray-100);color:var(--gray-700);border:1.5px solid var(--gray-300)}
 .pill .k{font-weight:400;opacity:0.75}.pill .v{font-family:var(--mono)}
 .tldr{background:var(--slate);color:var(--ivory);border-radius:12px;padding:22px 26px;margin-bottom:48px}
 .tldr-label{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:var(--oat);margin-bottom:10px}
@@ -54,7 +56,7 @@ table.impact td{font-family:var(--mono);color:var(--slate)}
 .ai-row.done .ai-desc{color:var(--gray-500);text-decoration:line-through;text-decoration-color:var(--gray-300)}
 .ai-avatar{width:30px;height:30px;border-radius:50%;background:var(--oat);color:var(--gray-700);font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;letter-spacing:0.02em}
 .ai-desc{font-size:14px;color:var(--slate)}.ai-due{font-family:var(--mono);font-size:12px;color:var(--gray-500);text-align:right}
-a:focus-visible,button:focus-visible,details summary:focus-visible{outline:2px solid var(--clay);outline-offset:2px;border-radius:4px}
+a:focus-visible,button:focus-visible{outline:2px solid var(--clay);outline-offset:2px;border-radius:4px}
 @media print{
   body{background:var(--ivory);color:var(--slate);padding:24px}
   .pill{border:1px solid var(--gray-300)}
@@ -65,43 +67,47 @@ a:focus-visible,button:focus-visible,details summary:focus-visible{outline:2px s
 <body>
 <div class="page">
   <header>
-    <div class="inc-id">[INCIDENT ID]</div>
-    <h1>[INCIDENT TITLE]</h1>
+    <div class="inc-id">INC-2026-0143</div>
+    <h1>OAuth webhook timeouts on token rotation</h1>
     <div class="meta-row">
-      <span class="pill sev">[SEV LEVEL]</span>
+      <span class="pill sev">SEV-2</span>
       <span class="pill resolved">Resolved</span>
-      <span class="pill neutral"><span class="k">Duration</span> <span class="v">[DURATION]</span></span>
-      <span class="pill neutral"><span class="k">Detected</span> <span class="v">[TIME]</span></span>
-      <span class="pill neutral"><span class="k">Owner</span> <span class="v">[NAME]</span></span>
+      <span class="pill neutral"><span class="k">Duration</span> <span class="v">47m</span></span>
+      <span class="pill neutral"><span class="k">Detected</span> <span class="v">2026-05-12 14:08 UTC</span></span>
+      <span class="pill neutral"><span class="k">Owner</span> <span class="v">@platform-oncall</span></span>
     </div>
   </header>
   <main>
 
   <div class="tldr">
     <div class="tldr-label">TL;DR</div>
-    <p>[ONE PARAGRAPH SUMMARY OF WHAT HAPPENED, IMPACT, AND RESOLUTION]</p>
+    <p>A token-rotation deploy at 14:02 UTC raised webhook handler latency from p99 <code>~250ms</code> to <code>~12s</code>, causing 3% of OAuth callbacks to fail for 47 minutes. The new <code>refreshToken()</code> path made a synchronous round-trip to the identity service per request instead of using the cached token. Resolved by rolling back the deploy and shipping a fix with a 5-minute cache TTL.</p>
   </div>
 
   <section id="timeline">
     <h2>Timeline</h2>
     <hr class="rule">
     <div class="timeline">
-      <div class="tl-entry"><span class="tl-dot"></span><span class="tl-time">[TIME]</span><div class="tl-body">[EVENT DESCRIPTION]</div></div>
-      <div class="tl-entry"><span class="tl-dot impact"></span><span class="tl-time">[TIME]</span><div class="tl-body"><strong>Impact starts.</strong> [DESCRIPTION]</div></div>
-      <div class="tl-entry"><span class="tl-dot mitigated"></span><span class="tl-time">[TIME]</span><div class="tl-body"><strong>Mitigated.</strong> [DESCRIPTION]</div></div>
-      <div class="tl-entry"><span class="tl-dot"></span><span class="tl-time">[TIME]</span><div class="tl-body">[RESOLUTION DESCRIPTION]</div></div>
+      <div class="tl-entry"><span class="tl-dot"></span><span class="tl-time">14:02 UTC</span><div class="tl-body">Deploy <code>v2.41.0</code> rolls out to production. Token rotation refactor is included.</div></div>
+      <div class="tl-entry"><span class="tl-dot impact"></span><span class="tl-time">14:08 UTC</span><div class="tl-body"><strong>Impact starts.</strong> PagerDuty fires on <code>webhook_latency_p99 &gt; 5s</code>. OAuth callbacks begin timing out for tenants whose tokens rotated in the last 24h.</div></div>
+      <div class="tl-entry"><span class="tl-dot"></span><span class="tl-time">14:14 UTC</span><div class="tl-body">@mira-okafor takes incident command. Status page updated to "Investigating".</div></div>
+      <div class="tl-entry"><span class="tl-dot"></span><span class="tl-time">14:23 UTC</span><div class="tl-body">Identity-service dashboard shows a 40× spike in <code>GetToken</code> RPC volume from the API tier.</div></div>
+      <div class="tl-entry"><span class="tl-dot mitigated"></span><span class="tl-time">14:31 UTC</span><div class="tl-body"><strong>Mitigated.</strong> Rolled back to <code>v2.40.3</code>. Latency returns to baseline within 90s.</div></div>
+      <div class="tl-entry"><span class="tl-dot"></span><span class="tl-time">14:55 UTC</span><div class="tl-body">Status page updated to "Resolved". 3.1% of OAuth callbacks failed during the window; affected tenants notified.</div></div>
     </div>
   </section>
 
   <section id="root-cause">
     <h2>Root cause</h2>
     <hr class="rule">
-    <p>[ROOT CAUSE DESCRIPTION]</p>
+    <p>The token-rotation refactor removed the in-process token cache in favor of a "single source of truth" pattern, but the replacement code path made a synchronous gRPC call to the identity service on every webhook callback — adding ~50ms of latency per request and saturating the identity service at peak traffic.</p>
     <div class="code-panel">
-      <span class="path">[FILE PATH]</span>
-<div class="diff-line ctx">   [CONTEXT LINE]</div>
-<div class="diff-line del">- [REMOVED LINE]</div>
-<div class="diff-line add">+ [ADDED LINE]</div>
+      <span class="path">internal/oauth/token_store.go</span>
+<div class="diff-line ctx">  func (s *TokenStore) Get(tenant string) (*Token, error) {</div>
+<div class="diff-line del">-     if cached, ok := s.cache.Get(tenant); ok { return cached, nil }</div>
+<div class="diff-line add">+     // Always fetch fresh — single source of truth</div>
+<div class="diff-line ctx">      return s.client.GetToken(ctx, tenant)</div>
+<div class="diff-line ctx">  }</div>
     </div>
   </section>
 
@@ -109,7 +115,11 @@ a:focus-visible,button:focus-visible,details summary:focus-visible{outline:2px s
     <h2>Impact</h2>
     <hr class="rule">
     <table class="impact">
-      <tr><th>[METRIC]</th><td>[VALUE]</td></tr>
+      <tr><th>Duration of impact</th><td>47m (14:08 → 14:55 UTC)</td></tr>
+      <tr><th>Failed OAuth callbacks</th><td>3,112 (3.1%)</td></tr>
+      <tr><th>Tenants affected</th><td>184 of 6,420</td></tr>
+      <tr><th>Customer-reported tickets</th><td>9</td></tr>
+      <tr><th>Revenue at risk</th><td>~$2,300 (refund-eligible)</td></tr>
     </table>
   </section>
 
@@ -117,8 +127,11 @@ a:focus-visible,button:focus-visible,details summary:focus-visible{outline:2px s
     <h2>Action items</h2>
     <hr class="rule">
     <div class="actions">
-      <div class="ai-row done"><span class="ai-check"></span><span class="ai-avatar">[INIT]</span><span class="ai-desc">[ACTION]</span><span class="ai-due">[DATE]</span></div>
-      <div class="ai-row"><span class="ai-check"></span><span class="ai-avatar">[INIT]</span><span class="ai-desc">[ACTION]</span><span class="ai-due">[DATE]</span></div>
+      <div class="ai-row done"><span class="ai-check"></span><span class="ai-avatar">MO</span><span class="ai-desc">Roll back v2.41.0 and re-ship token-rotation with a 5-minute cache TTL</span><span class="ai-due">2026-05-12</span></div>
+      <div class="ai-row done"><span class="ai-check"></span><span class="ai-avatar">JK</span><span class="ai-desc">Notify affected tenants and process refund-eligible accounts</span><span class="ai-due">2026-05-13</span></div>
+      <div class="ai-row"><span class="ai-check"></span><span class="ai-avatar">PT</span><span class="ai-desc">Add load test that catches identity-service RPC spikes in CI before deploy</span><span class="ai-due">2026-05-22</span></div>
+      <div class="ai-row"><span class="ai-check"></span><span class="ai-avatar">MO</span><span class="ai-desc">Document the cache-first invariant in <code>docs/oauth/architecture.md</code></span><span class="ai-due">2026-05-27</span></div>
+      <div class="ai-row"><span class="ai-check"></span><span class="ai-avatar">SD</span><span class="ai-desc">Set <code>identity_service_rps</code> SLO alert at 80% of measured capacity</span><span class="ai-due">2026-06-03</span></div>
     </div>
   </section>
   </main>

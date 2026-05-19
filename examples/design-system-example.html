@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bloom Design System — Living Reference</title>
+<style>
+:root {
+  --ivory:#FAF9F5;--slate:#141413;--clay:#D97757;--oat:#E3DACC;--olive:#788C5D;
+  --rust:#B04A3F;--gray-100:#F0EEE6;--gray-300:#D1CFC5;--gray-500:#87867F;
+  --gray-700:#3D3D3A;--white:#FFFFFF;
+  --serif:ui-serif,Georgia,"Times New Roman",serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Monaco,Consolas,monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--ivory);
+  color: var(--gray-700);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.6;
+  padding: 56px 32px 96px;
+  -webkit-font-smoothing: antialiased;
+}
+.page { max-width: 1080px; margin: 0 auto; }
+header.intro { margin-bottom: 56px; max-width: 720px; }
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gray-500);
+  margin-bottom: 14px;
+}
+h1 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 44px;
+  letter-spacing: -0.015em;
+  line-height: 1.1;
+  color: var(--slate);
+  margin-bottom: 18px;
+}
+.lede { font-size: 17px; color: var(--gray-700); }
+section { margin-bottom: 64px; }
+h2 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 26px;
+  color: var(--slate);
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+.sec-note { color: var(--gray-500); font-size: 14px; margin-bottom: 24px; }
+
+/* Color swatches */
+.swatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 14px;
+}
+.swatch {
+  background: var(--white);
+  border: 1.5px solid var(--gray-300);
+  border-radius: 12px;
+  padding: 14px;
+}
+.swatch .chip {
+  height: 86px;
+  border-radius: 8px;
+  border: 1px solid rgba(20,20,19,0.08);
+  margin-bottom: 12px;
+}
+.swatch .name { font-weight: 600; color: var(--slate); font-size: 14px; }
+.swatch .var, .swatch .hex {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--gray-500);
+  margin-top: 2px;
+  display: block;
+}
+.swatch button.copy {
+  margin-top: 10px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--gray-500);
+  background: var(--gray-100);
+  border: 1px solid var(--gray-300);
+  border-radius: 6px;
+  padding: 5px 9px;
+  cursor: pointer;
+}
+.swatch button.copy:hover { color: var(--slate); }
+.swatch button.copy.copied { background: var(--olive); color: var(--white); border-color: var(--olive); }
+
+/* Typography scale */
+.type-row {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 24px;
+  align-items: baseline;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--gray-300);
+}
+.type-row:last-child { border-bottom: none; }
+.type-meta { font-family: var(--mono); font-size: 12px; color: var(--gray-500); padding-top: 6px; }
+.type-sample.h-display { font-family: var(--serif); font-weight: 500; font-size: 44px; line-height: 1.1; color: var(--slate); }
+.type-sample.h-1 { font-family: var(--serif); font-weight: 500; font-size: 30px; color: var(--slate); }
+.type-sample.h-2 { font-family: var(--serif); font-weight: 500; font-size: 22px; color: var(--slate); }
+.type-sample.body { font-family: var(--sans); font-size: 15px; color: var(--gray-700); }
+.type-sample.mono { font-family: var(--mono); font-size: 13px; color: var(--slate); background: var(--gray-100); padding: 6px 10px; border-radius: 6px; display: inline-block; }
+
+/* Components */
+.components {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+}
+.component-card {
+  background: var(--white);
+  border: 1.5px solid var(--gray-300);
+  border-radius: 12px;
+  padding: 22px;
+}
+.component-card h3 { font-family: var(--serif); font-weight: 500; color: var(--slate); font-size: 17px; margin-bottom: 14px; }
+
+.btn {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 18px;
+  border-radius: 8px;
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  margin: 4px 6px 4px 0;
+}
+.btn.primary { background: var(--clay); color: var(--white); }
+.btn.primary:hover { background: var(--rust); }
+.btn.secondary { background: var(--white); color: var(--slate); border-color: var(--gray-300); }
+.btn.secondary:hover { background: var(--gray-100); }
+.btn.ghost { background: transparent; color: var(--clay); padding-left: 12px; padding-right: 12px; }
+.btn.ghost:hover { background: var(--oat); }
+
+.pill {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  margin: 3px 4px 3px 0;
+}
+.pill.olive { background: rgba(120,140,93,0.15); color: var(--olive); }
+.pill.clay  { background: rgba(217,119,87,0.15); color: var(--clay); }
+.pill.sand  { background: var(--oat); color: var(--gray-700); }
+.pill.slate { background: var(--gray-100); color: var(--gray-700); border: 1px solid var(--gray-300); }
+
+input[type="text"] {
+  font-family: var(--sans); font-size: 14px;
+  padding: 9px 12px;
+  border: 1.5px solid var(--gray-300);
+  border-radius: 8px;
+  background: var(--white);
+  color: var(--slate);
+  width: 100%;
+  margin-top: 4px;
+}
+label.fld { font-size: 12.5px; color: var(--gray-500); display: block; margin-bottom: 4px; }
+
+/* Live preview footer */
+.live-preview {
+  background: var(--slate);
+  color: var(--ivory);
+  border-radius: 12px;
+  padding: 26px 28px;
+  margin-top: 12px;
+}
+.live-preview .label {
+  font-family: var(--mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--oat);
+  margin-bottom: 14px;
+}
+.live-preview h3 { font-family: var(--serif); font-weight: 500; font-size: 22px; color: var(--white); margin-bottom: 10px; }
+.live-preview p { color: var(--gray-300); margin-bottom: 14px; }
+.live-preview .btn { background: var(--clay); color: var(--white); }
+
+button:focus-visible, a:focus-visible, input:focus-visible {
+  outline: 2px solid var(--clay); outline-offset: 2px; border-radius: 4px;
+}
+@media print {
+  body { background: var(--ivory); color: var(--slate); padding: 24px; }
+  .swatches, .components { grid-template-columns: repeat(2, 1fr); }
+  .swatch, .component-card, .live-preview, .type-row { break-inside: avoid; }
+  .swatch button.copy { display: none; }
+  .live-preview { background: var(--gray-100); color: var(--slate); }
+  .live-preview h3, .live-preview p { color: var(--slate); }
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="intro">
+    <div class="eyebrow">Bloom · Living design system</div>
+    <h1>Tokens, type, and components — all in one file</h1>
+    <p class="lede">This is what a Bloom design-system reference looks like as an artifact: copy-able tokens, the full type scale, and the small set of components every Bloom-produced page composes from. No build step, no external dependencies, prints cleanly.</p>
+  </header>
+  <main>
+
+  <section id="colors">
+    <h2>Colors</h2>
+    <p class="sec-note">Tap a swatch's <code>copy</code> button to copy the <code>var(--token)</code> reference to your clipboard.</p>
+    <div class="swatches">
+      <div class="swatch"><div class="chip" style="background:var(--ivory)"></div><div class="name">Ivory</div><span class="var">var(--ivory)</span><span class="hex">#FAF9F5</span><button class="copy" data-token="var(--ivory)">copy var</button></div>
+      <div class="swatch"><div class="chip" style="background:var(--slate)"></div><div class="name">Slate</div><span class="var">var(--slate)</span><span class="hex">#141413</span><button class="copy" data-token="var(--slate)">copy var</button></div>
+      <div class="swatch"><div class="chip" style="background:var(--clay)"></div><div class="name">Clay</div><span class="var">var(--clay)</span><span class="hex">#D97757</span><button class="copy" data-token="var(--clay)">copy var</button></div>
+      <div class="swatch"><div class="chip" style="background:var(--oat)"></div><div class="name">Oat</div><span class="var">var(--oat)</span><span class="hex">#E3DACC</span><button class="copy" data-token="var(--oat)">copy var</button></div>
+      <div class="swatch"><div class="chip" style="background:var(--olive)"></div><div class="name">Olive</div><span class="var">var(--olive)</span><span class="hex">#788C5D</span><button class="copy" data-token="var(--olive)">copy var</button></div>
+      <div class="swatch"><div class="chip" style="background:var(--rust)"></div><div class="name">Rust</div><span class="var">var(--rust)</span><span class="hex">#B04A3F</span><button class="copy" data-token="var(--rust)">copy var</button></div>
+      <div class="swatch"><div class="chip" style="background:var(--gray-100)"></div><div class="name">Gray 100</div><span class="var">var(--gray-100)</span><span class="hex">#F0EEE6</span><button class="copy" data-token="var(--gray-100)">copy var</button></div>
+      <div class="swatch"><div class="chip" style="background:var(--gray-300)"></div><div class="name">Gray 300</div><span class="var">var(--gray-300)</span><span class="hex">#D1CFC5</span><button class="copy" data-token="var(--gray-300)">copy var</button></div>
+      <div class="swatch"><div class="chip" style="background:var(--gray-500)"></div><div class="name">Gray 500</div><span class="var">var(--gray-500)</span><span class="hex">#87867F</span><button class="copy" data-token="var(--gray-500)">copy var</button></div>
+      <div class="swatch"><div class="chip" style="background:var(--gray-700)"></div><div class="name">Gray 700</div><span class="var">var(--gray-700)</span><span class="hex">#3D3D3A</span><button class="copy" data-token="var(--gray-700)">copy var</button></div>
+    </div>
+  </section>
+
+  <section id="type">
+    <h2>Typography</h2>
+    <p class="sec-note">Two families — serif (<code>--serif</code>) for headings, sans (<code>--sans</code>) for body, mono (<code>--mono</code>) for code, tokens, and metadata.</p>
+    <div class="type-row"><div class="type-meta">Display<br>44 / 1.1</div><div class="type-sample h-display">The Unreasonable Effectiveness of HTML</div></div>
+    <div class="type-row"><div class="type-meta">H1<br>30 / 1.25</div><div class="type-sample h-1">Sprint 44 — Acme</div></div>
+    <div class="type-row"><div class="type-meta">H2<br>22 / 1.3</div><div class="type-sample h-2">Highlights from the last two weeks</div></div>
+    <div class="type-row"><div class="type-meta">Body<br>15 / 1.6</div><div class="type-sample body">The skill captures the patterns from "The Unreasonable Effectiveness of HTML" and makes them reproducible across every agent harness.</div></div>
+    <div class="type-row"><div class="type-meta">Mono<br>13 / 1.4</div><div class="type-sample mono">var(--clay) /* #D97757 */</div></div>
+  </section>
+
+  <section id="components">
+    <h2>Components</h2>
+    <p class="sec-note">Buttons, pills, inputs — the small palette every Bloom artifact draws from.</p>
+    <div class="components">
+      <div class="component-card">
+        <h3>Buttons</h3>
+        <button class="btn primary">Primary action</button>
+        <button class="btn secondary">Secondary</button>
+        <button class="btn ghost">Ghost</button>
+      </div>
+      <div class="component-card">
+        <h3>Pills</h3>
+        <span class="pill olive">Shipped</span>
+        <span class="pill clay">Blocking</span>
+        <span class="pill sand">In review</span>
+        <span class="pill slate">Triaged</span>
+      </div>
+      <div class="component-card">
+        <h3>Input</h3>
+        <label class="fld" for="ex">Tenant ID</label>
+        <input id="ex" type="text" value="acme-prod-east">
+      </div>
+    </div>
+  </section>
+
+  <section id="preview">
+    <h2>Composed preview</h2>
+    <p class="sec-note">A miniature page using the tokens above.</p>
+    <div class="live-preview">
+      <div class="label">Sprint 44 · highlight card</div>
+      <h3>Shipped the onboarding empty-state rewrite</h3>
+      <p>Mira Okafor led the redesign; rollout reached 100% of tenants on Tuesday. Median time-to-first-action dropped from 4m 12s to 1m 38s.</p>
+      <button class="btn">View metrics →</button>
+    </div>
+  </section>
+  </main>
+</div>
+<script>
+document.querySelectorAll('button.copy').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var token = btn.dataset.token;
+    if (!token) return;
+    navigator.clipboard.writeText(token).then(function () {
+      var original = btn.textContent;
+      btn.classList.add('copied');
+      btn.textContent = 'copied!';
+      setTimeout(function () {
+        btn.classList.remove('copied');
+        btn.textContent = original;
+      }, 1200);
+    }).catch(function () {
+      btn.textContent = 'copy failed';
+    });
+  });
+});
+</script>
+</body>
+</html>
