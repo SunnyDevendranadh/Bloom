@@ -45,6 +45,8 @@ tbody tr:hover{background:var(--ivory)}
 .highlights li::before{content:"";position:absolute;left:6px;top:8px;width:7px;height:7px;border-radius:2px;background:var(--clay)}
 .highlights li strong{color:var(--slate);font-weight:600}
 a:focus-visible,button:focus-visible{outline:2px solid var(--clay);outline-offset:2px;border-radius:4px}
+@media (max-width: 640px) { .page { padding: 1rem; } }
+@media (max-width: 960px) { .page { max-width: 100%; } }
 @media print{
   body{background:var(--ivory);color:var(--slate);padding:24px}
   .auto-pill{display:none}

@@ -92,6 +92,8 @@ footer h2 { font-family: var(--serif); font-weight: 500; font-size: 22px; color:
 a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible {
   outline: 2px solid var(--clay); outline-offset: 2px; border-radius: 4px;
 }
+@media (max-width: 640px) { .page { padding: 1rem; } }
+@media (max-width: 960px) { .page { max-width: 100%; } }
 @media print {
   body { background: var(--ivory); color: var(--slate); padding: 24px; }
   .file-card, .bubble, footer.next-steps, header.pr-head { break-inside: avoid; }
