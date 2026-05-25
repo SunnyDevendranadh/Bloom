@@ -28,6 +28,7 @@ var userInput = window.location.hash;
 document.body.innerHTML = userInput;
 document.body.innerHTML = `<div>${userInput}</div>`;
 document.body.innerHTML = "<div>safe static literal</div>";
+navigator.clipboard.writeText(document.body.innerHTML);
 </script>
 </body>
 </html>
