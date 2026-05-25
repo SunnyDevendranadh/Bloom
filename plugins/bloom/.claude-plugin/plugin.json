@@ -1,6 +1,6 @@
 {
   "name": "bloom",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "Per-session sticky HTML artifacts (reports, reviews, plans). Includes static report templates and interactive references (triage board, animation sandbox). Activate with /bloom.",
   "author": {
     "name": "Sunny Devendranadh",
@@ -9,5 +9,14 @@
   "homepage": "https://github.com/SunnyDevendranadh/Bloom",
   "repository": "https://github.com/SunnyDevendranadh/Bloom",
   "license": "MIT",
-  "keywords": ["html", "artifacts", "session-mode", "bloom", "markdown", "reports", "code-review", "design-system"]
+  "keywords": [
+    "html",
+    "artifacts",
+    "session-mode",
+    "bloom",
+    "markdown",
+    "reports",
+    "code-review",
+    "design-system"
+  ]
 }
