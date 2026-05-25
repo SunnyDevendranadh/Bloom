@@ -4,6 +4,8 @@ How to install **Bloom** — the per-session sticky HTML skill — for every maj
 
 Bloom is sticky: once activated in a session, it stays on until the session ends or the user deactivates it. Each harness section below shows the marketplace install command (where available), the manual install path as a fallback, plus the activation and deactivation triggers.
 
+For slash-command support, stickiness, and what each harness loads into context, see [`harness-capabilities.md`](./harness-capabilities.md).
+
 ---
 
 ## Marketplace install (recommended)
@@ -134,18 +136,18 @@ cp -r .claude/skills/bloom/ ~/.claude/skills/
 
 Search for `bloom` and select **Install Plugin**.
 
-**Manual install** (works today): the Codex CLI reads `AGENTS.md` at the repo root and `~/.codex/AGENTS.md` for global instructions.
+**Manual install** (works today): the Codex CLI reads `AGENTS.md` at the repo root and `~/.codex/AGENTS.md` for global instructions. By default, install loads **[`droids/bloom-core.md`](../droids/bloom-core.md)** (~210 lines) — enough for reports, reviews, plans, and companion `.html` files. For interactive UI (triage boards, animation sandboxes, annotated diffs, slide decks), also vendor [`droids/bloom-patterns.md`](../droids/bloom-patterns.md) into the repo or append it to a separate `AGENTS-patterns.md`.
 
 ```bash
-# Project-level bloom (this repo only)
-cp droids/bloom.md /path/to/your-project/AGENTS.md
+# Project-level bloom core (this repo only)
+curl -fsSL https://raw.githubusercontent.com/SunnyDevendranadh/Bloom/main/droids/bloom-core.md >> /path/to/your-project/AGENTS.md
 
-# Global bloom (all your Codex CLI sessions)
+# Global bloom core (all your Codex CLI sessions)
 mkdir -p ~/.codex
-cp droids/bloom.md ~/.codex/AGENTS.md
+curl -fsSL https://raw.githubusercontent.com/SunnyDevendranadh/Bloom/main/droids/bloom-core.md >> ~/.codex/AGENTS.md
 ```
 
-If `AGENTS.md` already exists in either location, append the universal AGENTS.md snippet from the section above. Bloom activates the first time the user message in a Codex CLI session contains `/bloom`, "bloom on", or "let it bloom".
+If `AGENTS.md` already exists in either location, the curl commands append after existing instructions. Bloom activates the first time the user message in a Codex CLI session contains `/bloom`, "bloom on", or "let it bloom". See [`harness-capabilities.md`](./harness-capabilities.md) for what each harness loads into context.
 
 ---
 
@@ -157,13 +159,13 @@ If `AGENTS.md` already exists in either location, append the universal AGENTS.md
 - You should see `Bloom` in the Coding section.
 - Click the `+` next to Bloom and follow the prompts.
 
-**Manual install** (works today): the Codex App reads `AGENTS.md` from the GitHub repository it's connected to.
+**Manual install** (works today): the Codex App reads `AGENTS.md` from the GitHub repository it's connected to. Commit repo-root `AGENTS.md` with **[`droids/bloom-core.md`](../droids/bloom-core.md)** content (or run `./scripts/sync-skill-files.sh` in the Bloom repo). For interactive UI patterns, also commit [`droids/bloom-patterns.md`](../droids/bloom-patterns.md) or an `AGENTS-patterns.md` sibling.
 
-1. Commit `AGENTS.md` to your repo root (copy `droids/bloom.md` or paste the universal snippet).
+1. Commit `AGENTS.md` to your repo root (bloom-core, or paste the universal snippet).
 2. Push to the branch you connect to Codex.
 3. In the Codex App, open the project and trigger bloom with `/bloom` or "bloom on" in your first message.
 
-Bloom stays sticky for the rest of that Codex App task. To auto-activate without typing a trigger, commit a `.bloom` file at the repo root.
+Bloom stays sticky for the rest of that Codex App task. To auto-activate without typing a trigger, commit a `.bloom` file at the repo root. See [`harness-capabilities.md`](./harness-capabilities.md) for slash vs phrase activation and context size.
 
 ---
 
@@ -204,18 +206,18 @@ Update later with:
 gemini extensions update bloom
 ```
 
-**Manual install** (works today): the Gemini CLI reads `GEMINI.md` at the repo root and `~/.gemini/GEMINI.md` for global instructions.
+**Manual install** (works today): the Gemini CLI reads `GEMINI.md` at the repo root and `~/.gemini/GEMINI.md` for global instructions. By default, install loads **[`droids/bloom-core.md`](../droids/bloom-core.md)** (this repo's `GEMINI.md` is generated from core). For interactive UI, also vendor [`droids/bloom-patterns.md`](../droids/bloom-patterns.md).
 
 ```bash
-# Project-level bloom
-cp droids/bloom.md /path/to/your-project/GEMINI.md
+# Project-level bloom core
+curl -fsSL https://raw.githubusercontent.com/SunnyDevendranadh/Bloom/main/droids/bloom-core.md >> /path/to/your-project/GEMINI.md
 
-# Global bloom
+# Global bloom core
 mkdir -p ~/.gemini
-cp droids/bloom.md ~/.gemini/GEMINI.md
+curl -fsSL https://raw.githubusercontent.com/SunnyDevendranadh/Bloom/main/droids/bloom-core.md >> ~/.gemini/GEMINI.md
 ```
 
-If `GEMINI.md` already exists, paste the universal AGENTS.md snippet from above at the top — the trigger phrases work identically in Gemini CLI. A `.bloom` file at the repo root auto-activates bloom at session start.
+If `GEMINI.md` already exists, append core or paste the universal AGENTS.md snippet from above at the top — the trigger phrases work identically in Gemini CLI. A `.bloom` file at the repo root auto-activates bloom at session start. See [`harness-capabilities.md`](./harness-capabilities.md) for what loads into context.
 
 ---
 
@@ -229,14 +231,14 @@ OpenCode uses its own plugin install. Install Bloom separately even if you alrea
 Fetch and follow instructions from https://raw.githubusercontent.com/SunnyDevendranadh/Bloom/main/plugins/bloom/INSTALL.opencode.md
 ```
 
-Or use the same flow as the Codex CLI manual install — OpenCode reads `AGENTS.md` at the repo root:
+Or use the same flow as the Codex CLI manual install — OpenCode reads `AGENTS.md` at the repo root. By default, install loads **[`droids/bloom-core.md`](../droids/bloom-core.md)**; see [`plugins/bloom/INSTALL.opencode.md`](../plugins/bloom/INSTALL.opencode.md) for the one-line curl install. For interactive UI (triage boards, animation sandboxes), also vendor [`droids/bloom-patterns.md`](../droids/bloom-patterns.md).
 
 ```bash
-# Project-level
-cp droids/bloom.md /path/to/your-project/AGENTS.md
+# Project-level bloom core
+curl -fsSL https://raw.githubusercontent.com/SunnyDevendranadh/Bloom/main/droids/bloom-core.md >> /path/to/your-project/AGENTS.md
 ```
 
-If you also use OpenCode's `opencode.json` for project config, the AGENTS.md install is independent — bloom triggers work regardless of the JSON config. A `.bloom` file at the repo root auto-activates bloom.
+If you also use OpenCode's `opencode.json` for project config, the AGENTS.md install is independent — bloom triggers work regardless of the JSON config. A `.bloom` file at the repo root auto-activates bloom. See [`harness-capabilities.md`](./harness-capabilities.md) for context size and stickiness.
 
 ---
 
@@ -254,12 +256,12 @@ Or search for "bloom" in the Cursor plugin marketplace.
 
 ```bash
 mkdir -p /path/to/your-project/.cursor/rules
-cp droids/bloom.md /path/to/your-project/.cursor/rules/bloom.mdc
+cp droids/bloom-core.md /path/to/your-project/.cursor/rules/bloom.mdc
 ```
 
-**Manual install — legacy Cursor (`.cursorrules` at the repo root):**
+**Manual install (recommended):** copy [`.cursor/rules/bloom.mdc`](../.cursor/rules/bloom.mdc) into your project’s `.cursor/rules/`, or use bloom-core in repo-root [`AGENTS.md`](../AGENTS.md) (generated from [`droids/bloom-core.md`](../droids/bloom-core.md)). For interactive UI patterns, open or vendor [`droids/bloom-patterns.md`](../droids/bloom-patterns.md) when building triage boards, sandboxes, or slide decks. See [`harness-capabilities.md`](./harness-capabilities.md) for what Cursor loads into context.
 
-Paste this snippet into `.cursorrules`:
+**Legacy Cursor (`.cursorrules` at the repo root):** paste this snippet into `.cursorrules`:
 
 ```
 Bloom — per-session sticky HTML output mode.
@@ -440,7 +442,7 @@ If you want bloom available across multiple harnesses in one repo, the cheapest 
 | Factory Droid | `.factory/droids/bloom.md` |
 | Gemini CLI | `GEMINI.md` |
 | OpenCode | `AGENTS.md` |
-| Cursor | `.cursor/rules/bloom.mdc` (or `.cursorrules` legacy) |
+| Cursor | `.cursor/rules/bloom.mdc` (recommended; `.cursorrules` legacy) |
 | GitHub Copilot CLI | `AGENTS.md` |
 | GitHub Copilot (VS Code) | `.github/copilot-instructions.md` |
 | Windsurf | `.windsurfrules` |

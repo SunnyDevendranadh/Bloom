@@ -1,0 +1,8 @@
+# Bloom session artifacts (agent-generated; opt-in to commit)
+.bloom
+bloom/
+
+# Optional: uncomment if you do not want HTML companions in git
+# README.html
+# AGENTS.html
+# CLAUDE.html

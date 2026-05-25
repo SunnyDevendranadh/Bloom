@@ -4,7 +4,19 @@
 
 **Bloom** is a per-session sticky skill that makes flat markdown bloom into rich, self-contained `.html` artifacts. Drop it into any AI coding agent and reports, reviews, plans, design docs, and interactive editors come back as single `.html` files you can open, click around, and export from — because diffs, diagrams, status reports, and design comparisons are **spatial** information that loses meaning when flattened into prose.
 
+## Who is this for?
+
+Bloom works best when you want **agent-produced deliverables** you can open in a browser: PR reviews, status reports, migration plans, architecture decision records, incident timelines, and similar artifacts that benefit from layout, chips, tables, and export buttons.
+
+It is **not** aimed at everyday coding Q&A, quick one-off fixes, or teams that only want markdown inside GitHub PR comment threads.
+
+**Interactive vs static:** The skill teaches patterns for sandboxes, triage boards, and slide decks. This repo ships starter templates under [`templates/`](templates/) — mostly static report layouts plus interactive references for triage and motion. See [Templates in this repo](#templates-in-this-repo) below. For deep interactive UI, agents should also read [`droids/bloom-patterns.md`](droids/bloom-patterns.md).
+
+---
+
 Supported harnesses:
+
+Capability details (slash commands, stickiness, what each harness loads): [`docs/harness-capabilities.md`](docs/harness-capabilities.md).
 
 - **Claude Code** — `.claude/skills/bloom/` (sticky session skill)
 - **Codex CLI** (OpenAI) — `AGENTS.md`
@@ -12,7 +24,7 @@ Supported harnesses:
 - **Factory Droid** — `droids/bloom.md`
 - **Gemini CLI** (Google) — `GEMINI.md`
 - **OpenCode** (sst) — `AGENTS.md`
-- **Cursor** — `.cursorrules` or `.cursor/rules/bloom.mdc`
+- **Cursor** — [`.cursor/rules/bloom.mdc`](.cursor/rules/bloom.mdc) (recommended; legacy [`.cursorrules`](https://docs.cursor.com/context/rules) also works)
 - **GitHub Copilot CLI** — `AGENTS.md`
 
 Plus Windsurf, Aider, GitHub Copilot for VS Code, Continue, Replit Agent, Pi, and any other system-prompt-aware agent.
@@ -88,7 +100,7 @@ bloom
 
 - Select `Install Plugin`.
 
-**Manual install** (works today): copy `droids/bloom.md` to your repo's `AGENTS.md` or `~/.codex/AGENTS.md`.
+**Manual install** (works today): use repo-root [`AGENTS.md`](AGENTS.md), or copy it to `~/.codex/AGENTS.md` for global use.
 
 ### Codex App
 
@@ -98,7 +110,7 @@ Bloom is queued for submission to the [official Codex plugin marketplace](https:
 - You should see `Bloom` in the Coding section.
 - Click the `+` next to Bloom and follow the prompts.
 
-**Manual install** (works today): commit `AGENTS.md` (copied from `droids/bloom.md`) to the GitHub branch you connect to Codex.
+**Manual install** (works today): commit repo-root [`AGENTS.md`](AGENTS.md) to the GitHub branch you connect to Codex.
 
 ### Factory Droid
 
@@ -130,7 +142,7 @@ gemini extensions install https://github.com/SunnyDevendranadh/Bloom
 gemini extensions update bloom
 ```
 
-**Manual install** (works today): copy `droids/bloom.md` to `GEMINI.md` at the repo root or `~/.gemini/GEMINI.md` global.
+**Manual install** (works today): use repo-root [`GEMINI.md`](GEMINI.md) (points at `AGENTS.md`), or copy [`AGENTS.md`](AGENTS.md) to `~/.gemini/GEMINI.md` global.
 
 ### OpenCode
 
@@ -142,7 +154,7 @@ OpenCode uses its own plugin install; install Bloom separately even if you alrea
 Fetch and follow instructions from https://raw.githubusercontent.com/SunnyDevendranadh/Bloom/main/plugins/bloom/INSTALL.opencode.md
 ```
 
-**Manual install** (works today): copy `droids/bloom.md` to your repo's `AGENTS.md`.
+**Manual install** (works today): use repo-root [`AGENTS.md`](AGENTS.md).
 
 ### Cursor
 
@@ -154,7 +166,7 @@ Fetch and follow instructions from https://raw.githubusercontent.com/SunnyDevend
 
 - Or search for "bloom" in the plugin marketplace.
 
-**Manual install** (works today): copy `droids/bloom.md` to `.cursor/rules/bloom.mdc` or paste the bloom snippet into `.cursorrules`.
+**Manual install** (works today): copy [`.cursor/rules/bloom.mdc`](.cursor/rules/bloom.mdc) into your project’s `.cursor/rules/` (summary rule; full skill in [`AGENTS.md`](AGENTS.md)). **Legacy:** paste the same content into a repo-root `.cursorrules` file if your Cursor setup does not use `.mdc` rules yet.
 
 ### GitHub Copilot CLI
 
@@ -170,7 +182,7 @@ copilot plugin marketplace add SunnyDevendranadh/Bloom
 copilot plugin install bloom@bloom
 ```
 
-**Manual install** (works today): copy `droids/bloom.md` to your repo's `AGENTS.md`.
+**Manual install** (works today): use repo-root [`AGENTS.md`](AGENTS.md).
 
 ### Other harnesses
 
@@ -204,6 +216,10 @@ Once activated, bloom is **sticky for the rest of the session**. You don't re-in
 - Companion to a reserved `.md` (e.g., `README.md`) → sibling `.html` next to it (`README.html`)
 - The `.md` stays canonical so harnesses and GitHub keep working
 
+### Keeping your repo clean
+
+Agent artifacts default to `./bloom/` and an optional `.bloom` session marker. Add the lines in [`.gitignore`](.gitignore) if you do not want those committed. Commit templates and hand-authored HTML; ignore dated agent drafts unless you want them in history.
+
 **What gets produced as HTML**
 
 Reports, reviews, comparisons, documentation, plans, explainers, diagrams, slide decks, postmortems, triage boards, flag/prompt editors — anything you'd otherwise dump as a wall of markdown.
@@ -220,8 +236,13 @@ One-line answers, tool status updates, errors, short clarifying questions, commi
 Bloom/
 ├── README.md                                    # This file
 ├── LICENSE                                      # MIT
+├── AGENTS.md                                    # Bloom skill (Codex, OpenCode, Copilot CLI, Aider)
+├── GEMINI.md                                    # Gemini CLI pointer to AGENTS.md
 ├── .claude-plugin/
 │   └── marketplace.json                         # Bloom marketplace listing
+├── .cursor/
+│   └── rules/
+│       └── bloom.mdc                            # Cursor rule (HTML globs → AGENTS.md)
 ├── plugins/
 │   └── bloom/
 │       ├── .claude-plugin/
@@ -235,7 +256,7 @@ Bloom/
 │       └── bloom/
 │           └── SKILL.md                         # Claude Code skill (manual install / self-use)
 ├── droids/
-│   └── bloom.md                                 # The canonical skill (Factory droid + universal)
+│   └── bloom.md                                 # Canonical skill source (Factory droid)
 ├── docs/
 │   ├── harness-setup.md                         # Per-agent setup guides
 │   ├── categories.md                            # The 9 document categories explained
@@ -244,7 +265,7 @@ Bloom/
 │   ├── construction-rules.md                    # The 12 rules for producing HTML (v1)
 │   ├── construction-rules-v2.md                 # Rule 9 revision for templates
 │   └── security.md                              # Security hardening guide
-├── bloom-validator/                             # Zero-dep TypeScript CLI for the 12+8 rules
+├── bloom-validator/                             # Zero-dep CLI — construction + security rules
 │   ├── README.md
 │   ├── package.json
 │   ├── src/
@@ -254,19 +275,21 @@ Bloom/
 │   │   └── rules/                               # One file per rule
 │   └── tests/                                   # node:test suite + fixtures
 ├── templates/
-│   ├── exploration-code-approaches.html
+│   ├── accessibility-report.html
 │   ├── annotated-pr-review.html
-│   ├── design-system-reference.html
-│   ├── animation-sandbox.html
-│   ├── annotated-flowchart.html
-│   ├── slide-deck.html
-│   ├── feature-explainer.html
-│   ├── status-report.html
-│   ├── status-report-v2.html                    # Worked v2 example (data-template slots)
+│   ├── api-documentation.html
+│   ├── architecture-decision.html
+│   ├── dependency-audit.html
+│   ├── design-review.html
+│   ├── exploration-code-approaches.html
 │   ├── incident-timeline.html
-│   ├── triage-board.html
-│   ├── feature-flag-editor.html
-│   └── prompt-tuner.html
+│   ├── migration-plan.html
+│   ├── monthly-review.html
+│   ├── onboarding-guide.html
+│   ├── sprint-retro.html
+│   ├── status-report-v2.html                    # Worked v2 example (data-template slots)
+│   ├── status-report.html
+│   └── weekly-digest.html
 └── examples/
     ├── pr-review-example.html
     ├── incident-report-example.html
@@ -288,6 +311,26 @@ Bloom/
 | 7 | **Research & Learning** | Walls of explanation text | Collapsible steps, tabbed configs, interactive demos, glossary sidebars |
 | 8 | **Reports** | Status emails nobody reads | Timeline cards, stat bands, inline bar charts |
 | 9 | **Custom Editors** | "Prioritize these in a doc" | Drag boards with markdown export, flag toggles with copy-diff, prompt editors with live preview |
+
+**What ships in this repo today:** The templates under [`templates/`](templates/) are mostly **static report layouts** (categories 1–3, 8) — exploration cards, annotated PR review, design review, status reports, retros, audits, and similar. Agents can still *generate* slide decks, animation sandboxes, and drag-and-drop editors (categories 4–7, 9) from the skill; those patterns are documented in [`docs/categories.md`](docs/categories.md) and [`AGENTS.md`](AGENTS.md), not bundled as starter HTML yet. [`templates/status-report-v2.html`](templates/status-report-v2.html) is the richest reference (dark mode, motion tokens, light interaction).
+
+---
+
+## Templates in this repo
+
+Starter `.html` files under [`templates/`](templates/). Agents can copy structure and swap in real content; run [`bloom-validator`](bloom-validator/) on anything you edit.
+
+| Template | Interactive | Best for |
+|---|---|---|
+| [`status-report-v2.html`](templates/status-report-v2.html) | Light | Sprint/status |
+| [`annotated-pr-review.html`](templates/annotated-pr-review.html) | No | PR review |
+| [`exploration-code-approaches.html`](templates/exploration-code-approaches.html) | No | Approach comparison |
+| [`incident-timeline.html`](templates/incident-timeline.html) | No | Incidents |
+| [`triage-board.html`](templates/triage-board.html) | Yes | Prioritization |
+| [`animation-sandbox.html`](templates/animation-sandbox.html) | Yes | Motion/easing |
+| Other report starters | No | [`status-report.html`](templates/status-report.html), [`sprint-retro.html`](templates/sprint-retro.html), [`weekly-digest.html`](templates/weekly-digest.html), [`monthly-review.html`](templates/monthly-review.html), [`migration-plan.html`](templates/migration-plan.html), [`onboarding-guide.html`](templates/onboarding-guide.html), [`architecture-decision.html`](templates/architecture-decision.html), [`api-documentation.html`](templates/api-documentation.html), [`design-review.html`](templates/design-review.html), [`dependency-audit.html`](templates/dependency-audit.html), [`accessibility-report.html`](templates/accessibility-report.html) |
+
+Worked examples (not templates): [`examples/`](examples/).
 
 ---
 
@@ -334,6 +377,8 @@ All templates follow the security guidelines in [`docs/security.md`](docs/securi
 
 ## Validation
 
+[![bloom-validator](https://github.com/SunnyDevendranadh/Bloom/actions/workflows/validator.yml/badge.svg)](https://github.com/SunnyDevendranadh/Bloom/actions/workflows/validator.yml)
+
 [`bloom-validator/`](bloom-validator/) is a zero-dependency TypeScript CLI that checks any `.html` file against Bloom's construction and security rules. It uses Node ≥ 22.6 native TypeScript type-stripping — no build step.
 
 ```bash
@@ -343,6 +388,13 @@ node bloom-validator/src/index.ts a.html b.html c.html
 ```
 
 Exit codes: `0` clean, `1` errors found, `2` invalid usage. See [`bloom-validator/README.md`](bloom-validator/README.md) for the full rule table and JSON output shape.
+
+**Contributors:** run the test suite and validate changed HTML before opening a PR:
+
+```bash
+cd bloom-validator && npm test
+node src/index.ts ../templates/your-template.html
+```
 
 ---
 
@@ -369,9 +421,21 @@ See [`docs/construction-rules.md`](docs/construction-rules.md) for the full 12-r
 
 1. Fork this repo
 2. Create a feature branch
-3. Add or improve templates, docs, or the skill itself
-4. Make sure templates pass the construction rules checklist
-5. Open a PR
+3. Add or improve templates, docs, the skill, or validator rules
+4. After editing [`droids/bloom-core.md`](droids/bloom-core.md), run `./scripts/sync-skill-files.sh` to regenerate [`AGENTS.md`](AGENTS.md) and [`GEMINI.md`](GEMINI.md)
+5. **Validate changes** (Node ≥ 22.6):
+   ```bash
+   cd bloom-validator && npm test
+   ```
+   For new or edited templates/examples:
+   ```bash
+   cd bloom-validator
+   node src/index.ts ../templates/your-file.html
+   node src/index.ts ../examples/your-file.html
+   ```
+   CI runs the same checks on every push to `main` (see [`.github/workflows/validator.yml`](.github/workflows/validator.yml)).
+6. Skim [`docs/construction-rules.md`](docs/construction-rules.md) and the [manual checklist](bloom-validator/README.md#manual-checklist-not-automated) for items the CLI does not cover yet (e.g. `file://` smoke test, progressive enhancement)
+7. Open a PR
 
 ---
 

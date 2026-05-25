@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bloom — Design Token Reference (Example)</title>
+<style>
+:root {
+  --ivory: #FAF9F5;
+  --slate: #141413;
+  --clay: #D97757;
+  --oat: #E3DACC;
+  --olive: #788C5D;
+  --rust: #B04A3F;
+  --gray-100: #F0EEE6;
+  --gray-300: #D1CFC5;
+  --gray-500: #87867F;
+  --gray-700: #3D3D3A;
+  --white: #FFFFFF;
+  --serif: ui-serif, Georgia, "Times New Roman", serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--ivory);
+  color: var(--gray-700);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.6;
+  padding: 48px 24px 80px;
+  -webkit-font-smoothing: antialiased;
+}
+.page { max-width: 920px; margin: 0 auto; }
+img { max-width: 100%; }
+:focus-visible { outline: 2px solid var(--clay); outline-offset: 2px; }
+header { margin-bottom: 36px; }
+h1 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 32px;
+  color: var(--slate);
+  margin-bottom: 8px;
+}
+.lead { color: var(--gray-500); font-size: 14px; max-width: 52ch; }
+main section { margin-bottom: 40px; }
+h2 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 22px;
+  color: var(--slate);
+  margin-bottom: 16px;
+}
+.swatch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 14px;
+}
+.swatch {
+  background: var(--white);
+  border: 1.5px solid var(--gray-300);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.swatch-chip {
+  height: 72px;
+  border-bottom: 1.5px solid var(--gray-300);
+}
+.chip-ivory { background: var(--ivory); }
+.chip-slate { background: var(--slate); }
+.chip-clay { background: var(--clay); }
+.chip-oat { background: var(--oat); }
+.chip-olive { background: var(--olive); }
+.chip-rust { background: var(--rust); }
+.chip-gray-100 { background: var(--gray-100); }
+.chip-gray-300 { background: var(--gray-300); }
+.chip-gray-500 { background: var(--gray-500); }
+.chip-gray-700 { background: var(--gray-700); }
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.type-xl { font-size: 28px; }
+.type-base { font-size: 15px; }
+.swatch-meta { padding: 12px 14px; }
+.swatch-name {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--slate);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.swatch-use { font-size: 12px; color: var(--gray-500); }
+.type-row {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--gray-100);
+}
+.type-row:last-child { border-bottom: none; }
+.type-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--gray-500);
+  width: 72px;
+  flex-shrink: 0;
+}
+.sample-serif { font-family: var(--serif); font-weight: 500; color: var(--slate); }
+.sample-sans { font-family: var(--sans); color: var(--gray-700); }
+.sample-mono { font-family: var(--mono); font-size: 13px; color: var(--slate); }
+.btn-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+.btn {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1.5px solid var(--gray-300);
+  background: var(--white);
+  color: var(--slate);
+  cursor: pointer;
+}
+.btn-primary { background: var(--clay); border-color: var(--clay); color: var(--white); }
+.btn-secondary { background: var(--olive); border-color: var(--olive); color: var(--white); }
+.btn-ghost { background: var(--oat); border-color: var(--oat); color: var(--slate); }
+@media (max-width: 960px) { body { padding: 32px 20px 64px; } h1 { font-size: 28px; } }
+@media (max-width: 640px) { body { padding: 24px 16px 56px; } h1 { font-size: 24px; } }
+@media print { nav, button, .toolbar { display: none; } section { break-inside: avoid; } }
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <h1>Bloom design tokens</h1>
+    <p class="lead">Example reference page for the warm palette used across Bloom artifacts. All colors are defined once in <code>:root</code> and consumed via <code>var(--token)</code>.</p>
+  </header>
+  <main>
+    <section>
+      <h2>Color swatches</h2>
+      <div class="swatch-grid">
+        <article class="swatch">
+          <div class="swatch-chip chip-ivory"><span class="visually-hidden">Ivory</span></div>
+          <div class="swatch-meta"><div class="swatch-name">--ivory</div><div class="swatch-use">Page background</div></div>
+        </article>
+        <article class="swatch">
+          <div class="swatch-chip chip-slate"><span class="visually-hidden">Slate</span></div>
+          <div class="swatch-meta"><div class="swatch-name">--slate</div><div class="swatch-use">Headings, emphasis</div></div>
+        </article>
+        <article class="swatch">
+          <div class="swatch-chip chip-clay"><span class="visually-hidden">Clay</span></div>
+          <div class="swatch-meta"><div class="swatch-name">--clay</div><div class="swatch-use">Primary accent, focus</div></div>
+        </article>
+        <article class="swatch">
+          <div class="swatch-chip chip-oat"><span class="visually-hidden">Oat</span></div>
+          <div class="swatch-meta"><div class="swatch-name">--oat</div><div class="swatch-use">Warm fills, hover</div></div>
+        </article>
+        <article class="swatch">
+          <div class="swatch-chip chip-olive"><span class="visually-hidden">Olive</span></div>
+          <div class="swatch-meta"><div class="swatch-name">--olive</div><div class="swatch-use">Success, shipped</div></div>
+        </article>
+        <article class="swatch">
+          <div class="swatch-chip chip-rust"><span class="visually-hidden">Rust</span></div>
+          <div class="swatch-meta"><div class="swatch-name">--rust</div><div class="swatch-use">Danger, blocking</div></div>
+        </article>
+        <article class="swatch">
+          <div class="swatch-chip chip-gray-100"><span class="visually-hidden">Gray 100</span></div>
+          <div class="swatch-meta"><div class="swatch-name">--gray-100</div><div class="swatch-use">Subtle fills</div></div>
+        </article>
+        <article class="swatch">
+          <div class="swatch-chip chip-gray-300"><span class="visually-hidden">Gray 300</span></div>
+          <div class="swatch-meta"><div class="swatch-name">--gray-300</div><div class="swatch-use">Borders, dividers</div></div>
+        </article>
+        <article class="swatch">
+          <div class="swatch-chip chip-gray-500"><span class="visually-hidden">Gray 500</span></div>
+          <div class="swatch-meta"><div class="swatch-name">--gray-500</div><div class="swatch-use">Captions, muted</div></div>
+        </article>
+        <article class="swatch">
+          <div class="swatch-chip chip-gray-700"><span class="visually-hidden">Gray 700</span></div>
+          <div class="swatch-meta"><div class="swatch-name">--gray-700</div><div class="swatch-use">Body text</div></div>
+        </article>
+      </div>
+    </section>
+    <section>
+      <h2>Type scale</h2>
+      <div class="type-row"><span class="type-label">serif</span><span class="sample-serif type-xl">Status report headline</span></div>
+      <div class="type-row"><span class="type-label">sans</span><span class="sample-sans type-base">Body copy for reviews, timelines, and plans.</span></div>
+      <div class="type-row"><span class="type-label">mono</span><span class="sample-mono">bloom-validate examples/*.html</span></div>
+    </section>
+    <section>
+      <h2>Button samples</h2>
+      <div class="btn-row">
+        <button type="button" class="btn btn-primary">Primary</button>
+        <button type="button" class="btn btn-secondary">Success</button>
+        <button type="button" class="btn btn-ghost">Ghost</button>
+        <button type="button" class="btn">Default</button>
+      </div>
+    </section>
+  </main>
+</div>
+</body>
+</html>
