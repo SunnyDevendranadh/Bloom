@@ -1,47 +1,36 @@
 import type { Issue, Rule } from "../types.ts";
-import { lineFromOffset } from "../parser.ts";
+import { snippet } from "../parser.ts";
 
-/**
- * Rule 12: No alert(), prompt(), or confirm() calls.
- *
- * These blocking dialog APIs provide poor UX and are incompatible with
- * Bloom's progressive enhancement requirement. Use inline UI instead.
- */
 export const noDialogApis: Rule = {
+  id: "rule-12",
   name: "no-dialog-apis",
-  description:
-    "Blocks alert(), prompt(), and confirm() dialog calls — use inline UI instead",
-  check(ctx) {
+  check(ctx): Issue[] {
     const issues: Issue[] = [];
+    const banned = [
+      { pattern: /\balert\s*\(/g, label: "alert()" },
+      { pattern: /\bprompt\s*\(/g, label: "prompt()" },
+      { pattern: /\bconfirm\s*\(/g, label: "confirm()" },
+    ];
 
-    // Match function calls inside <script> tags only
-    const scriptRegex = /<script[^>]*>([\s\S]*?)<\/script>/gi;
-    let sm: RegExpExecArray | null;
-    while ((sm = scriptRegex.exec(ctx.source)) !== null) {
-      const scriptContent = sm[1] ?? "";
-      const scriptStart = sm.index + sm[0].indexOf(sm[1]);
-
-      const banned = [
-        { pattern: /\balert\s*\(/g, name: "alert()" },
-        { pattern: /\bprompt\s*\(/g, name: "prompt()" },
-        { pattern: /\bconfirm\s*\(/g, name: "confirm()" },
-      ];
-
-      for (const { pattern, name } of banned) {
+    for (const block of ctx.scriptBlocks) {
+      if (block.attributes["src"]) continue;
+      for (const { pattern, label } of banned) {
         pattern.lastIndex = 0;
         let m: RegExpExecArray | null;
-        while ((m = pattern.exec(scriptContent)) !== null) {
-          const offset = scriptStart + m.index;
+        while ((m = pattern.exec(block.content)) !== null) {
+          const line =
+            block.startLine + (block.content.slice(0, m.index).split("\n").length - 1);
           issues.push({
-            rule: "no-dialog-apis",
+            rule: "rule-12",
+            ruleName: "no-dialog-apis",
             severity: "error",
-            line: lineFromOffset(ctx.lineStarts, offset),
-            message: `${name} is not allowed — use inline UI instead`,
+            line,
+            message: `${label} is not allowed — use inline UI instead (Rule 12)`,
+            snippet: snippet(ctx.lines, line),
           });
         }
       }
     }
-
     return issues;
   },
 };

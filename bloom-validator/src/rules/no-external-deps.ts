@@ -1,7 +1,5 @@
 import type { Issue, Rule } from "../types.ts";
-import { offsetToLine, snippet } from "../parser.ts";
-
-import { lineFromOffsetInBlock } from "../parser.ts";
+import { blockOffsetToLine, offsetToLine, snippet } from "../parser.ts";
 
 const SOURCE_PATTERNS: Array<{ re: RegExp; message: string }> = [
   {
@@ -59,7 +57,7 @@ export const noExternalDeps: Rule = {
         re.lastIndex = 0;
         let m: RegExpExecArray | null;
         while ((m = re.exec(block.content)) !== null) {
-          const line = lineFromOffsetInBlock(block, m.index);
+          const line = blockOffsetToLine(block, m.index);
           issues.push({
             rule: "rule-1",
             ruleName: "no-external-deps",

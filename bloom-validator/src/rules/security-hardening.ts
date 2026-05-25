@@ -1,5 +1,5 @@
 import type { Issue, Rule } from "../types.ts";
-import { lineFromOffsetInBlock, offsetToLine, snippet } from "../parser.ts";
+import { blockOffsetToLine, offsetToLine, snippet } from "../parser.ts";
 
 interface SecCheck {
   id: string;
@@ -36,6 +36,22 @@ const SCRIPT_CHECKS: SecCheck[] = [
     ruleName: "no-network",
     re: /\b(?:fetch|XMLHttpRequest|WebSocket|EventSource)\s*\(/g,
     message: "Network APIs (fetch/XMLHttpRequest/WebSocket/EventSource) are forbidden (S4)",
+    scope: "script",
+  },
+  {
+    id: "S7",
+    ruleName: "unsafe-clipboard",
+    re: /clipboard\.writeText\s*\([^)]*innerHTML/g,
+    message:
+      "clipboard.writeText with innerHTML is forbidden — build export text programmatically (S7)",
+    scope: "script",
+  },
+  {
+    id: "S7",
+    ruleName: "unsafe-clipboard",
+    re: /(?<!clipboard\.)writeText\s*\(\s*[^)]*\.innerHTML/g,
+    message:
+      "writeText with .innerHTML is forbidden — use textContent or escaped strings (S7)",
     scope: "script",
   },
 ];
@@ -88,7 +104,7 @@ export const securityHardening: Rule = {
         check.re.lastIndex = 0;
         let m: RegExpExecArray | null;
         while ((m = check.re.exec(block.content)) !== null) {
-          const line = lineFromOffsetInBlock(block, m.index);
+          const line = blockOffsetToLine(block, m.index);
           issues.push({
             rule: check.id,
             ruleName: check.ruleName,
@@ -104,7 +120,7 @@ export const securityHardening: Rule = {
       while ((im = INNER_HTML_RE.exec(block.content)) !== null) {
         const rhs = im[1] ?? "";
         if (isSafeInnerHtmlRhs(rhs)) continue;
-        const line = lineFromOffsetInBlock(block, im.index);
+        const line = blockOffsetToLine(block, im.index);
         const reason = rhs.trim().startsWith("`")
           ? "template literal with interpolation"
           : "non-literal expression";

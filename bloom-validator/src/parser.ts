@@ -80,7 +80,7 @@ export function findAllTags(
   return out;
 }
 
-export function lineFromOffsetInBlock(block: ExtractedBlock, offsetInContent: number): number {
+export function blockOffsetToLine(block: ExtractedBlock, offsetInContent: number): number {
   let line = block.startLine;
   for (let i = 0; i < offsetInContent && i < block.content.length; i++) {
     if (block.content[i] === "\n") line++;

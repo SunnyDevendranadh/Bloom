@@ -1,5 +1,5 @@
 import type { Issue, Rule } from "../types.ts";
-import { lineFromOffsetInBlock, snippet } from "../parser.ts";
+import { blockOffsetToLine, snippet } from "../parser.ts";
 
 const HEX_RE = /#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})\b/g;
 const ROOT_RE = /(:root\s*\{|@media[^{]*\{\s*:root\s*\{)/gi;
@@ -61,7 +61,7 @@ export const noHardcodedHex: Rule = {
       let m: RegExpExecArray | null;
       while ((m = HEX_RE.exec(masked)) !== null) {
         if (isInsideRoot(m.index, rootRanges)) continue;
-        const line = lineFromOffsetInBlock(block, m.index);
+        const line = blockOffsetToLine(block, m.index);
         issues.push({
           rule: "rule-2",
           ruleName: "no-hardcoded-hex",
