@@ -1,5 +1,5 @@
 import type { Issue, Rule } from "../types.ts";
-import { lineFromOffsetInBlock, snippet } from "../parser.ts";
+import { blockOffsetToLine, snippet } from "../parser.ts";
 
 const BANNED = [
   { pattern: /\balert\s*\(/g, label: "alert()" },
@@ -18,7 +18,7 @@ export const noDialogApis: Rule = {
         pattern.lastIndex = 0;
         let m: RegExpExecArray | null;
         while ((m = pattern.exec(block.content)) !== null) {
-          const line = lineFromOffsetInBlock(block, m.index);
+          const line = blockOffsetToLine(block, m.index);
           issues.push({
             rule: "rule-12",
             ruleName: "no-dialog-apis",
