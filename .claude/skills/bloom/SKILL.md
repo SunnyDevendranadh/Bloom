@@ -7,7 +7,7 @@ description: Per-session sticky mode that makes markdown bloom into rich, self-c
 
 **Bloom** puts the current session into a sticky HTML-output mode. Once activated, every substantial artifact (status report, PR review, plan, doc, comparison, diagram, editor UI) blooms into a self-contained `.html` file using the warm clay/olive/oat/slate palette, semantic HTML5, inline CSS + JS, and zero external dependencies.
 
-The canonical reference for the skill lives at `droids/bloom.md` in the Bloom repo. The rules below are the Claude-Code-specific operating instructions.
+Canonical split: `droids/bloom-core.md` (session + rules) and `droids/bloom-patterns.md` (categories + copy-paste patterns). The rules below are the Claude-Code-specific operating instructions.
 
 ---
 
@@ -74,6 +74,21 @@ After writing the file, reply with a single plain-text line stating the path. Ex
 > Wrote `./bloom/2025-05-13-pr-312-review.html` — open it in your browser.
 
 Do NOT paste the HTML source into the chat. The file is the artifact.
+
+---
+
+## Shipped templates (copy from repo)
+
+| Template | Category | Interactive |
+|----------|----------|-------------|
+| `templates/status-report-v2.html` | Reports | Light (tabs/motion) |
+| `templates/annotated-pr-review.html` | Code review | No |
+| `templates/exploration-code-approaches.html` | Exploration | No |
+| `templates/incident-timeline.html` | Reports | No |
+| `templates/triage-board.html` | Custom editors | Yes — DnD + markdown export |
+| `templates/animation-sandbox.html` | Prototyping | Yes — easing controls |
+
+For slide decks, flag editors, or complex DnD, read `droids/bloom-patterns.md` Category sections before generating.
 
 ---
 

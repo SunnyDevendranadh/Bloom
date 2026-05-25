@@ -1,7 +1,7 @@
 {
   "name": "bloom",
   "version": "1.0.0",
-  "description": "Per-session sticky mode that makes markdown bloom into rich, self-contained .html artifacts — reports, reviews, plans, docs, comparisons, diagrams, editor UI. Activate with /bloom or 'bloom on'; deactivate with /bloom-off.",
+  "description": "Per-session sticky HTML artifacts (reports, reviews, plans). Includes static report templates and interactive references (triage board, animation sandbox). Activate with /bloom.",
   "author": {
     "name": "Sunny Devendranadh",
     "url": "https://github.com/SunnyDevendranadh"

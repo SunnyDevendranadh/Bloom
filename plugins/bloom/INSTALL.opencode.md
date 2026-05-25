@@ -7,12 +7,16 @@ Bloom is a per-session sticky HTML output mode. Once activated, every substantia
 Append the canonical Bloom skill into your project's `AGENTS.md`. If `AGENTS.md` doesn't exist yet, create it.
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/SunnyDevendranadh/Bloom/main/droids/bloom.md >> AGENTS.md
+curl -fsSL https://raw.githubusercontent.com/SunnyDevendranadh/Bloom/main/droids/bloom-core.md >> AGENTS.md
+# Optional deep patterns:
+curl -fsSL https://raw.githubusercontent.com/SunnyDevendranadh/Bloom/main/droids/bloom-patterns.md >> AGENTS-patterns.md
 ```
 
-If `AGENTS.md` already has content, that command appends Bloom after the existing instructions. Either order works — Bloom's activation logic is keyed to trigger phrases and slash commands, not document position.
+If `AGENTS.md` already has content, the first command appends Bloom core after the existing instructions. Either order works — Bloom's activation logic is keyed to trigger phrases and slash commands, not document position. Skip the second command unless you need triage boards, animation sandboxes, or other interactive UI patterns.
 
 ## Verify
+
+The core-only install adds ~210 lines (~9 KB) to `AGENTS.md` — enough for reports, reviews, and companion `.html` files without loading the full patterns appendix.
 
 Open a fresh OpenCode session in the same repo and type:
 
@@ -57,5 +61,6 @@ In any session, type `/bloom-off` or say "bloom off". OpenCode returns to defaul
 
 ## See also
 
-- Canonical skill: [`droids/bloom.md`](https://github.com/SunnyDevendranadh/Bloom/blob/main/droids/bloom.md)
+- Core skill: [`droids/bloom-core.md`](https://github.com/SunnyDevendranadh/Bloom/blob/main/droids/bloom-core.md)
+- Optional patterns: [`droids/bloom-patterns.md`](https://github.com/SunnyDevendranadh/Bloom/blob/main/droids/bloom-patterns.md)
 - Full setup guide for every harness: [`docs/harness-setup.md`](https://github.com/SunnyDevendranadh/Bloom/blob/main/docs/harness-setup.md)
