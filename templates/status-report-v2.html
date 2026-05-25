@@ -108,7 +108,23 @@ hr.rule { border: none; border-top: 1px solid var(--gray-300); margin: 0 0 22px;
   grid-template-columns: repeat(4, 1fr);
   gap: 14px;
 }
-@media (max-width: 720px) { .summary-band { grid-template-columns: repeat(2, 1fr); } }
+img { max-width: 100%; }
+.col-pr { width: 90px; }
+.col-author { width: 140px; }
+.col-risk { width: 100px; }
+.col-stage { width: 100px; }
+.col-owner { width: 140px; }
+.col-blocked-on { width: 140px; }
+.col-actions { width: 60px; }
+@media (max-width: 960px) {
+  body { padding: 40px 20px 96px; }
+  .summary-band { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  body { padding: 28px 16px 72px; }
+  h1 { font-size: 28px; }
+  .summary-band { grid-template-columns: 1fr; }
+}
 .stat-card {
   background: var(--white);
   border: 1.5px solid var(--gray-300);
@@ -224,10 +240,19 @@ tbody tr:last-child td { border-bottom: none; }
 tbody tr:hover { background: var(--ivory); }
 .pr-link { font-family: var(--mono); font-size: 13px; color: var(--clay); }
 .risk { display: inline-flex; align-items: center; gap: 7px; font-size: 12px; color: var(--gray-500); }
-.risk-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
-.risk-dot.low  { background: var(--olive); }
-.risk-dot.med  { background: var(--oat); border: 1px solid var(--gray-500); }
-.risk-dot.high { background: var(--clay); }
+.risk::before {
+  content: "";
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-right: 7px;
+  vertical-align: 1px;
+}
+.risk-low::before { background: var(--olive); }
+.risk-med::before { background: var(--oat); border: 1px solid var(--gray-500); box-sizing: border-box; }
+.risk-high::before { background: var(--clay); }
 .btn {
   display: inline-flex;
   align-items: center;
@@ -378,25 +403,25 @@ tbody tr:hover { background: var(--ivory); }
 
         <article id="panel-shipped" class="tab-panel" role="tabpanel" aria-labelledby="tab-shipped">
           <table>
-            <thead><tr><th style="width:90px">PR</th><th>Title</th><th style="width:140px">Author</th><th style="width:100px">Risk</th></tr></thead>
+            <thead><tr><th class="col-pr">PR</th><th>Title</th><th class="col-author">Author</th><th class="col-risk">Risk</th></tr></thead>
             <tbody>
               <tr>
                 <td><span class="pr-link">#2841</span></td>
                 <td>Rewrite onboarding empty state</td>
                 <td>Mira Okafor</td>
-                <td><span class="risk"><span class="risk-dot low"></span>Low</span></td>
+                <td><span class="risk risk-low">Low</span></td>
               </tr>
               <tr>
                 <td><span class="pr-link">#2837</span></td>
                 <td>Move 42 legacy accounts to billing v2</td>
                 <td>Jules Halberg</td>
-                <td><span class="risk"><span class="risk-dot med"></span>Med</span></td>
+                <td><span class="risk risk-med">Med</span></td>
               </tr>
               <tr>
                 <td><span class="pr-link">#2829</span></td>
                 <td>Add structured logging to auth middleware</td>
                 <td>Priya Sundaram</td>
-                <td><span class="risk"><span class="risk-dot low"></span>Low</span></td>
+                <td><span class="risk risk-low">Low</span></td>
               </tr>
             </tbody>
           </table>
@@ -404,19 +429,19 @@ tbody tr:hover { background: var(--ivory); }
 
         <article id="panel-progress" class="tab-panel" role="tabpanel" aria-labelledby="tab-progress" hidden>
           <table>
-            <thead><tr><th style="width:90px">PR</th><th>Title</th><th style="width:140px">Author</th><th style="width:100px">Stage</th></tr></thead>
+            <thead><tr><th class="col-pr">PR</th><th>Title</th><th class="col-author">Author</th><th class="col-stage">Stage</th></tr></thead>
             <tbody>
               <tr>
                 <td><span class="pr-link">#2848</span></td>
                 <td>Trial-to-paid conversion analytics</td>
                 <td>Devon Reyes</td>
-                <td><span class="risk"><span class="risk-dot med"></span>Review</span></td>
+                <td><span class="risk risk-med">Review</span></td>
               </tr>
               <tr>
                 <td><span class="pr-link">#2851</span></td>
                 <td>Replace JWT signing key rotation cron</td>
                 <td>Priya Sundaram</td>
-                <td><span class="risk"><span class="risk-dot low"></span>Draft</span></td>
+                <td><span class="risk risk-low">Draft</span></td>
               </tr>
             </tbody>
           </table>
@@ -424,7 +449,7 @@ tbody tr:hover { background: var(--ivory); }
 
         <article id="panel-blocked" class="tab-panel" role="tabpanel" aria-labelledby="tab-blocked" hidden>
           <table>
-            <thead><tr><th>Issue</th><th style="width:140px">Owner</th><th style="width:140px">Blocked on</th><th style="width:60px"></th></tr></thead>
+            <thead><tr><th>Issue</th><th class="col-owner">Owner</th><th class="col-blocked-on">Blocked on</th><th class="col-actions"> </th></tr></thead>
             <tbody>
               <tr>
                 <td>OAuth webhook timeout (95p 1.8s over SLA)</td>

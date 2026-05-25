@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Acme — Release Triage Board</title>
+<style>
+:root {
+  --ivory: #FAF9F5;
+  --slate: #141413;
+  --clay: #D97757;
+  --oat: #E3DACC;
+  --olive: #788C5D;
+  --rust: #B04A3F;
+  --gray-100: #F0EEE6;
+  --gray-300: #D1CFC5;
+  --gray-500: #87867F;
+  --gray-700: #3D3D3A;
+  --white: #FFFFFF;
+  --serif: ui-serif, Georgia, "Times New Roman", serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+  --duration-fast: 150ms;
+  --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --shadow-sm: 0 1px 2px rgba(20,20,19,0.06);
+  --shadow-md: 0 4px 10px rgba(20,20,19,0.08);
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--ivory);
+  color: var(--gray-700);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.5;
+  padding: 48px 24px 96px;
+}
+.page { max-width: 1100px; margin: 0 auto; }
+header { margin-bottom: 28px; }
+h1 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 32px;
+  color: var(--slate);
+  margin-bottom: 6px;
+}
+.lede { color: var(--gray-500); font-size: 14px; }
+.toolbar { margin-top: 18px; }
+.btn {
+  appearance: none;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1.5px solid var(--gray-300);
+  background: var(--white);
+  color: var(--slate);
+  cursor: pointer;
+}
+.btn:hover { background: var(--gray-100); }
+.btn:focus-visible { outline: 2px solid var(--clay); outline-offset: 2px; }
+.board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+.column {
+  background: var(--gray-100);
+  border: 1.5px solid var(--gray-300);
+  border-radius: 12px;
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+}
+.col-head {
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid var(--gray-300);
+}
+.col-head h2 {
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--slate);
+}
+.col-count {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--gray-500);
+  margin-top: 2px;
+}
+.col-body {
+  flex: 1;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.ticket {
+  background: var(--white);
+  border: 1.5px solid var(--gray-300);
+  border-radius: 8px;
+  padding: 10px 12px;
+  cursor: grab;
+  box-shadow: var(--shadow-sm);
+}
+.ticket:active { cursor: grabbing; }
+.ticket:focus-visible { outline: 2px solid var(--clay); outline-offset: 2px; }
+.ticket-title { font-size: 13px; font-weight: 600; color: var(--slate); margin-bottom: 6px; }
+.ticket-meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: var(--oat);
+  color: var(--slate);
+}
+.tag.infra { background: var(--gray-300); }
+.tag.billing { background: var(--clay); color: var(--white); }
+.points {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--gray-500);
+  margin-left: auto;
+}
+img { max-width: 100%; }
+:focus-visible { outline: 2px solid var(--clay); outline-offset: 2px; }
+@media (max-width: 960px) {
+  body { padding: 36px 20px 72px; }
+  .board { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  body { padding: 24px 16px 64px; }
+  h1 { font-size: 26px; }
+  .board { grid-template-columns: 1fr; }
+}
+@media print {
+  body { padding: 0; background: var(--white); }
+  .toolbar, .ticket { break-inside: avoid; }
+  .ticket { cursor: default; box-shadow: none; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <h1>Release 12.4 — Triage</h1>
+    <p class="lede">Drag tickets between columns. Export the board as markdown for standup notes.</p>
+    <div class="toolbar">
+      <button type="button" class="btn" id="copy-md">Copy as markdown</button>
+    </div>
+  </header>
+  <main>
+    <section aria-label="Kanban board">
+      <div class="board">
+        <div class="column" data-column="backlog">
+          <div class="col-head"><h2 data-template="col-backlog">Backlog</h2><div class="col-count">3 tickets</div></div>
+          <div class="col-body">
+            <article class="ticket" draggable="true" tabindex="0">
+              <div class="ticket-title">Webhook retry backoff tuning</div>
+              <div class="ticket-meta"><span class="tag infra">infra</span><span class="points">5 pts</span></div>
+            </article>
+            <article class="ticket" draggable="true" tabindex="0">
+              <div class="ticket-title">Trial expiry email sequence</div>
+              <div class="ticket-meta"><span class="tag">growth</span><span class="points">3 pts</span></div>
+            </article>
+            <article class="ticket" draggable="true" tabindex="0">
+              <div class="ticket-title">Audit log export CSV columns</div>
+              <div class="ticket-meta"><span class="tag">compliance</span><span class="points">2 pts</span></div>
+            </article>
+          </div>
+        </div>
+        <div class="column" data-column="doing">
+          <div class="col-head"><h2 data-template="col-doing">Doing</h2><div class="col-count">2 tickets</div></div>
+          <div class="col-body">
+            <article class="ticket" draggable="true" tabindex="0">
+              <div class="ticket-title">OAuth token refresh race fix</div>
+              <div class="ticket-meta"><span class="tag infra">infra</span><span class="points">8 pts</span></div>
+            </article>
+            <article class="ticket" draggable="true" tabindex="0">
+              <div class="ticket-title">Seat-based billing proration</div>
+              <div class="ticket-meta"><span class="tag billing">billing</span><span class="points">5 pts</span></div>
+            </article>
+          </div>
+        </div>
+        <div class="column" data-column="done">
+          <div class="col-head"><h2 data-template="col-done">Done</h2><div class="col-count">2 tickets</div></div>
+          <div class="col-body">
+            <article class="ticket" draggable="true" tabindex="0">
+              <div class="ticket-title">Onboarding empty-state rewrite</div>
+              <div class="ticket-meta"><span class="tag">ux</span><span class="points">5 pts</span></div>
+            </article>
+            <article class="ticket" draggable="true" tabindex="0">
+              <div class="ticket-title">Structured auth middleware logging</div>
+              <div class="ticket-meta"><span class="tag infra">infra</span><span class="points">3 pts</span></div>
+            </article>
+          </div>
+        </div>
+        <div class="column" data-column="blocked">
+          <div class="col-head"><h2 data-template="col-blocked">Blocked</h2><div class="col-count">2 tickets</div></div>
+          <div class="col-body">
+            <article class="ticket" draggable="true" tabindex="0">
+              <div class="ticket-title">Vendor webhook SLA breach</div>
+              <div class="ticket-meta"><span class="tag infra">infra</span><span class="points">8 pts</span></div>
+            </article>
+            <article class="ticket" draggable="true" tabindex="0">
+              <div class="ticket-title">Legacy billing reconciliation</div>
+              <div class="ticket-meta"><span class="tag billing">billing</span><span class="points">5 pts</span></div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+<script>
+(function () {
+  var dragEl = null;
+  document.querySelectorAll('.ticket').forEach(function (c) {
+    c.addEventListener('dragstart', function (e) { dragEl = c; e.dataTransfer.effectAllowed = 'move'; });
+    c.addEventListener('dragend', function () { dragEl = null; });
+  });
+  document.querySelectorAll('.col-body').forEach(function (col) {
+    col.addEventListener('dragover', function (e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; });
+    col.addEventListener('drop', function (e) { e.preventDefault(); if (dragEl) col.appendChild(dragEl); });
+  });
+  function flashButton(btn) {
+    var orig = btn.textContent;
+    btn.textContent = 'Copied';
+    btn.style.background = 'var(--olive)';
+    btn.style.color = 'var(--white)';
+    setTimeout(function () { btn.textContent = orig; btn.style.background = ''; btn.style.color = ''; }, 1200);
+  }
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); } catch (e) { /* silent */ }
+    document.body.removeChild(ta);
+  }
+  function buildMarkdown() {
+    var lines = ['# Release 12.4 — Triage', ''];
+    document.querySelectorAll('.column').forEach(function (col) {
+      var name = col.querySelector('.col-head h2').textContent.trim();
+      lines.push('## ' + name);
+      col.querySelectorAll('.ticket').forEach(function (t) {
+        var title = t.querySelector('.ticket-title').textContent.trim();
+        var tags = Array.prototype.map.call(t.querySelectorAll('.tag'), function (el) { return el.textContent.trim(); }).join(', ');
+        var pts = t.querySelector('.points').textContent.trim();
+        lines.push('- **' + title + '** (' + tags + ') — ' + pts);
+      });
+      lines.push('');
+    });
+    return lines.join('\n');
+  }
+  var btn = document.getElementById('copy-md');
+  if (btn) btn.addEventListener('click', function () {
+    var text = buildMarkdown();
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { flashButton(btn); }, function () { fallbackCopy(text); flashButton(btn); });
+    } else { fallbackCopy(text); flashButton(btn); }
+  });
+})();
+</script>
+</body>
+</html>
