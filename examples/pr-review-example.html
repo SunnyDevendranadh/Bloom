@@ -3,70 +3,71 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Example — Annotated PR Review</title>
+<title>acme/api — Cache OAuth tokens per tenant Review</title>
 <style>
 :root {
   --ivory: #FAF9F5; --slate: #141413; --clay: #D97757; --oat: #E3DACC;
   --olive: #788C5D; --rust: #B04A3F; --gray-100: #F0EEE6; --gray-300: #D1CFC5;
   --gray-500: #87867F; --gray-700: #3D3D3A; --white: #FFFFFF;
-  --amber: #B89B6E; --amber-text: #7A6A4F;
-  --diff-fg: #E8E6DC; --diff-muted: #B8B6AC;
+  --sand: #B89B6E; --sand-deep: #7A6A4F;
+  --code-fg: #E8E6DC; --code-fg-muted: #B8B6AC;
   --serif: ui-serif, Georgia, serif; --sans: system-ui, -apple-system, sans-serif;
   --mono: ui-monospace, "SF Mono", Menlo, monospace;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { background: var(--ivory); color: var(--gray-700); font-family: var(--sans); font-size: 15px; line-height: 1.6; padding: 48px 24px 80px; }
 .page { max-width: 920px; margin: 0 auto; }
-img { max-width: 100%; }
-:focus-visible { outline: 2px solid var(--clay); outline-offset: 2px; }
 header.pr-head { border: 1.5px solid var(--gray-300); border-radius: 12px; padding: 28px 32px; background: var(--white); margin-bottom: 36px; }
 .repo-line { font-family: var(--mono); font-size: 12.5px; color: var(--gray-500); margin-bottom: 10px; }
 h1 { font-family: var(--serif); font-weight: 500; font-size: 30px; color: var(--slate); margin-bottom: 18px; line-height: 1.25; }
 .meta-row { display: flex; align-items: center; flex-wrap: wrap; gap: 20px; }
-.meta-sub { font-size: 12px; color: var(--gray-500); }
 .avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--oat); color: var(--slate); display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; border: 1.5px solid var(--gray-300); }
+.who strong { color: var(--slate); }
+.who .when { display: block; font-size: 12px; color: var(--gray-500); }
 .branch { font-family: var(--mono); font-size: 12.5px; color: var(--gray-700); background: var(--gray-100); border: 1.5px solid var(--gray-300); border-radius: 8px; padding: 6px 10px; }
 .branch .arrow { color: var(--gray-500); margin: 0 6px; }
 .stat { font-family: var(--mono); font-size: 13px; }
 .stat .add { color: var(--olive); font-weight: 600; }
 .stat .del { color: var(--rust); font-weight: 600; }
-.stat .muted { color: var(--gray-500); margin-left: 10px; }
-main section { margin-bottom: 40px; }
+.stat .files { color: var(--gray-500); margin-left: 10px; }
+section { margin-bottom: 40px; }
 h2 { font-family: var(--serif); font-weight: 500; font-size: 21px; color: var(--slate); margin-bottom: 14px; }
 .risk-map { display: flex; flex-wrap: wrap; gap: 10px; }
-.chip { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 8px; border: 1.5px solid var(--gray-300); font-family: var(--mono); font-size: 12.5px; color: var(--slate); text-decoration: none; background: var(--white); }
-.chip::before { content: ""; width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.chip { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 8px; border: 1.5px solid var(--gray-300); font-family: var(--mono); font-size: 12.5px; color: var(--slate); text-decoration: none; background: var(--white); transition: transform 0.12s ease; }
+.chip:hover, .chip:focus-visible { transform: translateY(-1px); }
+.chip .dot { width: 9px; height: 9px; border-radius: 50%; }
 .chip.safe { background: rgba(120,140,93,0.10); border-color: rgba(120,140,93,0.45); }
-.chip.safe::before { background: var(--olive); }
+.chip.safe .dot { background: var(--olive); }
 .chip.medium { background: var(--oat); }
-.chip.medium::before { background: var(--amber); }
+.chip.medium .dot { background: var(--sand); }
 .chip.attention { background: rgba(217,119,87,0.12); border-color: rgba(217,119,87,0.55); }
-.chip.attention::before { background: var(--clay); }
-.legend { margin-top: 12px; font-size: 12px; color: var(--gray-500); display: flex; gap: 18px; flex-wrap: wrap; }
+.chip.attention .dot { background: var(--clay); }
+.legend { margin-top: 12px; font-size: 12px; color: var(--gray-500); display: flex; flex-wrap: wrap; gap: 18px; }
 .legend span { display: inline-flex; align-items: center; gap: 6px; }
-.legend-item::before { content: ""; width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 6px; vertical-align: 1px; }
-.legend-item.safe::before { background: var(--olive); }
-.legend-item.medium::before { background: var(--amber); }
-.legend-item.attention::before { background: var(--clay); }
+.legend .dot { width: 8px; height: 8px; border-radius: 50%; }
+.legend .dot.safe { background: var(--olive); }
+.legend .dot.medium { background: var(--sand); }
+.legend .dot.attention { background: var(--clay); }
 .file-card { border: 1.5px solid var(--gray-300); border-radius: 12px; background: var(--white); margin-bottom: 24px; overflow: hidden; scroll-margin-top: 20px; }
 .file-head { padding: 16px 20px; border-bottom: 1.5px solid var(--gray-100); display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .file-path { font-family: var(--mono); font-size: 13.5px; color: var(--slate); }
+.file-meta { display: flex; align-items: center; gap: 12px; }
 .risk-tag { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; padding: 3px 8px; border-radius: 6px; font-weight: 600; }
 .risk-tag.safe { background: rgba(120,140,93,0.15); color: var(--olive); }
-.risk-tag.medium { background: var(--oat); color: var(--amber-text); }
+.risk-tag.medium { background: var(--oat); color: var(--sand-deep); }
 .risk-tag.attention { background: rgba(217,119,87,0.15); color: var(--clay); }
-.diff { background: var(--slate); font-family: var(--mono); font-size: 12.5px; line-height: 1.7; overflow-x: auto; }
+.diff { background: var(--slate); font-family: var(--mono); font-size: 12.5px; line-height: 1.7; overflow-x: auto; padding: 6px 0; }
 .diff-row { display: grid; grid-template-columns: 48px 18px 1fr; padding: 0 14px 0 0; white-space: pre; }
 .diff-row .ln { text-align: right; padding-right: 14px; color: var(--gray-500); user-select: none; }
 .diff-row .mark { text-align: center; color: var(--gray-500); }
-.diff-row .code { color: var(--diff-fg); }
-.diff-row.ctx .code { color: var(--diff-muted); }
+.diff-row .code { color: var(--code-fg); }
+.diff-row.ctx .code { color: var(--code-fg-muted); }
 .diff-row.add { background: rgba(120,140,93,0.15); }
 .diff-row.add .mark { color: var(--olive); }
 .diff-row.del { background: rgba(176,74,63,0.15); }
 .diff-row.del .mark { color: var(--rust); }
 .comments { padding: 18px 20px 20px; background: var(--gray-100); display: flex; flex-direction: column; gap: 14px; }
-.bubble { background: var(--white); border: 1.5px solid var(--gray-300); border-left-width: 4px; border-radius: 8px; padding: 12px 14px 12px 16px; max-width: 680px; }
+.bubble { position: relative; background: var(--white); border: 1.5px solid var(--gray-300); border-left-width: 4px; border-radius: 8px; padding: 12px 14px 12px 16px; max-width: 680px; }
 .bubble.blocking { border-left-color: var(--clay); }
 .bubble.nit { border-left-color: var(--gray-300); }
 .bubble .anchor { font-family: var(--mono); font-size: 11.5px; color: var(--gray-500); margin-bottom: 4px; }
@@ -82,103 +83,151 @@ footer h2 { font-family: var(--serif); font-weight: 500; font-size: 22px; color:
 .checklist input[type="checkbox"] { width: 17px; height: 17px; margin-top: 2px; accent-color: var(--olive); cursor: pointer; }
 .checklist label { cursor: pointer; flex: 1; }
 .checklist code { font-family: var(--mono); font-size: 12.5px; background: var(--gray-100); padding: 1px 5px; border-radius: 4px; }
-@media (max-width: 960px) { body { padding: 32px 20px 64px; } h1 { font-size: 26px; } }
-@media (max-width: 640px) { body { padding: 24px 16px 56px; } .meta-row { flex-direction: column; align-items: flex-start; } }
-@media print { nav, button, .toolbar { display: none; } section { break-inside: avoid; } }
+a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible {
+  outline: 2px solid var(--clay); outline-offset: 2px; border-radius: 4px;
+}
+@media print {
+  body { background: var(--ivory); color: var(--slate); padding: 24px; }
+  .file-card, .bubble, footer.next-steps, header.pr-head { break-inside: avoid; }
+  .diff { background: var(--gray-100); }
+  .diff-row .code { color: var(--slate); }
+  .diff-row.ctx .code { color: var(--gray-700); }
+}
 </style>
 </head>
 <body>
 <div class="page">
   <header class="pr-head">
-    <div class="repo-line" data-template="repo">northwind/api-gateway · Pull Request #2841</div>
-    <h1 data-template="pr-title">Add structured logging to auth middleware</h1>
+    <div class="repo-line">acme/api · Pull Request #4421</div>
+    <h1>Cache OAuth tokens per tenant</h1>
     <div class="meta-row">
-      <div class="avatar" data-template="author-initials">PS</div>
-      <div><strong data-template="author">Priya Sundaram</strong><br><span class="meta-sub" data-template="opened">Opened May 10, 2026</span></div>
-      <div class="branch"><span data-template="branch">feat/auth-logs</span> <span class="arrow">→</span> main</div>
-      <div class="stat"><span class="add">+186</span> / <span class="del">−42</span> <span class="muted">6 files changed</span></div>
+      <div class="avatar">MO</div>
+      <div class="who"><strong>Mira Okafor</strong><span class="when">opened 2 days ago</span></div>
+      <div class="branch">mira/oauth-token-cache <span class="arrow">→</span> main</div>
+      <div class="stat"><span class="add">+184</span> / <span class="del">−47</span> <span class="files">4 files changed</span></div>
     </div>
   </header>
-
   <main>
+
   <section>
     <h2>Risk map</h2>
     <div class="risk-map">
-      <a class="chip safe" href="#file-middleware">middleware/auth.go</a>
-      <a class="chip medium" href="#file-config">config/logging.yaml</a>
-      <a class="chip attention" href="#file-tests">middleware/auth_test.go</a>
+      <a class="chip attention" href="#file-token-store"><span class="dot"></span>internal/oauth/token_store.go</a>
+      <a class="chip medium" href="#file-cache"><span class="dot"></span>internal/cache/redis_client.go</a>
+      <a class="chip safe" href="#file-handler"><span class="dot"></span>api/handlers/token.go</a>
+      <a class="chip safe" href="#file-tests"><span class="dot"></span>internal/oauth/token_store_test.go</a>
     </div>
     <div class="legend">
-      <span class="legend-item safe">safe</span>
-      <span class="legend-item medium">worth a look</span>
-      <span class="legend-item attention">needs attention</span>
+      <span><span class="dot safe"></span> safe — tests or trivial change</span>
+      <span><span class="dot medium"></span> worth a look — verify edge cases</span>
+      <span><span class="dot attention"></span> needs attention — could regress prod</span>
     </div>
   </section>
 
   <section>
     <h2>Files</h2>
-    <article class="file-card" id="file-middleware">
+
+    <article class="file-card" id="file-token-store">
       <div class="file-head">
-        <div class="file-path">middleware/auth.go</div>
-        <span class="risk-tag safe">Safe</span>
+        <div><div class="file-path">internal/oauth/token_store.go</div></div>
+        <div class="file-meta">
+          <span class="risk-tag attention">Needs attention</span>
+        </div>
       </div>
       <div class="diff">
-        <div class="diff-row ctx"><span class="ln">41</span><span class="mark">·</span><span class="code"> func Authenticate(next http.Handler) http.Handler {</span></div>
-        <div class="diff-row add"><span class="ln">42</span><span class="mark">+</span><span class="code">   log.Info("auth.start", "path", r.URL.Path)</span></div>
+        <div class="diff-row ctx"><span class="ln">112</span><span class="mark"> </span><span class="code">func (s *TokenStore) Get(ctx context.Context, tenantID string) (*Token, error) {</span></div>
+        <div class="diff-row del"><span class="ln">113</span><span class="mark">-</span><span class="code">    raw, err := s.db.QueryRow(ctx, "SELECT token FROM tokens WHERE tenant=$1", tenantID).Scan(&amp;raw)</span></div>
+        <div class="diff-row add"><span class="ln">113</span><span class="mark">+</span><span class="code">    if cached, ok := s.cache.Get(tenantID); ok {</span></div>
+        <div class="diff-row add"><span class="ln">114</span><span class="mark">+</span><span class="code">        return cached.(*Token), nil</span></div>
+        <div class="diff-row add"><span class="ln">115</span><span class="mark">+</span><span class="code">    }</span></div>
+        <div class="diff-row add"><span class="ln">116</span><span class="mark">+</span><span class="code">    raw, err := s.db.QueryRow(ctx, getTokenQuery, tenantID).Scan(&amp;raw)</span></div>
+        <div class="diff-row ctx"><span class="ln">117</span><span class="mark"> </span><span class="code">    if err != nil {</span></div>
+        <div class="diff-row ctx"><span class="ln">118</span><span class="mark"> </span><span class="code">        return nil, fmt.Errorf("token lookup: %w", err)</span></div>
       </div>
       <div class="comments">
+        <div class="bubble blocking">
+          <div class="anchor">L113–L116</div>
+          <p><span class="label">Blocking</span> The cache is populated only on miss — on token rotation the stale value will be served until TTL expires. Either invalidate on <code>Rotate()</code> or use a write-through pattern.</p>
+        </div>
         <div class="bubble nit">
-          <div class="anchor">middleware/auth.go:42</div>
-          <span class="label">Nit</span>
-          <p>Consider sampling debug logs in hot paths to avoid cardinality blow-up on <code>path</code>.</p>
+          <div class="anchor">L116</div>
+          <p><span class="label">Nit</span> Pulling the query into a package-level const (<code>getTokenQuery</code>) is nice — also pull the table name into a constant to match the rest of the file.</p>
         </div>
       </div>
     </article>
 
-    <article class="file-card" id="file-config">
+    <article class="file-card" id="file-cache">
       <div class="file-head">
-        <div class="file-path">config/logging.yaml</div>
-        <span class="risk-tag medium">Medium</span>
+        <div><div class="file-path">internal/cache/redis_client.go</div></div>
+        <div class="file-meta">
+          <span class="risk-tag medium">Worth a look</span>
+        </div>
       </div>
       <div class="diff">
-        <div class="diff-row add"><span class="ln">8</span><span class="mark">+</span><span class="code"> level: info</span></div>
+        <div class="diff-row add"><span class="ln">38</span><span class="mark">+</span><span class="code">func (c *RedisClient) GetWithTTL(key string) (interface{}, bool) {</span></div>
+        <div class="diff-row add"><span class="ln">39</span><span class="mark">+</span><span class="code">    val, err := c.conn.Get(c.ctx, key).Result()</span></div>
+        <div class="diff-row add"><span class="ln">40</span><span class="mark">+</span><span class="code">    if err == redis.Nil { return nil, false }</span></div>
+        <div class="diff-row add"><span class="ln">41</span><span class="mark">+</span><span class="code">    return val, err == nil</span></div>
+        <div class="diff-row add"><span class="ln">42</span><span class="mark">+</span><span class="code">}</span></div>
       </div>
       <div class="comments">
         <div class="bubble nit">
-          <div class="anchor">config/logging.yaml:8</div>
-          <span class="label">Nit</span>
-          <p>Align level with staging defaults documented in RUN-PLATFORM-12.</p>
+          <div class="anchor">L40</div>
+          <p><span class="label">Question</span> Swallowing non-<code>redis.Nil</code> errors here hides connection drops from callers. Worth logging at warn or returning the error?</p>
+        </div>
+      </div>
+    </article>
+
+    <article class="file-card" id="file-handler">
+      <div class="file-head">
+        <div><div class="file-path">api/handlers/token.go</div></div>
+        <div class="file-meta">
+          <span class="risk-tag safe">Safe</span>
+        </div>
+      </div>
+      <div class="diff">
+        <div class="diff-row ctx"><span class="ln">22</span><span class="mark"> </span><span class="code">func (h *Handler) Token(w http.ResponseWriter, r *http.Request) {</span></div>
+        <div class="diff-row del"><span class="ln">23</span><span class="mark">-</span><span class="code">    tok, err := h.store.GetUncached(r.Context(), tenant)</span></div>
+        <div class="diff-row add"><span class="ln">23</span><span class="mark">+</span><span class="code">    tok, err := h.store.Get(r.Context(), tenant)</span></div>
+      </div>
+      <div class="comments">
+        <div class="bubble nit">
+          <div class="anchor">L23</div>
+          <p><span class="label">LGTM</span> Drop-in replacement, same signature.</p>
         </div>
       </div>
     </article>
 
     <article class="file-card" id="file-tests">
       <div class="file-head">
-        <div class="file-path">middleware/auth_test.go</div>
-        <span class="risk-tag attention">Attention</span>
+        <div><div class="file-path">internal/oauth/token_store_test.go</div></div>
+        <div class="file-meta">
+          <span class="risk-tag safe">Safe</span>
+        </div>
       </div>
       <div class="diff">
-        <div class="diff-row del"><span class="ln">12</span><span class="mark">−</span><span class="code"> t.Skip("flaky in CI")</span></div>
-        <div class="diff-row add"><span class="ln">12</span><span class="mark">+</span><span class="code"> require.NoError(t, err)</span></div>
+        <div class="diff-row add"><span class="ln">+62</span><span class="mark">+</span><span class="code">    t.Run("cache hit avoids db round-trip", func(t *testing.T) { ... })</span></div>
+        <div class="diff-row add"><span class="ln">+78</span><span class="mark">+</span><span class="code">    t.Run("cache invalidates on rotate", func(t *testing.T) { ... })</span></div>
       </div>
       <div class="comments">
-        <div class="bubble blocking">
-          <div class="anchor">middleware/auth_test.go:12</div>
-          <span class="label">Blocking</span>
-          <p>Re-enabling this test without fixing the race will break main — link the flake fix issue or keep skip with ticket ID.</p>
+        <div class="bubble nit">
+          <div class="anchor">L78</div>
+          <p><span class="label">Note</span> Second test case currently asserts only the happy path; add the cache-expiry branch before merge.</p>
         </div>
       </div>
     </article>
   </section>
-  </main>
 
   <footer class="next-steps">
     <h2>Suggested next steps</h2>
     <ul class="checklist">
-      <li><input type="checkbox" id="s1"><label for="s1">Resolve flake in <code>auth_test.go</code> before merge</label></li>
-      <li><input type="checkbox" id="s2"><label for="s2">Add log volume note to on-call runbook</label></li>
+      <li><input type="checkbox" id="s1"><label for="s1">Add invalidation on <code>Rotate()</code> in <code>token_store.go</code></label></li>
+      <li><input type="checkbox" id="s2"><label for="s2">Return errors from <code>GetWithTTL</code> instead of swallowing</label></li>
+      <li><input type="checkbox" id="s3"><label for="s3">Complete the rotation invalidation test stub</label></li>
+      <li><input type="checkbox" id="s4"><label for="s4">Re-request review from @platform-oncall</label></li>
     </ul>
   </footer>
+  </main>
 </div>
 </body>
 </html>

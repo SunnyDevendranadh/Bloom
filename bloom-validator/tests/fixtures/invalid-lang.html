@@ -3,19 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Missing lang</title>
+<title>Broken — Missing lang</title>
 <style>
-:root { --slate: #141413; --ivory: #FAF9F5; }
-body { background: var(--ivory); color: var(--slate); }
-@media print { nav { display: none; } }
+:root { --slate: #141413; }
+body { color: var(--slate); }
 :focus-visible { outline: 2px solid var(--slate); }
-img { max-width: 100%; }
+@media print { body { padding: 0; } }
 </style>
 </head>
 <body>
-<header><h1>Test</h1></header>
+<header><h1>No lang attribute</h1></header>
 <main>
-<section><p>Content.</p></section>
+  <section>
+    <p>This document is missing a lang on the html element.</p>
+  </section>
 </main>
 </body>
 </html>

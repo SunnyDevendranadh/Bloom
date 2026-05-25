@@ -21,13 +21,11 @@ body {
 }
 .page { max-width: 860px; margin: 0 auto; }
 .card { border: 1.5px solid var(--gray-300); padding: 20px; }
-@media (max-width: 640px) { .page { padding: 1rem; } }
-@media (max-width: 960px) { .page { max-width: 100%; } }
+.card:focus-visible { outline: 2px solid var(--clay); outline-offset: 2px; }
 @media print {
-  nav, button { display: none; }
+  body { background: var(--ivory); padding: 0; }
+  .card { break-inside: avoid; }
 }
-:focus-visible { outline: 2px solid var(--clay); }
-img { max-width: 100%; }
 </style>
 </head>
 <body>

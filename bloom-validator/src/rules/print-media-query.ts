@@ -1,20 +1,23 @@
 import type { Issue, Rule } from "../types.ts";
 
-const PRINT_MEDIA_RE = /@media\s+print\b/i;
+const PRINT_RE = /@media[^{]*\bprint\b/i;
 
 export const printMediaQuery: Rule = {
-  id: "rule-13",
+  id: "rule-7",
   name: "print-media-query",
   check(ctx): Issue[] {
-    const allStyles = ctx.styleBlocks.map((b) => b.content).join("\n");
-    if (PRINT_MEDIA_RE.test(allStyles)) return [];
+    if (ctx.styleBlocks.length === 0) return [];
+    for (const block of ctx.styleBlocks) {
+      if (PRINT_RE.test(block.content)) return [];
+    }
     return [
       {
-        rule: "rule-13",
+        rule: "rule-7",
         ruleName: "print-media-query",
-        severity: "error",
-        line: 1,
-        message: "missing @media print (Rule 13)",
+        severity: "warning",
+        line: ctx.styleBlocks[0]!.startLine,
+        message:
+          "No @media print block found — add print styles so the artifact is readable on paper (Rule 7)",
       },
     ];
   },

@@ -1,10 +1,8 @@
 # bloom-validator
 
-A zero-dependency TypeScript CLI that validates `.html` files against Bloom's construction rules and security rules (S1–S8).
+A zero-dependency TypeScript CLI that validates `.html` files against Bloom's construction and security rules. Runs on Node ≥ 22.6 using native TypeScript type-stripping — no build step, no dependencies.
 
 ## Quick start
-
-Requires Node ≥ 22.6 (uses native TypeScript type-stripping — no build step).
 
 ```bash
 node src/index.ts path/to/file.html
@@ -20,37 +18,43 @@ Exit codes:
 
 ## Rules implemented
 
+The validator currently enforces 19 rules. Each rule is a single file under [`src/rules/`](src/rules/) and is registered in [`src/rule-registry.ts`](src/rule-registry.ts).
+
 | ID | Name | Severity | Description |
 |---|---|---|---|
-| `rule-1` | `no-external-deps` | error | No `<script src>`, `<link rel="stylesheet">`, `@import`, ES module `import`/`export` |
+| `rule-1` | `no-external-deps` | error | No `<script src>`, `<link rel="stylesheet">`, `@import`, or ES module `import`/`export` |
 | `S1` | `no-external-img`, `no-external-link` | error | No `<img src="http(s)://...">` or `<link href="http(s)://...">` |
 | `rule-2` | `no-hardcoded-hex` | error | No `#RRGGBB`/`#RGB`/`#RRGGBBAA` outside `:root` blocks |
 | `rule-3` | `semantic-html` | error+warn | Requires `<header>` and `<main>` in `<body>`; warns when no `<section>`/`<article>`/`<nav>`/`<aside>` are used |
 | `rule-5` | `responsive-breakpoints` | error | `@media (max-width: 640px)` and `960px` breakpoints required |
 | `rule-6-hint` | `editor-export-hint` | warning | Editor/triage/board artifacts should include clipboard export |
-| `rule-9` | `no-placeholder-content` | error | No placeholder dates, lorem ipsum, TODO, generic stubs |
-| `rule-8` | `heading-hierarchy` | error | Exactly one `<h1>`; no skipped levels |
+| `rule-9` | `no-placeholder-content` | error | No placeholder dates, lorem ipsum, TODO, generic stubs (or mark with `data-template=`) |
+| `rule-8` | `heading-hierarchy` | error | Exactly one `<h1>`; no skipped levels (h1 → h3) |
 | `rule-10` | `viewport-meta` | error | `<meta name="viewport">` required in `<head>` |
-| `rule-lang` | `lang-attribute` | error | `<html lang="...">` required |
-| `rule-13` | `print-media-query` | error | `@media print` block required in `<style>` |
-| `rule-style` | `no-inline-styles-except-root` | error | No inline `style=` attributes (except on `:root` token definitions) |
-| `rule-empty` | `no-empty-elements` | error | No empty `<div>`, `<span>`, `<p>`, etc. |
-| `rule-img` | `responsive-images` | error+warn | `<img>` must be responsive; missing `alt` is a warning |
+| `rule-13` | `lang-attribute` | error | `<html>` must have a non-empty `lang` attribute |
+| `rule-7` | `print-media-query` | warning | Warns when no `@media print` block is defined in any `<style>` |
+| `rule-17` | `no-inline-styles-except-root` | error | No inline `style=` attributes; move styles into the document stylesheet and use tokens |
+| `rule-16` | `no-empty-elements` | warning | Warns on empty `<div>`, `<span>`, and `<p>` elements unless marked with `data-template` or `aria-hidden` |
+| `rule-15` | `responsive-images` | warning | Warns when `<img>` elements exist but no responsive `img { max-width: 100%; ... }` style is defined |
 | `rule-8a` | `aria-landmarks` | warning | `<svg>` should have `aria-label` or `role="img"` |
-| `rule-8b` | `focus-visible` | warning | Interactive elements should define `:focus-visible` styles |
-| `rule-contrast` | `contrast-minimum` | warning | Hard-coded `color`/`background` hex pairs may fail contrast |
-| `rule-12` | `no-dialog-apis` | error | No `alert()`, `prompt()`, or `confirm()` |
-| `S2` | `no-eval`, `no-function-ctor`, `no-string-timer` | error | No `eval()`, `new Function()`, string-based timers |
-| `S3` | `innerHTML-with-variable` | error | `.innerHTML` may only be assigned a string literal |
-| `S4` | `no-network` | error | No `fetch`, `XMLHttpRequest`, `WebSocket`, `EventSource` |
-| `S5` | `no-inline-handlers` | error | No `on*=` attributes — use `addEventListener` |
-| `S6` | `no-data-html-uri` | error | No `data:text/html` or `data:text/javascript` URIs |
-| `S7` | `unsafe-clipboard` | error | No `writeText(...innerHTML)` — build export text programmatically |
-| `S8` | `no-javascript-uri` | error | No `javascript:` in `href`, `src`, `action` |
+| `rule-14` | `focus-visible` | warning | Warns when interactive elements exist but no `:focus`/`:focus-visible` style is defined |
+| `rule-contrast` | `contrast-minimum` | warning | Hard-coded `color`/`background` hex pairs may fail contrast ratio |
+| `rule-12` | `no-dialog-apis` | error | No `alert()`, `prompt()`, or `confirm()` calls in inline `<script>` |
+| `security` | `security-hardening` | error | Bundle of S2/S3/S4/S5/S6/S7/S8 checks — see below |
 
-## Manual checklist (not automated)
+The `security-hardening` rule emits issues under these `ruleName`s, all classified under rule id `security`:
 
-These Bloom construction/security expectations are documented in `droids/bloom.md` and `docs/security.md` but are **not** fully enforced by the validator (Rule 9 placeholder text **is** automated via `no-placeholder-content`):
+- `no-eval`, `no-function-ctor`, `no-string-timer` (S2) — `eval()`, `new Function()`, `setTimeout("...")`, `setInterval("...")`
+- `innerHTML-with-variable` (S3) — `.innerHTML = ` from anything but a plain string/template literal
+- `no-network` (S4) — `fetch`, `XMLHttpRequest`, `WebSocket`, `EventSource`
+- `no-inline-handlers` (S5) — `onclick=`, `onload=`, any inline `on*=` attribute
+- `no-data-html-uri` (S6) — `href="data:text/html"` or `data:text/javascript`
+- `unsafe-clipboard` (S7) — No `writeText(...innerHTML)`; build export text programmatically
+- `no-javascript-uri` (S8) — `javascript:` in `href`, `src`, `action`, `formaction`
+
+### Manual checklist (not automated)
+
+These Bloom construction/security expectations are documented in the skill but are not fully enforced by the validator:
 
 - [ ] Single self-contained file opens from `file://` with no console errors
 - [ ] Core content readable with JavaScript disabled (progressive enhancement; Rule 11)
@@ -85,11 +89,19 @@ When multiple files are passed, the top level is an array of these objects.
 ## Running tests
 
 ```bash
-node --test tests/validator.test.ts
+npm test
 ```
 
-The fixtures under `tests/fixtures/` cover one passing file and one targeted failure per rule family.
+13 tests under [`tests/`](tests/) cover one passing file (`valid.html`), one false-positive guard (`valid-with-urls.html`), and one targeted failure fixture per rule family.
+
+## Validating every template, skeleton, and example
+
+```bash
+npm run validate-all
+```
+
+This runs [`scripts/validate-all.mjs`](scripts/validate-all.mjs), which resolves the artifact list in Node (not via shell globbing) and shells out to `bloom-validate` once with every file. It works identically on Bash, Zsh, PowerShell, and CMD — useful for Windows contributors, and the single canonical command CI uses too.
 
 ## Notes on the inline template `<script>`
 
-Bloom templates themselves must include inline JavaScript (not TypeScript) because Rule 1 forbids any build step — the file has to run from `file://`. This validator is the only place in the Bloom repo where TypeScript runs at all, and it runs in Node, not the browser.
+Bloom templates themselves use inline JavaScript (not TypeScript) because Rule 1 forbids any build step — every artifact has to run from `file://`. This validator is the only place in the Bloom repo where TypeScript runs at all, and it runs in Node, not the browser.

@@ -84,16 +84,7 @@ describe("bloom-validator", () => {
     assert.match(messages, /2 <h1>/, "should detect duplicate h1");
   });
 
-  it("flags external image src URLs (S1 / S4)", () => {
-    const { path, source } = load("invalid-external-img.html");
-    const report = validate(path, source);
-    assert.equal(report.passed, false);
-    const imgIssues = report.issues.filter((i) => i.ruleName === "no-external-img");
-    assert.ok(imgIssues.length >= 1, `expected no-external-img issue, got: ${JSON.stringify(report.issues)}`);
-    assert.match(imgIssues[0]!.message, /http/i);
-  });
-
-  it("flags security violations (S2/S3/S4/S5/S6/S7/S8)", () => {
+  it("flags security violations (S2/S3/S4/S5/S6/S8)", () => {
     const { path, source } = load("invalid-security.html");
     const report = validate(path, source);
     assert.equal(report.passed, false);
@@ -104,7 +95,6 @@ describe("bloom-validator", () => {
       "no-string-timer",
       "no-network",
       "innerHTML-with-variable",
-      "unsafe-clipboard",
       "no-inline-handlers",
       "no-javascript-uri",
       "no-data-html-uri",
@@ -161,90 +151,44 @@ describe("bloom-validator", () => {
     );
   });
 
-  it("flags missing lang on <html> (rule-lang)", () => {
+  it("flags missing lang attribute on <html> (Rule 13)", () => {
     const { path, source } = load("invalid-lang.html");
     const report = validate(path, source);
-    const issues = report.issues.filter((i) => i.ruleName === "lang-attribute");
-    assert.ok(issues.length >= 1);
-    assert.equal(issues[0]!.severity, "error");
+    assert.equal(report.passed, false);
+    const langIssues = report.issues.filter((i) => i.ruleName === "lang-attribute");
+    assert.equal(langIssues.length, 1, `expected 1 lang issue, got ${langIssues.length}`);
+    assert.match(langIssues[0]!.message, /missing a lang attribute/);
   });
 
-  it("flags missing @media print (Rule 13)", () => {
-    const { path, source } = load("invalid-print.html");
+  it("warns when no @media print and no :focus styles (Rules 7, 14)", () => {
+    const { path, source } = load("invalid-print-focus.html");
     const report = validate(path, source);
-    const issues = report.issues.filter((i) => i.ruleName === "print-media-query");
-    assert.ok(issues.length >= 1);
-    assert.match(issues[0]!.message, /@media print/i);
+    // Both rules emit warnings, not errors, so passed should still be true.
+    assert.equal(report.errorCount, 0, `expected 0 errors, got ${report.errorCount}`);
+    const printIssues = report.issues.filter((i) => i.ruleName === "print-media-query");
+    const focusIssues = report.issues.filter((i) => i.ruleName === "focus-visible");
+    assert.equal(printIssues.length, 1, "expected exactly 1 print-media-query warning");
+    assert.equal(printIssues[0]!.severity, "warning");
+    assert.ok(focusIssues.length >= 1, "expected at least 1 focus-visible warning");
+    for (const issue of focusIssues) {
+      assert.equal(issue.severity, "warning");
+    }
   });
 
-  it("flags inline style attributes (rule-style)", () => {
-    const { path, source } = load("invalid-inline-style.html");
-    const report = validate(path, source);
-    const issues = report.issues.filter((i) => i.ruleName === "no-inline-styles-except-root");
-    assert.ok(issues.length >= 1);
-    assert.equal(issues[0]!.severity, "error");
-  });
-
-  it("flags empty elements (rule-empty)", () => {
-    const { path, source } = load("invalid-empty.html");
-    const report = validate(path, source);
-    const issues = report.issues.filter((i) => i.ruleName === "no-empty-elements");
-    assert.ok(issues.length >= 1);
-    assert.match(issues[0]!.message, /empty element/i);
-  });
-
-  it("flags unresponsive images and missing alt (rule-img)", () => {
-    const { path, source } = load("invalid-img.html");
-    const report = validate(path, source);
-    const issues = report.issues.filter((i) => i.ruleName === "responsive-images");
-    assert.ok(issues.some((i) => i.severity === "error"), "expected responsive error");
-    assert.ok(issues.some((i) => i.severity === "warning"), "expected missing alt warning");
-  });
-
-  it("warns on <svg> without aria-label or role=img (rule-8a)", () => {
-    const { path, source } = load("invalid-svg-aria.html");
-    const report = validate(path, source);
-    const issues = report.issues.filter((i) => i.ruleName === "aria-landmarks");
-    assert.ok(issues.length >= 1);
-    assert.equal(issues[0]!.severity, "warning");
-    assert.equal(report.passed, true, "warnings should not fail validation");
-  });
-
-  it("warns when interactive elements lack focus styles (rule-8b)", () => {
-    const { path, source } = load("invalid-focus.html");
-    const report = validate(path, source);
-    const issues = report.issues.filter((i) => i.ruleName === "focus-visible");
-    assert.ok(issues.length >= 1);
-    assert.equal(issues[0]!.severity, "warning");
-  });
-
-  it("warns on hard-coded color/background hex in same rule (rule-contrast)", () => {
-    const { path, source } = load("invalid-contrast.html");
-    const report = validate(path, source);
-    const issues = report.issues.filter((i) => i.ruleName === "contrast-minimum");
-    assert.ok(issues.length >= 1);
-    assert.equal(issues[0]!.severity, "warning");
-    assert.match(issues[0]!.message, /contrast/i);
-  });
-
-  it("flags missing responsive breakpoints (Rule 5)", () => {
-    const { path, source } = load("invalid-responsive.html");
+  it("flags unresponsive images, empty elements, and inline styles", () => {
+    const { path, source } = load("invalid-responsive-empty-inline-style.html");
     const report = validate(path, source);
     assert.equal(report.passed, false);
-    const issues = report.issues.filter((i) => i.ruleName === "responsive-breakpoints");
-    assert.ok(issues.length >= 1);
-    assert.equal(issues[0]!.severity, "error");
-    assert.match(issues[0]!.message, /640/);
-    assert.match(issues[0]!.message, /960/);
-  });
 
-  it("flags placeholder content in body (Rule 9)", () => {
-    const { path, source } = load("invalid-placeholder.html");
-    const report = validate(path, source);
-    assert.equal(report.passed, false);
-    const issues = report.issues.filter((i) => i.ruleName === "no-placeholder-content");
-    assert.ok(issues.length >= 1);
-    assert.equal(issues[0]!.severity, "error");
-    assert.match(issues[0]!.message, /placeholder date/i);
+    const rules = new Set(report.issues.map((i) => i.ruleName));
+    assert.ok(rules.has("responsive-images"), `missing responsive-images in ${[...rules].join(", ")}`);
+    assert.ok(rules.has("no-empty-elements"), `missing no-empty-elements in ${[...rules].join(", ")}`);
+    assert.ok(
+      rules.has("no-inline-styles-except-root"),
+      `missing no-inline-styles-except-root in ${[...rules].join(", ")}`,
+    );
+
+    const inlineStyle = report.issues.find((i) => i.ruleName === "no-inline-styles-except-root");
+    assert.equal(inlineStyle?.severity, "error");
   });
 });

@@ -1,25 +1,24 @@
 import type { Issue, Rule } from "../types.ts";
-import { snippet } from "../parser.ts";
+import { lineFromOffsetInBlock, snippet } from "../parser.ts";
+
+const BANNED = [
+  { pattern: /\balert\s*\(/g, label: "alert()" },
+  { pattern: /\bprompt\s*\(/g, label: "prompt()" },
+  { pattern: /\bconfirm\s*\(/g, label: "confirm()" },
+];
 
 export const noDialogApis: Rule = {
   id: "rule-12",
   name: "no-dialog-apis",
   check(ctx): Issue[] {
     const issues: Issue[] = [];
-    const banned = [
-      { pattern: /\balert\s*\(/g, label: "alert()" },
-      { pattern: /\bprompt\s*\(/g, label: "prompt()" },
-      { pattern: /\bconfirm\s*\(/g, label: "confirm()" },
-    ];
-
     for (const block of ctx.scriptBlocks) {
       if (block.attributes["src"]) continue;
-      for (const { pattern, label } of banned) {
+      for (const { pattern, label } of BANNED) {
         pattern.lastIndex = 0;
         let m: RegExpExecArray | null;
         while ((m = pattern.exec(block.content)) !== null) {
-          const line =
-            block.startLine + (block.content.slice(0, m.index).split("\n").length - 1);
+          const line = lineFromOffsetInBlock(block, m.index);
           issues.push({
             rule: "rule-12",
             ruleName: "no-dialog-apis",

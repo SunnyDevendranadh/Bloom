@@ -1,31 +1,31 @@
 import type { Issue, Rule } from "../types.ts";
 import { offsetToLine, snippet } from "../parser.ts";
 
-const EMPTY_ELEMENT_RE =
-  /<(p|div|span|section|article)\b[^>]*>\s*<\/\1>/gi;
+const EMPTY_ELEMENT_RE = /<(div|span|p)\b([^>]*)>\s*<\/\1>/gi;
 
 export const noEmptyElements: Rule = {
-  id: "rule-empty",
+  id: "rule-16",
   name: "no-empty-elements",
   check(ctx): Issue[] {
     const issues: Issue[] = [];
-    const html = ctx.bodyHtml || ctx.source;
-    const baseOffset = ctx.bodyHtml
-      ? ctx.source.indexOf(ctx.bodyHtml)
-      : 0;
-    EMPTY_ELEMENT_RE.lastIndex = 0;
     let m: RegExpExecArray | null;
-    while ((m = EMPTY_ELEMENT_RE.exec(html)) !== null) {
-      const line = offsetToLine(ctx.source, baseOffset + m.index);
+    EMPTY_ELEMENT_RE.lastIndex = 0;
+
+    while ((m = EMPTY_ELEMENT_RE.exec(ctx.source)) !== null) {
+      const attrs = m[2] ?? "";
+      if (/\b(?:aria-hidden|data-template|class|role)\b/i.test(attrs)) continue;
+
+      const line = offsetToLine(ctx.source, m.index);
       issues.push({
-        rule: "rule-empty",
+        rule: "rule-16",
         ruleName: "no-empty-elements",
-        severity: "error",
+        severity: "warning",
         line,
-        message: "empty element",
+        message: `Empty <${m[1]}> element found — remove it or mark intentional generated content with data-template (Rule 16)`,
         snippet: snippet(ctx.lines, line),
       });
     }
+
     return issues;
   },
 };
