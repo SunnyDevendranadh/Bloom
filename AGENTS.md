@@ -65,12 +65,16 @@ Reserved `.md` files (`README.md`, `CLAUDE.md`, `AGENTS.md`, `CONTRIBUTING.md`, 
 
 ## HTML Skeleton
 
-Every file starts with:
-- `<meta charset="utf-8">` + `<meta name="viewport" content="width=device-width, initial-scale=1">`
-- `<title>` — specific, not generic
-- `<style>` with `:root` palette, reset (`* { margin:0; padding:0; box-sizing:border-box }`), body styles, `.page { max-width:860px; margin:0 auto }`
-- Content in `<div class="page">` or semantic wrapper
-- `<script>` at end — addEventListener only, no eval, no innerHTML with user data
+```html
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>[Specific title]</title><style>
+:root{--ivory:#FAF9F5;--slate:#141413;--clay:#D97757;--oat:#E3DACC;--olive:#788C5D;--rust:#B04A3F;--gray-100:#F0EEE6;--gray-300:#D1CFC5;--gray-500:#87867F;--gray-700:#3D3D3A;--white:#FFF;--serif:ui-serif,Georgia,"Times New Roman",serif;--sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+*{margin:0;padding:0;box-sizing:border-box}body{background:var(--ivory);color:var(--gray-700);font-family:var(--sans);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;padding:56px 24px 120px}.page{max-width:860px;margin:0 auto}</style>
+</head><body><div class="page"><!-- semantic content --></div>
+<script>/* addEventListener only; no eval, no innerHTML with user data */</script>
+</body></html>
+```
 
 ---
 
