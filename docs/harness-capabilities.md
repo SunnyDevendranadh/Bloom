@@ -6,6 +6,8 @@ Bloom is a **skill convention**, not a runtime. There is no Bloom daemon, CLI se
 
 ## Capability matrix
 
+### Bloom (HTML artifact mode)
+
 | Harness | Primary install | `/bloom` slash | Sticky without re-prompt | Full patterns (categories, copy-paste UI) |
 |---------|-----------------|----------------|---------------------------|-------------------------------------------|
 | **Claude Code** | `.claude/skills/bloom/SKILL.md` (or plugin marketplace) | Yes — native skill slash | Yes — skill stays loaded for the session | Yes — `SKILL.md` + repo `droids/bloom.md` / templates |
@@ -16,6 +18,24 @@ Bloom is a **skill convention**, not a runtime. There is no Bloom daemon, CLI se
 | **Gemini CLI** | `GEMINI.md` (points at / inlines `AGENTS.md`) | Phrase only | Prompt-dependent | Same as Codex |
 | **Factory Droid** | `droids/bloom.md` | Phrase only | Prompt-dependent | Full file in `droids/bloom.md` today |
 | **Windsurf, Aider, Continue, Copilot VS Code, Pi, etc.** | `AGENTS.md` or harness-specific rules file | Varies by harness | Prompt-dependent | `AGENTS.md` + optional vendor of `droids/` |
+
+\* **Cursor** does not ship a Bloom runtime. Slash-looking text in chat is not a guaranteed command unless Cursor maps it; rely on **natural-language triggers** and the **rule/skill text** loaded into context.
+
+### Bloom Plan (decision-transparent planning mode)
+
+| Harness | Primary install | `/plan` slash | Decision tables | Adaptive scale | HTML companion |
+|---------|-----------------|---------------|-----------------|----------------|----------------|
+| **Claude Code** | `.claude/skills/bloom-plan/SKILL.md` | Yes — native skill slash | Yes | Yes (Greenfield / Brownfield / Phase) | Yes |
+| **Cursor** | `.cursor/rules/bloom-plan.mdc` | No — phrases only* | Yes | Yes | Yes |
+| **Codex CLI / Codex App** | `AGENTS.md` (synced) | Phrase only | Yes | Yes | Yes |
+| **OpenCode** | `AGENTS.md` + `plugins/bloom-plan/INSTALL.opencode.md` | Phrase only | Yes | Yes | Yes |
+| **GitHub Copilot CLI** | `AGENTS.md` (synced) | Phrase only | Yes | Yes | Yes |
+| **Gemini CLI** | `GEMINI.md` (synced) | Phrase only | Yes | Yes | Yes |
+| **Factory Droid** | Copy `droids/bloom-plan.md` to `.factory/droids/` | Phrase only | Yes | Yes | Yes |
+| **Continue** | Copy `droids/bloom-plan.md` to `.continue/rules/bloom-plan.md` | Phrase only | Yes | Yes | Yes |
+| **GitHub Copilot VS Code** | `.github/copilot-instructions.md` (append) | Phrase only | Yes | Yes | Yes |
+| **Windsurf** | `.windsurfrules` (append) | Phrase only | Yes | Yes | Yes |
+| **Aider** | `AGENTS.md` (synced) | Phrase only | Yes | Yes | Yes |
 
 \* **Cursor** does not ship a Bloom runtime. Slash-looking text in chat is not a guaranteed command unless Cursor maps it; rely on **natural-language triggers** and the **rule/skill text** loaded into context.
 

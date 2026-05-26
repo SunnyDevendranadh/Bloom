@@ -21,6 +21,39 @@ Type `/bloom` once and every substantial artifact for the rest of the session be
 
 ---
 
+## Bloom Plan — Decision-Transparent Planning
+
+Bloom also ships a **planning skill** that adds Cursor-style Plan-Execute-Verify on top of Bloom's HTML output. Activate it with `/bloom-plan` or `/plan` in any supported harness.
+
+**What it does:**
+
+1. **Research** (read-only phase) — explores the codebase, gathers context, asks clarifying questions
+2. **Plan** — writes a structured `.plan.md` and an interactive `.plan.html` companion to `.cursor/plans/`
+3. **Approve** — pauses for your explicit approval before making any changes
+4. **Execute** — implements the plan step-by-step after you approve
+5. **Verify** — runs lint/test, confirms changes against the plan
+
+**What makes it different from regular planning:**
+
+- **Decision transparency** — every decision includes 3-4 alternatives with concrete examples, measurable benchmarks, and explicit "why not chosen" reasoning. No "trust me" choices.
+- **Adaptive scale** — automatically adjusts depth: Greenfield (full-scope architecture decisions), Brownfield (execution-level implementation choices), or Phase Planning (task-level steps from a master plan).
+- **Interactive HTML companion** — every plan gets a `.plan.html` with expandable decision cards, `localStorage`-persisted checklists, color-coded risk matrices, and a status timeline.
+
+**Install for your harness** — bloom-plan is included in `AGENTS.md`, `GEMINI.md`, and the other harness files when you run `scripts/sync-skill-files.sh`. See the harness-specific files:
+
+| Harness | File |
+|---------|------|
+| Claude Code | `.claude/skills/bloom-plan/SKILL.md` |
+| Cursor | `.cursor/rules/bloom-plan.mdc` |
+| Codex CLI / App / OpenCode / Copilot CLI / Aider | `AGENTS.md` (synced via `scripts/sync-skill-files.sh`) |
+| Gemini CLI | `GEMINI.md` (synced via `scripts/sync-skill-files.sh`) |
+| Factory Droid | Copy `droids/bloom-plan.md` to `.factory/droids/` |
+| Continue | Copy `droids/bloom-plan.md` to `.continue/rules/bloom-plan.md` |
+| GitHub Copilot VS Code | Append snippet to `.github/copilot-instructions.md` |
+| Windsurf | Append snippet to `.windsurfrules` |
+
+---
+
 ## Why
 
 | Flat markdown | Self-contained HTML |
@@ -220,21 +253,37 @@ Bloom/
 ├── .claude-plugin/
 │   └── marketplace.json                         # Bloom marketplace listing
 ├── plugins/
-│   └── bloom/
-│       ├── .claude-plugin/
-│       │   └── plugin.json                      # Bloom plugin manifest
+│   ├── bloom/
+│   │   ├── .claude-plugin/
+│   │   │   └── plugin.json                      # Bloom plugin manifest
+│   │   ├── skills/
+│   │   │   └── bloom/
+│   │   │       └── SKILL.md                     # Bloom plugin-packaged skill
+│   │   └── INSTALL.opencode.md                  # OpenCode install instructions
+│   └── bloom-plan/
 │       ├── skills/
-│       │   └── bloom/
-│       │       └── SKILL.md                     # Plugin-packaged skill
+│       │   └── bloom-plan/
+│       │       └── SKILL.md                     # Bloom Plan plugin-packaged skill
 │       └── INSTALL.opencode.md                  # OpenCode install instructions
 ├── .claude/
 │   └── skills/
-│       └── bloom/
-│           └── SKILL.md                         # Claude Code skill (manual install)
+│       ├── bloom/
+│       │   └── SKILL.md                         # Claude Code skill (bloom)
+│       └── bloom-plan/
+│           └── SKILL.md                         # Claude Code skill (bloom-plan)
+├── .cursor/
+│   └── rules/
+│       ├── bloom.mdc                            # Cursor rule (bloom)
+│       └── bloom-plan.mdc                       # Cursor rule (bloom-plan)
 ├── droids/
-│   └── bloom.md                                 # Canonical cross-harness skill
+│   ├── bloom.md                                 # Canonical cross-harness skill (index)
+│   ├── bloom-core.md                            # Bloom core skill (mode, rules, skeleton)
+│   ├── bloom-patterns.md                        # Bloom patterns (categories, harness matrix)
+│   ├── bloom-plan.md                            # Canonical bloom-plan skill
+│   └── bloom-plan-index.md                      # Bloom-plan maintainer index
 ├── docs/
 │   ├── harness-setup.md                         # Per-agent setup guides
+│   ├── harness-capabilities.md                  # Harness capability matrix
 │   ├── categories.md                            # The 9 document categories explained
 │   ├── design-system.md                         # Token reference (v1)
 │   ├── design-system-v2.md                      # Dark mode, motion tokens, Tabs, Modal
@@ -279,6 +328,13 @@ Bloom/
     └── workflows/
         └── ci.yml                               # Validator tests + artifact validation
 ```
+
+Harnesses that don't have a tracked install target copy from `droids/bloom-plan.md` to their native location:
+- **Factory Droid:** `cp droids/bloom-plan.md .factory/droids/bloom-plan.md` (project) or `~/.factory/droids/` (global)
+- **Continue:** `cp droids/bloom-plan.md .continue/rules/bloom-plan.md`
+- **GitHub Copilot VS Code:** append snippet to `.github/copilot-instructions.md`
+- **Windsurf:** append snippet to `.windsurfrules`
+- **Pi / General:** paste into system prompt
 
 Templates and skeletons are different:
 

@@ -8,18 +8,20 @@ Bloom is sticky: once activated in a session, it stays on until the session ends
 
 ## Manual install (primary path for every harness)
 
-The single source of truth for the skill is [`droids/bloom.md`](../droids/bloom.md). Every harness install is some variation of copying that file into the location the harness reads.
+The single source of truth for Bloom is [`droids/bloom.md`](../droids/bloom.md) and for Bloom Plan is [`droids/bloom-plan.md`](../droids/bloom-plan.md). Every harness install is some variation of copying those files into the location the harness reads. After editing `droids/bloom-core.md` or `droids/bloom-plan.md`, run `./scripts/sync-skill-files.sh` to update `AGENTS.md` and `GEMINI.md`.
 
-| Harness | Manual install |
-|---|---|
-| Claude Code | `cp -r .claude/skills/bloom /path/to/project/.claude/skills/bloom` |
-| Codex CLI | `cp droids/bloom.md /path/to/project/AGENTS.md` |
-| Codex App | `cp droids/bloom.md AGENTS.md && git commit && git push` |
-| Factory Droid | `cp droids/bloom.md .factory/droids/` |
-| Gemini CLI | `cp droids/bloom.md GEMINI.md` |
-| OpenCode | `cp droids/bloom.md /path/to/project/AGENTS.md` |
-| Cursor | `cp droids/bloom.md .cursor/rules/bloom.mdc` |
-| GitHub Copilot CLI | `cp droids/bloom.md /path/to/project/AGENTS.md` |
+| Harness | Bloom install | Bloom Plan install |
+|---|---|---|
+| Claude Code | `cp -r .claude/skills/bloom /path/to/project/.claude/skills/` | `cp -r .claude/skills/bloom-plan /path/to/project/.claude/skills/` |
+| Codex CLI | `cp droids/bloom.md /path/to/project/AGENTS.md` | Included in synced `AGENTS.md` |
+| Codex App | `cp droids/bloom.md AGENTS.md && git commit && git push` | Included in synced `AGENTS.md` |
+| Factory Droid | `cp droids/bloom.md .factory/droids/` | `cp droids/bloom-plan.md .factory/droids/bloom-plan.md` |
+| Gemini CLI | `cp droids/bloom.md GEMINI.md` | Included in synced `GEMINI.md` |
+| OpenCode | `cp droids/bloom.md /path/to/project/AGENTS.md` | Included in synced `AGENTS.md` |
+| Cursor | `cp droids/bloom.md .cursor/rules/bloom.mdc` | `cp .cursor/rules/bloom-plan.mdc /path/to/project/.cursor/rules/` |
+| GitHub Copilot CLI | `cp droids/bloom.md /path/to/project/AGENTS.md` | Included in synced `AGENTS.md` |
+
+Note: For Factory Droid and Continue, the install targets (`.factory/droids/`, `.continue/rules/`) are runtime locations not tracked in git — copy from `droids/` to the harness-native directory.
 
 Per-harness deep notes are in each section below.
 
@@ -407,7 +409,18 @@ If you want bloom available across multiple harnesses in one repo, the cheapest 
 | Aider | `AGENTS.md` (or `.aider.conf.yml`) |
 | Continue | `.continue/rules.md` |
 
-The `AGENTS.md` row covers Codex CLI, Codex App, OpenCode, GitHub Copilot CLI, and Aider in one file. Drop bloom there once and five harnesses pick it up.
+The `AGENTS.md` row covers Codex CLI, Codex App, OpenCode, GitHub Copilot CLI, and Aider in one file. Drop bloom there once and five harnesses pick it up. Bloom Plan is included in `AGENTS.md` and `GEMINI.md` via the sync script (`./scripts/sync-skill-files.sh`).
+
+**Bloom Plan** has harness-specific files that must be installed separately:
+
+| Harness | Bloom Plan source → target |
+|---------|---------------------------|
+| Claude Code | `.claude/skills/bloom-plan/SKILL.md` (tracked in repo with YAML frontmatter) |
+| Cursor | `.cursor/rules/bloom-plan.mdc` (tracked in repo with YAML frontmatter) |
+| Factory Droid | `droids/bloom-plan.md` → `.factory/droids/bloom-plan.md` (copy, not tracked) |
+| Continue | `droids/bloom-plan.md` → `.continue/rules/bloom-plan.md` (copy, not tracked) |
+| GitHub Copilot (VS Code) | Append bloom-plan snippet to `.github/copilot-instructions.md` (not tracked) |
+| Windsurf | Append bloom-plan snippet to `.windsurfrules` (not tracked) |
 
 ---
 
@@ -448,3 +461,35 @@ The agent should answer in one or two lines of plain text. No HTML artifact for 
 > `/bloom-off`
 
 The agent should confirm in plain text and return to default markdown behavior on the next turn.
+
+---
+
+## Bloom Plan verification
+
+After installing bloom-plan for your harness, test the planning lifecycle:
+
+**1. Verify activation.** Send:
+
+> `/bloom-plan`
+
+The agent should confirm in plain text that planning mode is active, list the deactivation command (`/plan-off`), and note that plan artifacts go to `.cursor/plans/`.
+
+**2. Verify plan generation.** Send:
+
+> "Plan the architecture for a URL shortener service"
+
+The agent should enter a research phase (read-only), then produce both a `.plan.md` and `.plan.html` in `.cursor/plans/`. Every decision section should have 3-4 alternatives with concrete examples and benchmarks.
+
+**3. Verify approval gate.** After the plan is written, the agent should pause and ask for explicit approval before executing any changes.
+
+**4. Verify adaptive scale.** Try each:
+
+- Greenfield: "Plan a new project from scratch" — full-scope decisions (tech stack, architecture, etc.)
+- Brownfield: "Plan adding auth to this codebase" — execution-level decisions (which files, which patterns)
+- Phase: "The master plan has 5 phases. Plan phase 1" — task-level decisions (atomic steps, verification)
+
+**5. Verify deactivation.** Send:
+
+> `/plan-off`
+
+The agent should confirm in plain text and return to default behavior.

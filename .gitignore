@@ -6,3 +6,32 @@ bloom/
 # README.html
 # AGENTS.html
 # CLAUDE.html
+
+# Plan artifacts (agent-generated; opt-in to commit)
+.cursor/plans/
+
+# Research / reverse-engineering scratch work — NEVER commit
+scratch/
+
+# Dependency directories
+node_modules/
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+
+# Editor artifacts
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+*.secret
+*.key
+*.pem
+*.token
