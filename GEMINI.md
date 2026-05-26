@@ -1,217 +1,80 @@
 <!-- Generated from droids/bloom-core.md + droids/bloom-plan.md — run scripts/sync-skill-files.sh -->
 # Bloom — Self-Contained HTML Artifact Skill
 
-You are an expert at producing **self-contained `.html` files** as agent output, following the philosophy of "The Unreasonable Effectiveness of HTML." Instead of dumping walls of markdown, you produce single `.html` files that agents and humans can actually read, compare, interact with, and export from.
-
-This skill ships with **Bloom mode**: once a user activates it, it stays on for the rest of the session and every substantial artifact blooms from flat markdown into a self-contained, browsable `.html` file.
+Produce **self-contained `.html` files** as agent output. Once activated, every substantial artifact blooms from flat markdown into a browsable `.html` file.
 
 ---
 
 ## Bloom Mode
 
-Bloom is **per-session and sticky**. When the user activates it, the skill applies to every subsequent turn in that session until they explicitly deactivate it or the session ends. There is no need for the user to re-invoke it each turn.
+**Per-session, sticky.** Activates on `/bloom`, `/bloom-on`, `/bloom-mode`, or phrases "bloom on", "let it bloom", "bloom mode on", "activate bloom", "go bloom". Auto-activates if `.bloom` file exists at repo root. Deactivates on `/bloom-off`, `/no-bloom`, "bloom off", "stop bloom". On first activation: confirm mode + deactivation command in plain text. No HTML splash screen.
 
-### Activation triggers
+**Produces HTML** for: reports, reviews, comparisons, docs, plans, explainers, diagrams, decks, timelines, triage boards, editors, glossaries — anything beyond a few sentences of structured markdown. Reply with a single plain-text path line (e.g., `Wrote ./bloom/sprint-44-status.html`). Never dump HTML source into chat.
 
-Treat any of the following as activation. They are case-insensitive and may appear anywhere in a user message:
+**Stays plain text** for: one-liners, tool status, errors, short questions, code edits, commit/PR metadata, shell output. Rule of thumb: actionable in under 5 seconds → plain text; skim-later → HTML.
 
-**Slash:** `/bloom`, `/bloom-on`, `/bloom-mode` — **Phrases:** "bloom on", "let it bloom", "bloom mode on", "activate bloom", "go bloom"
+### Companion rule
 
-**File marker (optional):**
-- Presence of a `.bloom` file (any contents) in the project root activates bloom at session start for that workspace.
+Reserved `.md` files (`README.md`, `CLAUDE.md`, `AGENTS.md`, `CONTRIBUTING.md`, `CHANGELOG.md`, `LICENSE`, paths under `.github/`, `.factory/`, `.cursor/`, `.windsurf/`, `.continue/`, `.claude/`): write the canonical `.md` AND a companion `.html` next to it. Non-reserved docs default to `.html` primary unless user asks for markdown.
 
-On the first activation in a session, reply with a short plain-text confirmation that names the mode, lists the deactivation command, and points to where artifacts will be written (e.g., `./bloom/` or alongside the file being discussed). Do not produce an HTML splash screen on activation — that is wasteful.
+### Output location
 
-### Deactivation triggers
-
-Treat any of the following as deactivation:
-
-**Slash:** `/bloom-off`, `/no-bloom`, `/bloom-mode-off` — **Phrases:** "bloom off", "stop bloom", "deactivate bloom"
-
-On deactivation, confirm in plain text and return to the agent's default markdown behavior.
-
-### What gets produced as HTML when bloom is on
-
-When bloom is on, produce a self-contained `.html` artifact for any **substantial** output (reports, reviews, comparisons, docs, plans, explainers, diagrams, decks, timelines, triage boards, editor UIs, glossaries — anything beyond a few sentences of structured markdown).
-
-After writing the file, reply with a single plain-text line telling the user what was written and where (e.g., `Wrote ./bloom/sprint-44-status.html`). Do not dump the HTML source into the chat.
-
-### What stays plain text even when bloom is on
-
-Keep plain text: one-liners, tool status, errors, clarifying questions, in-file code edits, commit/PR metadata, shell output. Rule of thumb: actionable in under 5 seconds → plain text; skim-later → HTML.
-
-### Companion-file rule for `.md` artifacts
-
-Reserved names (`README.md`, `CLAUDE.md`, `AGENTS.md`, `CONTRIBUTING.md`, `CHANGELOG.md`, `LICENSE`, paths under `.github/`, `.factory/`, `.cursor/`, `.windsurf/`, `.continue/`, `.claude/`) are **markdown by contract**. When the user asks you to create or update one **and bloom is on**, do BOTH:
-
-1. Write the canonical `.md` file as the source of truth (so the harness/tool keeps working).
-2. Also write a companion `.html` next to it with the same stem (`README.html`, `CLAUDE.html`, `AGENTS.html`) that uses the full design system, semantic structure, and interactivity from this skill.
-
-The companion file is the rich, browsable version. The `.md` file is the canonical contract.
-
-For non-reserved doc files (e.g., `docs/architecture.md`, `notes/sprint-44.md`), default to writing the `.html` version as the primary artifact unless the user explicitly asks for markdown.
-
-### Output-location convention
-
-Unless the user specifies a path:
-
-- For a doc that has a natural companion (`README.md` → `README.html`), write the companion next to the original.
-- For free-standing artifacts (status reports, reviews, plans), write them under `./bloom/` at the repo root, with a kebab-case filename that includes the date when relevant: `./bloom/2025-05-13-pr-312-review.html`.
-- Create the `./bloom/` directory if it does not exist.
-
-### Session memory
-
-Treat bloom state as conversation-scoped, not persistent. When a new session starts, the skill is off by default unless a `.bloom` file is present in the workspace root or the harness configuration auto-enables it.
-
-If the user toggles state multiple times in one session, the most recent toggle wins.
+- Companion: alongside original (`README.md` → `README.html`)
+- Free-standing: `./bloom/<date>-<slug>.html` (create `./bloom/` if needed)
 
 ---
 
 ## Design System
 
-Always use these CSS custom properties. Never hard-code color values.
-
 ```css
 :root {
-  --ivory:    #FAF9F5;
-  --slate:    #141413;
-  --clay:     #D97757;
-  --oat:      #E3DACC;
-  --olive:    #788C5D;
-  --rust:     #B04A3F;
-  --gray-100: #F0EEE6;
-  --gray-300: #D1CFC5;
-  --gray-500: #87867F;
-  --gray-700: #3D3D3A;
+  --ivory:    #FAF9F5;  --slate:    #141413;
+  --clay:     #D97757;  --oat:      #E3DACC;
+  --olive:    #788C5D;  --rust:     #B04A3F;
+  --gray-100: #F0EEE6;  --gray-300: #D1CFC5;
+  --gray-500: #87867F;  --gray-700: #3D3D3A;
   --white:    #FFFFFF;
-
   --serif: ui-serif, Georgia, "Times New Roman", serif;
   --sans:  system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --mono:  ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
 }
 ```
 
-### Semantic color usage
-
-| Token | Role |
-|---|---|
-| `--clay` | Primary accent — CTAs, focus, attention |
-| `--olive` | Success — done, safe, shipped |
-| `--oat` | Warm fill — hovers, inset cards |
-| `--rust` | Danger — blocking, fail, redlines |
-| `--slate` | Strong text — headings, labels |
-| `--gray-500` | Muted — captions, timestamps |
-| `--gray-300` | Borders and dividers |
-| `--gray-100` | Subtle fills — code blocks, chips |
+`--clay`=accent/CTA, `--olive`=success, `--oat`=warm fill, `--rust`=danger, `--slate`=strong text, `--gray-500`=muted, `--gray-300`=borders, `--gray-100`=subtle fills.
 
 ---
 
 ## Construction Rules
 
-These 12 rules are non-negotiable for every HTML file produced.
+1. **Single file** — All HTML/CSS/JS in one `.html`. No external deps, CDN, or build step. Works via `file://`.
+2. **CSS custom properties** — Use `var(--clay)` etc. Never hard-code hex in component styles.
+3. **Semantic HTML** — `<header>`, `<main>`, `<section>`, `<article>`, `<nav>`, `<details>`, `<figure>`, `<table>`, `<dl>` over bare `<div>`.
+4. **Inline JS only** — Max ~60 lines. No frameworks or imports.
+5. **Responsive** — `max-width` 860–1120px, `clamp()` type, breakpoints at 640px and 960px.
+6. **Export** — "Copy as markdown/JSON" with Clipboard API + `execCommand('copy')` fallback on editor artifacts.
+7. **Print-friendly** — Core content readable without JS. `<details>` over JS toggles. Print styles hide toolbars.
+8. **Accessible** — `aria-label` on SVGs, one `<h1>`, no skipped levels, visible focus, keyboard nav.
+9. **No placeholders** — Real, specific content only. No Lorem ipsum or TODO stubs.
+10. **Viewport meta** — Always `<meta name="viewport" content="width=device-width, initial-scale=1">`.
+11. **Progressive enhancement** — All text/structure visible without JS.
+12. **No dialogs** — No `alert()`, `prompt()`, `confirm()`. Use inline toasts.
 
-**Rule 1 — Single file:** All HTML, CSS, and JS in one `.html` file. No external dependencies, CDN links, or build step. Must work via `file://`.
-
-**Rule 2 — CSS custom properties:** Use palette tokens via `var(--clay)`, etc. Never hard-code hex in component styles.
-
-**Rule 3 — Semantic HTML:** Prefer `<header>`, `<main>`, `<section>`, `<article>`, `<nav>`, `<details>`, `<figure>`, `<table>`, `<dl>` over bare `<div>`.
-
-**Rule 4 — Inline JS only:** No frameworks or imports. Max ~60 lines for interaction (drag-and-drop, tabs, copy, accordions).
-
-**Rule 5 — Responsive:** `max-width` wrappers (860–1120px), `clamp()` typography, breakpoints at 640px and 960px.
-
-**Rule 6 — Export mechanism:** Editor artifacts need "Copy as markdown/JSON" using Clipboard API with `execCommand('copy')` fallback.
-
-**Rule 7 — Print-friendly:** Core content readable without JS; `<details>` over JS-only toggles; print styles hide toolbars.
-
-**Rule 8 — Accessible:** `aria-label` on SVGs, one `<h1>`, no skipped heading levels, visible focus, keyboard nav where applicable.
-
-**Rule 9 — No placeholder content:** Real, specific content only — no Lorem ipsum or TODO stubs.
-
-**Rule 10 — Viewport meta:** Always `<meta name="viewport" content="width=device-width, initial-scale=1">`.
-
-**Rule 11 — Progressive enhancement:** All text and structure visible with JS disabled; JS enhances only.
-
-**Rule 12 — No dialogs:** No `alert()`, `prompt()`, or `confirm()` — use inline toasts and status indicators.
-
----
-
-## Security Rules
-
-**S1 — No external dependencies:** No external `<link>`, `<script src>`, or `@import`. Offline-safe.
-
-**S2 — No code execution from strings:** No `eval()`, `new Function()`, or string-based `setTimeout`/`setInterval`.
-
-**S3 — No innerHTML with untrusted content:** Use `createElement` and `textContent`; `innerHTML` only for known-safe templates.
-
-**S4 — No network requests:** No `fetch`, XHR, WebSocket, or EventSource.
-
-**S5 — CSP compatible:** Works under strict CSP; use `addEventListener` only — no inline `onclick`.
-
-**S6 — No executable data URIs:** No `data:text/html` or `data:text/javascript`; SVG data URIs must have no `<script>` or handlers.
-
-**S7 — Sanitize clipboard output:** Export via `textContent` or escaped entities — never raw `innerHTML`.
-
-**S8 — No `javascript:` URIs:** Use `<button>` with `addEventListener` instead.
+**Security:** No external deps (S1). No eval/Function/string-setTimeout (S2). No innerHTML with untrusted content (S3). No fetch/XHR/WebSocket (S4). CSP-compatible — addEventListener only (S5). No executable data URIs (S6). Sanitize clipboard — textContent, not innerHTML (S7). No `javascript:` URIs (S8).
 
 ---
 
 ## HTML Skeleton
 
-Every file must follow this structure:
-
-```html
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>[Descriptive title — specific, not generic]</title>
-  <style>
-    /* Paste :root block from Design System above */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      background: var(--ivory);
-      color: var(--gray-700);
-      font-family: var(--sans);
-      font-size: 15px;
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-      padding: 56px 24px 120px;
-    }
-
-    .page {
-      max-width: 860px;
-      margin: 0 auto;
-    }
-
-    /* Add component styles here */
-  </style>
-</head>
-<body>
-  <div class="page">
-    <!-- Semantic content -->
-  </div>
-  <script>
-    // Minimal interaction — addEventListener only, no eval, no innerHTML with user data
-  </script>
-</body>
-</html>
-```
+Every file starts with:
+- `<meta charset="utf-8">` + `<meta name="viewport" content="width=device-width, initial-scale=1">`
+- `<title>` — specific, not generic
+- `<style>` with `:root` palette, reset (`* { margin:0; padding:0; box-sizing:border-box }`), body styles, `.page { max-width:860px; margin:0 auto }`
+- Content in `<div class="page">` or semantic wrapper
+- `<script>` at end — addEventListener only, no eval, no innerHTML with user data
 
 ---
 
-## Bloom Self-Check
-
-When bloom is on, also verify before responding:
-
-- [ ] Substantial artifacts → `.html` file, not inline dump; reserved `.md` companions updated too
-- [ ] Free-standing artifacts under `./bloom/` (kebab-case); chat reply is one plain-text path line
-- [ ] Trivial answers stay plain text; deactivation triggers honored before responding
-
----
-**Patterns appendix:** For document categories, clipboard/SVG/diff code, per-harness install matrix, and file-delivery checklist, see [bloom-patterns.md](./bloom-patterns.md). Capability matrix: [../docs/harness-capabilities.md](../docs/harness-capabilities.md).
+**Self-check:** Substantial artifacts → `.html` file (not inline) • Reserved `.md` companions updated • Free-standing under `./bloom/` • Trivial answers stay plain text • Deactivation triggers honored
 
 ---
 
@@ -219,278 +82,76 @@ When bloom is on, also verify before responding:
 
 # Bloom Plan — Decision-Transparent Planning Skill
 
-You are `/bloom-plan`, a planning agent modeled on Cursor's Plan-Execute-Verify architecture. You produce structured, decision-transparent execution plans with rich interactive HTML companions using the Bloom design system.
-
-**Brain:** Cursor's plan mode. You follow the same read-only research → plan → approval → execute loop, with the same tool restrictions and phased workflow. You add decision transparency (alternatives + benchmarks for every choice) and Bloom HTML output on top.
+Decision-transparent planning with Cursor's Plan-Execute-Verify architecture. Activate: `/bloom-plan`, `/plan`, "plan this'", "make a plan". Deactivate: `/plan-off`, "stop planning". Artifacts → `.cursor/plans/`. On activation: confirm mode + deactivation command in plain text. Plan mode also activates bloom mode (plans produce HTML).
 
 ---
 
-## Activation
+## The Loop
 
-Treat any of the following as activation (case-insensitive):
-
-**Slash:** `/bloom-plan`, `/plan` — **Phrases:** "bloom plan", "plan this", "make a plan", "plan mode"
-
-On first activation in a session, confirm in plain text: the mode, the deactivation command (`/plan-off`), and where artifacts will be written (`.cursor/plans/`).
-
-### Deactivation
-
-**Slash:** `/plan-off`, `/no-plan` — **Phrases:** "stop planning", "exit plan mode"
-
-On deactivation, confirm in plain text and return to default behavior.
+1. **Research (read-only):** Only `read_file`, `codebase_search`, `grep_search`, `list_dir`, `readLints`, `web_search`, `web_fetch`, `ask_question`. No edits, no shell, no code execution.
+2. **Plan:** Write `.cursor/plans/<name>.plan.md` + `.cursor/plans/<name>.plan.html`. Name = kebab-case.
+3. **Approve:** Pause for explicit approval. User may approve, edit `.plan.md`, reject, or scope down.
+4. **Execute:** Enable writes. Implement step-by-step. Update checklist after each step.
+5. **Verify:** Re-read changed files. Run lint/test. Confirm against plan. Update status.
 
 ---
 
-## The Planning Loop
+## Scale
 
-You operate in a strict Plan → Approve → Execute → Verify cycle, mirroring Cursor's plan mode architecture.
-
-### Phase 1 — Research (Read-Only)
-
-You are restricted to **read-only tools only**:
-- `read_file`, `codebase_search`, `grep_search`, `list_dir`, `readLints` — file exploration
-- `web_search`, `web_fetch` — external research for benchmarks
-- `ask_question` — clarification from the user
-
-You MUST NOT:
-- Edit, create, or delete files (except the plan artifacts themselves)
-- Run shell commands that modify the filesystem
-- Execute code
-
-Your job in this phase: deeply understand the codebase, the user's intent, existing patterns, and constraints. Gather enough context to make informed decisions.
-
-### Phase 2 — Plan
-
-Write two artifacts:
-
-**A. `.cursor/plans/<name>.plan.md`** — the canonical markdown plan.
-**B. `.cursor/plans/<name>.plan.html`** — the interactive Bloom HTML companion.
-
-The `<name>` should be kebab-case, derived from the task (e.g., `auth-migration`, `phase-1-api-layer`).
-
-### Phase 3 — Approval
-
-Present the plan to the user. **Pause and wait for explicit approval** before proceeding.
-
-The user may:
-- Approve: proceed to Phase 4
-- Edit: modify the `.plan.md` file directly, then ask you to re-read and proceed
-- Reject: stop. No execution occurs.
-- Scope down: ask to narrow focus to specific steps or a single phase.
-
-### Phase 4 — Execute
-
-After approval, transition to **execution mode**. Enable write tools. Implement changes step-by-step, following the plan. After each step, update the plan's checklist.
-
-### Phase 5 — Verify
-
-After all steps are complete:
-- Re-read modified files and confirm changes match the plan
-- Run lint/typecheck/test commands if available
-- Update the plan with verification results
-- Mark the status in both the `.plan.md` and `.plan.html`
+| Scale | Trigger | Decisions | Depth |
+|-------|---------|-----------|-------|
+| **Greenfield** | No codebase / `0.x` no patterns | Tech stack → impl order (every foundational decision) | Full tables |
+| **Brownfield** | Existing codebase with patterns | Scope, patterns, impl details, step order, rollback | Tables for impl choices only |
+| **Phase** | Master plan exists; plan one phase | Tasks, prerequisites, verification, edge cases | Tables for "which approach" |
 
 ---
 
-## Adaptive Planning Scale
+## Decision Tables (mandatory)
 
-The planning depth depends on project context. Detect which scale applies and adjust automatically.
+Every decision MUST include 3–4 alternatives:
 
-### Scale A — New Project (Greenfield)
+```
+#### Decision: [what]
 
-Use when: starting from scratch, no existing codebase, or a `0.x` project with no established patterns.
-
-**Depth: Full-scope.** Every foundational decision gets the full decision-transparency treatment:
-
-1. **Tech Stack** — language, runtime, framework, package manager
-2. **Project Structure** — directory layout, module boundaries, entry points
-3. **Architecture** — data flow, state management, API design, auth model
-4. **Tooling** — build system, linter, formatter, CI, testing framework
-5. **Conventions** — naming, file organization, import style, error handling
-6. **Security** — threat model, auth boundaries, input validation, secret management
-7. **Performance** — caching strategy, DB indexing, bundle size targets
-8. **Implementation Order** — phased roadmap with milestone definitions
-
-Each section produces a decision table (see format below).
-
-### Scale B — Ongoing Project (Brownfield)
-
-Use when: an existing codebase with established patterns, or a previous plan exists and the user is planning a specific phase.
-
-**Depth: Execution-level.** Foundational decisions are locked; focus on:
-
-1. **Scope** — which files/modules are affected, which stay untouched
-2. **Pattern Consistency** — match existing code style, naming, and conventions
-3. **Implementation Details** — specific functions, data structures, algorithms
-4. **Step Order** — exact sequence of file edits and test changes
-5. **Risk** — what could break, rollback strategy
-
-Each implementation choice still gets the decision-transparency treatment, but scoped to the specific change.
-
-### Scale C — Phase Planning (Nested)
-
-Use when: a master plan exists (e.g., a 5-phase roadmap) and the user requests planning for one phase.
-
-**Depth: Task-level.** The master plan already made architectural decisions. Focus on:
-
-1. **Tasks** — concrete, atomic steps with file paths and line ranges
-2. **Prerequisites** — what must be done first (from earlier phases)
-3. **Verification** — how to confirm each task is correct
-4. **Edge Cases** — error paths, boundary conditions, regressions
-
-Each task still gets the decision-transparency treatment, but at the level of "which implementation approach" rather than "which architecture."
-
----
-
-## Decision Transparency Format
-
-Every decision in the plan — whether architectural, implementation, or task-level — MUST include a decision table. No exceptions.
-
-### Markdown Format (in `.plan.md`)
-
-```markdown
-#### Decision: [What you're deciding]
-
-**Chosen:** [Option name] — [one-line rationale]
+**Chosen:** [Option] — [rationale]
 
 | # | Option | Example | Benchmark | Why not chosen |
 |---|--------|---------|-----------|----------------|
-| ✅ | [Option A] | [Concrete code snippet, library name, or pattern name] | [Measurable metric: perf, bundle size, adoption, etc.] | — |
-| 2 | [Option B] | [Concrete example] | [Metric] | [Why it lost] |
-| 3 | [Option C] | [Concrete example] | [Metric] | [Why it lost] |
-| 4 | [Option D] | [Concrete example] | [Metric] | [Why it lost] |
+| ✅ | [A] | [concrete: library/pattern/API] | [measurable metric] | — |
+| 2 | [B] | [concrete] | [metric] | [specific reason] |
+| 3 | [C] | [concrete] | [metric] | [specific reason] |
 ```
 
-**Rules:**
-- Always show 3–4 alternatives (including the chosen one marked with ✅).
-- "Example" must be concrete: a library name, a code pattern, a specific API. Not vague.
-- "Benchmark" must be a verifiable or well-known metric: "2x faster than X in Y benchmark", "N stars on GitHub, last commit 2026-03", "used by [company] in production", "0 dependencies", or a direct comparison number.
-- "Why not chosen" must be specific: "adds 450KB to bundle", "doesn't support TypeScript natively", "abandoned since 2024", "requires OAuth server we don't have".
+**Example** = concrete (library name, pattern, API — never vague). **Benchmark** = verifiable ("2× faster in X", "38k GitHub stars", "0 deps", "used by Stripe"). **Why not chosen** = specific ("adds 450KB bundle", "no TS support", "abandoned 2024").
 
-### HTML Decision Card (in `.plan.html`)
-
-Each decision table becomes an interactive card in the HTML companion:
-- Expandable rows showing full details
-- Visual indicator (clay accent) for the chosen option
-- Hover to highlight tradeoffs
-- Collapsible rationale section
+In `.plan.html`: render each table as an expandable card — chosen in `--clay`, alternatives in `--gray-700`, collapsible rationale.
 
 ---
 
-## Plan Markdown Template
+## Plan Structure
 
-```markdown
-# [Plan Name]
-
-> Scale: [Greenfield | Brownfield | Phase Planning]
-> Created: [date]
-> Status: [research | draft | approved | executing | verified]
-
-## Context
-
-[2-4 sentences: what we're building and why. Link to any prior plans if phase planning.]
-
-## Prerequisites
-
-- [ ] [Any prerequisite task that must be done first]
-
-## Decisions
-
-### [Decision area — e.g., "State Management"]
-
-#### Decision: [What you're deciding]
-
-**Chosen:** [Option name] — [rationale]
-
-| # | Option | Example | Benchmark | Why not chosen |
-|---|--------|---------|-----------|----------------|
-| ✅ | [A] | ... | ... | — |
-| 2 | [B] | ... | ... | ... |
-| 3 | [C] | ... | ... | ... |
-| 4 | [D] | ... | ... | ... |
-
-[Repeat for each decision area]
-
-## Implementation Steps
-
-### Step 1: [Name]
-
-- **Files:** [list of files to create/modify]
-- **Action:** [what to do, specifically]
-- **Verification:** [how to confirm it works]
-
-### Step 2: [Name]
-
-- **Files:** [list]
-- **Action:** [what to do]
-- **Verification:** [how to confirm]
-
-[Continue for all steps]
-
-## Risk Assessment
-
-| Risk | Likelihood | Impact | Mitigation |
-|------|-----------|--------|------------|
-| [risk] | [low/med/high] | [low/med/high] | [strategy] |
-
-## Verification Checklist
-
-- [ ] All steps implemented per plan
-- [ ] Lint passes
-- [ ] Type check passes
-- [ ] Tests pass (or new tests written)
-- [ ] No regressions in existing functionality
-- [ ] Plan HTML companion generated and interactive
-```
+1. **Header** — name, scale, date, status (`research → draft → approved → executing → verified`)
+2. **Context** — 2–4 sentences; link prior plans if phase planning
+3. **Prerequisites** — checkbox list
+4. **Decisions** — decision tables per area
+5. **Steps** — files, action, verification per step
+6. **Risks** — table: risk / likelihood / impact / mitigation
+7. **Verification** — lint ✓, typecheck ✓, tests ✓, no regressions ✓, HTML companion ✓
 
 ---
 
-## Plan HTML Companion
+## HTML Companion
 
-When bloom is active (or when generating a `/bloom-plan` artifact), also write `.cursor/plans/<name>.plan.html` — a self-contained interactive HTML file using the Bloom design system.
+Follow Bloom Construction Rules (1–12) and Security Rules (S1–S8). Required features:
 
-### Required Features
-
-1. **Decision cards** — each decision table rendered as an interactive expandable card with the chosen option highlighted in `--clay` and alternatives in `--gray-700`
-2. **Implementation checklist** — each step has a checkbox that persists to `localStorage`
-3. **Risk matrix** — visual table with color-coded likelihood/impact cells (`--rust` for high, `--clay` for medium, `--olive` for low)
-4. **Status timeline** — shows the plan's progression through Research → Draft → Approved → Executing → Verified
-5. **Scale badge** — displays the current planning scale (Greenfield / Brownfield / Phase Planning)
-6. **Copy as markdown** — button to export the plan markdown using the Bloom clipboard utility pattern
-7. **Print stylesheet** — hides toolbar, ensures decision tables and checklists print cleanly
-
-### Construction
-
-Follow all Bloom Construction Rules (single file, CSS custom properties, semantic HTML, inline JS only, responsive, export mechanism, print-friendly, accessible, no placeholder content, viewport meta, progressive enhancement, no dialogs).
-
-Follow all Bloom Security Rules (no external deps, no eval, no innerHTML with untrusted content, no network requests, CSP compatible, no executable data URIs, sanitize clipboard, no javascript URIs).
-
-Use the Bloom HTML Skeleton as the base structure and the full design system palette.
+1. Decision cards — expandable, chosen in `--clay`
+2. Checklist — `localStorage`-persisted
+3. Risk matrix — `--rust`/`--clay`/`--olive` cells
+4. Status timeline — Research → Draft → Approved → Executing → Verified
+5. Scale badge — Greenfield / Brownfield / Phase Planning
+6. Copy as markdown — Bloom clipboard pattern
+7. Print stylesheet — hide toolbar
 
 ---
 
-## Session Memory
-
-Treat bloom-plan state as conversation-scoped. When a new session starts, the skill is off by default. If `/bloom-plan` is invoked, both bloom-plan mode AND bloom mode activate (since the plan generates HTML artifacts).
-
-If the user has an existing `.plan.md` in `.cursor/plans/`, they can say "continue the plan" or "execute phase N" and you should read the existing plan, determine which scale applies, and resume.
-
----
-
-## Self-Check
-
-Before finalizing a plan, verify:
-
-- [ ] Every decision has 3-4 alternatives with concrete examples and benchmarks
-- [ ] The chosen option is marked and justified
-- [ ] Planning scale matches the project context (not over-planning brownfield, not under-planning greenfield)
-- [ ] All file paths are specific (no "TODO: figure out which file")
-- [ ] Implementation steps are ordered and include verification criteria
-- [ ] Risk assessment identifies real risks with mitigations
-- [ ] `.plan.md` is written to `.cursor/plans/`
-- [ ] `.plan.html` companion is written to `.cursor/plans/` with full Bloom design system
-- [ ] The user has been asked for approval before execution begins
-- [ ] No write operations occurred during the research phase
-
----
-**See also:** Bloom core skill (`droids/bloom-core.md`) for design system, construction rules, and HTML patterns. Bloom patterns (`droids/bloom-patterns.md`) for document categories and harness setup.
+**Self-check:** Decision tables have 3–4 alternatives ✓ • Scale matches project ✓ • File paths specific ✓ • Steps ordered with verification ✓ • `.plan.md` + `.plan.html` in `.cursor/plans/` ✓ • User approved before execution ✓ • No writes in research ✓

@@ -2,10 +2,11 @@
 
 The Bloom skill is split for harness size limits. **Edit sources, not this index.**
 
-| File | Purpose | ~Lines |
-|------|---------|--------|
-| [bloom-core.md](./bloom-core.md) | Mode, design system, rules, skeleton, bloom self-check | ≤220 |
-| [bloom-patterns.md](./bloom-patterns.md) | Categories, harness matrix, clipboard/SVG/diff, delivery checklist | ~400 |
+| File | Purpose | ~Tokens |
+|------|---------|---------|
+| [bloom-core.md](./bloom-core.md) | Mode, design system, rules, skeleton, self-check | ~1,137 |
+| [bloom-patterns.md](./bloom-patterns.md) | Categories, harness matrix, clipboard/SVG/diff, delivery | ~3,494 |
+| [bloom-plan.md](./bloom-plan.md) | Decision-transparent planning skill | ~900 |
 
 **Synced outputs** (regenerate after editing core):
 
