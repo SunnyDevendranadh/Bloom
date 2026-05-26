@@ -1,7 +1,7 @@
 {
   "name": "bloom",
-  "version": "1.2.0",
-  "description": "Per-session sticky HTML artifacts (reports, reviews, plans). Includes static report templates and interactive references (triage board, animation sandbox). Activate with /bloom.",
+  "version": "1.3.0",
+  "description": "Per-session sticky HTML artifacts (reports, reviews, plans) and decision-transparent planning mode (/bloom-plan). Includes static report templates, interactive references, and plan skill. Activate artifacts with /bloom, planning with /bloom-plan.",
   "author": {
     "name": "Sunny Devendranadh",
     "url": "https://github.com/SunnyDevendranadh"
