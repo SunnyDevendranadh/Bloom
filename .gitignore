@@ -35,3 +35,7 @@ Thumbs.db
 *.key
 *.pem
 *.token
+
+# Harness-specific runtime directories (copy from droids/ to use)
+.continue/
+.factory/
