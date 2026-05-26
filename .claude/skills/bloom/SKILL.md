@@ -11,7 +11,7 @@ Produce **self-contained `.html` files** as agent output. Once activated, every 
 
 ## Bloom Mode
 
-**Per-session, sticky.** Activates on `/bloom`, `/bloom-on`, `/bloom-mode`, or phrases "bloom on", "let it bloom", "bloom mode on", "activate bloom", "go bloom". Auto-activates if `.bloom` file exists at repo root. Deactivates on `/bloom-off`, `/no-bloom`, "bloom off", "stop bloom". On first activation: confirm mode + deactivation command in plain text. No HTML splash screen.
+**Per-session, sticky.** Activates on `/bloom`, `/bloom-on`, `/bloom-mode`, or phrases "bloom on", "let it bloom", "bloom mode on", "activate bloom", "go bloom". Auto-activates if `.bloom` file exists at repo root. Deactivates on `/bloom-off`, `/no-bloom`, "bloom off", "stop bloom". On first activation: confirm mode + deactivation command in plain text. No HTML splash screen. Off by default at session start; most recent toggle wins.
 
 **Produces HTML** for: reports, reviews, comparisons, docs, plans, explainers, diagrams, decks, timelines, triage boards, editors, glossaries — anything beyond a few sentences of structured markdown. Reply with a single plain-text path line (e.g., `Wrote ./bloom/sprint-44-status.html`). Never dump HTML source into chat.
 
@@ -19,7 +19,7 @@ Produce **self-contained `.html` files** as agent output. Once activated, every 
 
 ### Companion rule
 
-Reserved `.md` files (`README.md`, `CLAUDE.md`, `AGENTS.md`, `CONTRIBUTING.md`, `CHANGELOG.md`, `LICENSE`, paths under `.github/`, `.factory/`, `.cursor/`, `.windsurf/`, `.continue/`, `.claude/`): write the canonical `.md` AND a companion `.html` next to it. Non-reserved docs default to `.html` primary unless user asks for markdown.
+Reserved `.md` files (`README.md`, `CLAUDE.md`, `AGENTS.md`, `CONTRIBUTING.md`, `CHANGELOG.md`, `LICENSE`, paths under `.github/`, `.factory/`, `.cursor/`, `.windsurf/`, `.continue/`, `.claude/`): write both the canonical `.md` (source of truth) AND a companion `.html` next to it that uses the full design system and interactivity. Non-reserved docs default to `.html` primary unless user asks for markdown.
 
 ### Output location
 
@@ -82,4 +82,4 @@ Reserved `.md` files (`README.md`, `CLAUDE.md`, `AGENTS.md`, `CONTRIBUTING.md`, 
 
 ---
 
-**Self-check:** Substantial artifacts → `.html` file (not inline) • Reserved `.md` companions updated • Free-standing under `./bloom/` • Trivial answers stay plain text • Deactivation triggers honored
+**Self-check:** Substantial artifacts → `.html` file (not inline, reserved `.md` companions updated too) • Free-standing under `./bloom/` (kebab-case) • Trivial answers stay plain text • Deactivation triggers honored before responding
