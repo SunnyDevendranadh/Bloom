@@ -9,8 +9,8 @@
     {
       "name": "bloom",
       "source": "./plugins/bloom",
-      "description": "Per-session sticky mode that makes markdown bloom into rich, self-contained .html artifacts \u2014 reports, reviews, plans, docs, comparisons, diagrams, editor UI.",
-      "version": "1.3.0",
+      "description": "Per-session sticky HTML artifacts and decision-transparent planning. Token-optimized — 3,001 combined tokens. Activate artifacts with /bloom, planning with /bloom-plan.",
+      "version": "1.4.0",
       "homepage": "https://github.com/SunnyDevendranadh/Bloom",
       "keywords": [
         "html",
@@ -20,7 +20,8 @@
         "markdown",
         "reports",
         "code-review",
-        "planning"
+        "planning",
+        "decision-transparency"
       ]
     }
   ]

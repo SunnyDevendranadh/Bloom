@@ -1,6 +1,6 @@
 {
   "name": "bloom-validator",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Validates self-contained Bloom .html artifacts against active construction and security rules",
   "type": "module",
   "bin": {
