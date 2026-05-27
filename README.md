@@ -253,15 +253,12 @@ Bloom/
 ├── .claude-plugin/
 │   └── marketplace.json                         # Bloom marketplace listing
 ├── plugins/
-│   ├── bloom/
-│   │   ├── .claude-plugin/
-│   │   │   └── plugin.json                      # Bloom plugin manifest
-│   │   ├── skills/
-│   │   │   └── bloom/
-│   │   │       └── SKILL.md                     # Bloom plugin-packaged skill
-│   │   └── INSTALL.opencode.md                  # OpenCode install instructions
-│   └── bloom-plan/
+│   └── bloom/
+│       ├── .claude-plugin/
+│       │   └── plugin.json                      # Bloom plugin manifest
 │       ├── skills/
+│       │   ├── bloom/
+│       │   │   └── SKILL.md                     # Bloom plugin-packaged skill
 │       │   └── bloom-plan/
 │       │       └── SKILL.md                     # Bloom Plan plugin-packaged skill
 │       └── INSTALL.opencode.md                  # OpenCode install instructions

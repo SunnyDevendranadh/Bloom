@@ -12,8 +12,7 @@ Two skill definition files implementing the `/bloom-plan` skill with Cursor's Pl
 | `droids/bloom-plan-index.md` | Maintainer index, file listing, sync commands | Internal |
 | `.cursor/rules/bloom-plan.mdc` | Cursor rule with YAML frontmatter | Cursor |
 | `.claude/skills/bloom-plan/SKILL.md` | Claude Code skill with YAML frontmatter | Claude Code |
-| `plugins/bloom-plan/skills/bloom-plan/SKILL.md` | Plugin marketplace package skill | Claude Code marketplace |
-| `plugins/bloom-plan/INSTALL.opencode.md` | OpenCode install instructions | OpenCode |
+| `plugins/bloom/skills/bloom-plan/SKILL.md` | Plugin marketplace package skill | Claude Code marketplace |
 | `AGENTS.md` | Synced: includes bloom-core + bloom-plan | Codex CLI, Codex App, OpenCode, Copilot CLI, Aider |
 | `GEMINI.md` | Synced: includes bloom-core + bloom-plan | Gemini CLI |
 

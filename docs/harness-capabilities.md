@@ -28,7 +28,7 @@ Bloom is a **skill convention**, not a runtime. There is no Bloom daemon, CLI se
 | **Claude Code** | `.claude/skills/bloom-plan/SKILL.md` | Yes — native skill slash | Yes | Yes (Greenfield / Brownfield / Phase) | Yes |
 | **Cursor** | `.cursor/rules/bloom-plan.mdc` | No — phrases only* | Yes | Yes | Yes |
 | **Codex CLI / Codex App** | `AGENTS.md` (synced) | Phrase only | Yes | Yes | Yes |
-| **OpenCode** | `AGENTS.md` + `plugins/bloom-plan/INSTALL.opencode.md` | Phrase only | Yes | Yes | Yes |
+| **OpenCode** | `AGENTS.md` (synced) | Phrase only | Yes | Yes | Yes |
 | **GitHub Copilot CLI** | `AGENTS.md` (synced) | Phrase only | Yes | Yes | Yes |
 | **Gemini CLI** | `GEMINI.md` (synced) | Phrase only | Yes | Yes | Yes |
 | **Factory Droid** | Copy `droids/bloom-plan.md` to `.factory/droids/` | Phrase only | Yes | Yes | Yes |
