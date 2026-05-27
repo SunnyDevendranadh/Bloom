@@ -2,7 +2,7 @@
 
 The Bloom Plan skill is a single-file skill. **Edit `droids/bloom-plan.md`, not this index.**
 
-**Token budget:** bloom-plan ≈ 900 tokens. bloom-core ≈ 1,137 tokens. Combined ≈ 2,037 tokens (fits 2% budget at 128k context).
+**Token budget:** bloom-plan ≈ 960 tokens. bloom-core ≈ 1,137 tokens. Combined ≈ 2,097 tokens (fits 2% budget at 128k context).
 
 **Synced outputs** (regenerate after editing core):
 

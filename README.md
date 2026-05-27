@@ -37,6 +37,10 @@ Bloom also ships a **planning skill** that adds Cursor-style Plan-Execute-Verify
 
 - **Decision transparency** — every decision includes 3-4 alternatives with concrete examples, measurable benchmarks, and explicit "why not chosen" reasoning. No "trust me" choices.
 - **Adaptive scale** — automatically adjusts depth: Greenfield (full-scope architecture decisions), Brownfield (execution-level implementation choices), or Phase Planning (task-level steps from a master plan).
+- **Self-audit** — rates benchmark quality on a 3-point scale before presenting the plan. Weak benchmarks get strengthened; trivial decisions get collapsed to one-liners instead of forced tables.
+- **Cross-cutting analysis** — every plan covers security surface, test strategy, observability, and rollback — not just "what to build."
+- **Contingency paths** — each step includes an exact recovery if it fails. Every risk has both mitigation and contingency.
+- **Execution context** — preconditions (tools, runtimes, package managers) are validated during research and noted in the plan.
 - **Interactive HTML companion** — every plan gets a `.plan.html` with expandable decision cards, `localStorage`-persisted checklists, color-coded risk matrices, and a status timeline.
 
 **Install for your harness** — bloom-plan is included in `AGENTS.md`, `GEMINI.md`, and the other harness files when you run `scripts/sync-skill-files.sh`. See the harness-specific files:

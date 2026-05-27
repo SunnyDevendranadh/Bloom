@@ -44,6 +44,7 @@ Bloom is a **skill convention**, not a runtime. There is no Bloom daemon, CLI se
 - **`/bloom` is a harness/skill convention**, not a guaranteed cross-tool command. Only harnesses with native skill slash support (notably Claude Code) treat `/bloom` as a first-class activation.
 - **Sticky** means: once activated, the agent should keep producing HTML artifacts until deactivation or session end, without the user repeating "bloom on" every turn. Effectiveness depends on whether the skill text remains in context (Claude skills and loaded Cursor rules) vs. turn-limited `AGENTS.md` snippets.
 - **Full patterns** = triage boards, animation sandboxes, annotated diffs, slide decks, etc. Codex/OpenCode/Copilot/Gemini installs today load **`AGENTS.md` (core)**; deep pattern blocks will live in **`droids/bloom-patterns.md`** (Phase 3) and should be read from the repo when building complex UI.
+- **Bloom Plan v2 features** (self-audit, cross-cutting analysis, contingency paths, execution context validation) are skill-level improvements — they work identically across all harnesses since they are part of the plan content format, not harness-specific capabilities.
 
 ---
 

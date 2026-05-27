@@ -46,8 +46,12 @@ The `/bloom-plan` skill follows the Plan-Execute-Verify architecture used by lea
 
 1. **Decision transparency** — Every decision (architectural, implementation, task-level) includes 3-4 alternatives with concrete examples, benchmarks, and explicit "why not chosen" reasoning.
 2. **Adaptive planning scale** — Automatically detects whether the project is greenfield, brownfield, or phase-of-a-larger-plan, and adjusts planning depth accordingly.
-3. **Bloom HTML companion** — Every plan generates an interactive `.plan.html` file with decision cards, checklists, risk matrices, and a status timeline.
-4. **Explicit approval gate** — The agent pauses for user approval before execution.
+3. **Self-audit** — Rates benchmark quality (Strong/Weak/Empty) before presenting the plan. Weak benchmarks get strengthened; trivial decisions collapse to one-liners.
+4. **Cross-cutting analysis** — Every plan covers security surface, test strategy, observability, and rollback — not just implementation steps.
+5. **Contingency paths** — Every step and risk includes an exact recovery plan if something fails.
+6. **Execution context validation** — Preconditions (tools, runtimes, package managers) are validated during research and noted in the plan.
+7. **Bloom HTML companion** — Every plan generates an interactive `.plan.html` file with decision cards, checklists, risk matrices, and a status timeline.
+8. **Explicit approval gate** — The agent pauses for user approval before execution.
 
 ---
 
