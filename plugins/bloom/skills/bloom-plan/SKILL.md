@@ -1,39 +1,55 @@
 ---
 name: bloom-plan
-description: Decision-transparent planning. 3-4 alternatives per decision with concrete examples and benchmarks. Adaptive scale. Interactive HTML companions.
+description: Decision-transparent planning. 3-4 alternatives per decision with concrete examples and benchmarks. Adaptive scale. Self-audited benchmark quality. Interactive HTML companions.
 ---
 
 # Bloom Plan — Decision-Transparent Planning Skill
 
-Decision-transparent planning with Cursor's Plan-Execute-Verify architecture. Activate: `/bloom-plan`, `/plan`, "plan this'", "make a plan". Deactivate: `/plan-off`, "stop planning". Artifacts → `.cursor/plans/`. On activation: confirm mode + deactivation command in plain text. Plan mode also activates bloom mode (plans produce HTML).
+Decision-transparent planning with Plan-Execute-Verify. Activate: `/bloom-plan`, `/plan`, "plan this", "make a plan". Deactivate: `/plan-off`, "stop planning". Artifacts → `.cursor/plans/`. On activation: confirm mode + deactivation command in plain text. Plan mode auto-activates bloom mode (plans produce HTML).
 
 ---
 
 ## The Loop
 
-1. **Research (read-only):** Only `read_file`, `codebase_search`, `grep_search`, `list_dir`, `readLints`, `web_search`, `web_fetch`, `ask_question`. You MUST NOT edit, create, or delete files (except plan artifacts). You MUST NOT run shell commands or execute code.
-2. **Plan:** Write `.cursor/plans/<name>.plan.md` + `.cursor/plans/<name>.plan.html`. Name = kebab-case.
-3. **Approve:** Pause for explicit approval. User can: approve (proceed), edit the `.plan.md` (re-read and resume), reject (stop, no execution), or scope down (limit to specific steps or a single phase).
-4. **Execute:** Enable writes. Implement step-by-step. Update checklist after each step.
-5. **Verify:** Re-read all modified files — confirm every change matches the plan. Run lint, typecheck, and tests. If failures: fix, re-verify, update plan. Update plan status from `executing` → `verified` in both `.plan.md` and `.plan.html`.
+1. **Research (read-only):** Only read, search, grep, list, lint, web_search, web_fetch, ask_question. No edits, no shell commands, no code execution. Validate preconditions: check what tools, languages, and runtimes are available in the execution environment. Note these in Context.
+2. **Plan:** Write `.cursor/plans/<name>.plan.md` + `.cursor/plans/<name>.plan.html`. Name = kebab-case. Run self-audit (below) before presenting the plan.
+3. **Approve:** Pause for explicit approval. User can: approve (proceed), edit the `.plan.md` (re-read and resume), reject (stop), or scope down.
+4. **Execute:** Implement step-by-step. Update checklist after each step. If a step fails, follow its contingency path (see Steps format below).
+5. **Verify:** Re-read all modified files — confirm every change matches the plan. Run lint, typecheck, and tests. Fix failures, re-verify, update plan. Transition status `executing` → `verified`.
 
 ---
 
 ## Scale
 
-Detect which scale applies from the project context and user's prompt:
+Detect from project context and user prompt:
 
-| Scale | When to use | Deciding what | Decision scope |
-|-------|-------------|--------------|----------------|
-| **Greenfield** | No codebase exists, or a `0.x` project where no conventions/patterns are established | Tech stack, architecture, project structure, tooling, conventions, security, performance, impl order | Every foundational decision gets a full table with 3–4 alternatives |
-| **Brownfield** | Established codebase with existing patterns; user asks to plan a feature or change within it | Which files change, how to match existing patterns, specific data structures or algorithms, exact step order, what could break | Implementation-level choices get tables; foundational decisions are locked |
-| **Phase** | A master plan already exists; user asks to plan a specific phase of it | Exact tasks with file paths, what must be done first, how to verify each task, edge cases and regressions | Each task gets a "which approach" table |
+| Scale | Trigger | Decision scope |
+|-------|---------|----------------|
+| **Greenfield** | No codebase, or `0.x` with no conventions | Every foundational decision gets a full table (stack, architecture, tooling, security, perf, impl order) |
+| **Brownfield** | Established codebase with patterns | Implementation-level choices get tables; foundational decisions locked |
+| **Phase** | Master plan exists, planning a phase | Task-level "which approach" tables; atomic steps with file paths |
 
 ---
 
-## Decision Tables (mandatory)
+## Self-Audit (mandatory, before presenting plan)
 
-Every decision MUST include 3–4 alternatives:
+Rate every decision's benchmark quality on a 3-point scale:
+
+| Rating | Criteria | Action |
+|--------|----------|--------|
+| **Strong** | Verifiable metric (stars, deps, perf numbers, prod usage) | Keep table as-is |
+| **Weak** | Observation only ("dir exists", "feels cleaner", "implies curated") | Strengthen to a metric, or collapse to one-line rationale |
+| **Empty** | All alternatives interchangeable, choice is trivial | Skip table; write one-line rationale |
+
+**Collapse rule:** If all alternatives are equally valid (e.g., directory location for a one-file script, language choice for a single `print` statement), DO NOT force a table. Write: "Decision: [what]. Chosen: [option]. Alternatives considered: [B, C] — not meaningfully different." This prevents ceremony over substance.
+
+Anti-pattern (from hello-world test): "Dir already in repo" as a benchmark. Fix: "0 added deps, no packaging impact, pre-existing `.gitignore` cover."
+
+---
+
+## Decision Tables
+
+Every non-trivial decision (per self-audit) MUST include 3–4 alternatives:
 
 ```
 #### Decision: [what]
@@ -47,59 +63,39 @@ Every decision MUST include 3–4 alternatives:
 | 3 | [C] | [concrete] | [metric] | [specific reason] |
 ```
 
-**Example** = concrete (library name, pattern, API — never vague). **Benchmark** = verifiable ("2× faster in X", "38k GitHub stars", "0 deps", "used by Stripe"). **Why not chosen** = specific ("adds 450KB bundle", "no TS support", "abandoned 2024").
+**Example** = concrete (library name, pattern, API — never vague). **Benchmark** = verifiable and specific: "38k stars", "0 deps", "2× faster", "used by Stripe" — never "dir exists" or "feels right". **Why not chosen** = specific tradeoff: "adds 450KB", "no TS support", "abandoned 2024".
 
-Real example — what good vs bad looks like:
-
-```
-#### Decision: ORM for user auth
-
-**Chosen:** Prisma — type-safe, migrations built-in
-
-| # | Option    | Example                 | Benchmark                          | Why not chosen            |
-|---|-----------|-------------------------|------------------------------------|---------------------------|
-| ✅ | Prisma    | `prisma` v5, PostgreSQL | 38k★, 1.2M wky, TS-native        | —                         |
-| 2 | Drizzle   | `drizzle-orm` v0.29     | 22k★, 0 deps, 3× smaller          | No built-in migrations    |
-| 3 | Sequelize | `sequelize` v6          | 29k★, mature, MySQL/Postgres/MSSQL| JS-only, no TS safety     |
-```
-
-In `.plan.html`: render each table as an expandable card — chosen in `--clay`, alternatives in `--gray-700`, collapsible rationale.
+In `.plan.html`: expandable `<details>` cards — chosen in `--clay`, alternatives in `--gray-700`.
 
 ---
 
 ## Plan Structure
 
-1. **Header** — plan name, scale (Greenfield/Brownfield/Phase), date, status. Status transitions: `research` → `draft` → `approved` → `executing` → `verified`
-2. **Context** — what we're building and why. 2–4 sentences. Be specific: not "building an API" but "building a JWT-based REST API so the mobile app can authenticate without session cookies". Link any prior plans if phase planning.
-3. **Prerequisites** — checkbox list of blockers that must be resolved first
-4. **Decisions** — one decision table per area (format above). For Greenfield: cover each foundation. For Brownfield: only implementation choices. For Phase: only task-level approaches.
-5. **Steps** — ordered, atomic. Each: files to create/modify, specific action, verification criteria. Must include a concrete file path (not "update config" but "edit `src/config/auth.ts` line 24-38")
-6. **Risks** — table with columns: Risk | Likelihood (low/med/high) | Impact (low/med/high) | Mitigation
-7. **Verification** — plan verification: lint passes ✓, typecheck passes ✓, tests pass (or new tests written) ✓, no regressions ✓, `.plan.html` companion generated and interactive ✓
+1. **Header** — name, scale, date, status. Transitions: `research` → `draft` → `approved` → `executing` → `verified`
+2. **Context** — what and why. 2–4 sentences. Concrete: "JWT-based REST API so mobile app authenticates without session cookies." Note execution environment (tools, runtimes, package managers available). Link prior plans if phase planning.
+3. **Prerequisites** — checkbox list of blockers to resolve first. Include tools/runtimes verified available during research.
+4. **Decisions** — one table per non-trivial area (self-audited). Greenfield: every foundation. Brownfield: implementation only. Phase: task-level only.
+5. **Steps** — ordered, atomic. Each step: files to create/modify, specific action, verification criteria, **contingency** (exact revert/recovery if step fails). Use concrete file paths ("edit `src/config/auth.ts` line 24-38", not "update config").
+6. **Cross-cutting** — security surface (new deps, auth, data flow), test strategy (unit/integration/e2e), observability (logging, metrics, error paths), rollback plan (revert path if any step fails).
+7. **Risks** — table: Risk | Likelihood (low/med/high) | Impact (low/med/high) | Mitigation | Contingency
+8. **Verification** — lint ✓, typecheck ✓, tests ✓, no regressions ✓, `.plan.html` companion ✓
 
 ---
 
 ## HTML Companion
 
-Follow Bloom Construction Rules (1–12) and Security Rules (S1–S8). Required features:
-
-1. **Decision cards** — each decision table as an expandable `<details>` card. Chosen option highlighted in `--clay`, alternatives in `--gray-700`. Click to expand/collapse rationale.
-2. **Implementation checklist** — each step as a checkbox that persists to `localStorage` across reloads
-3. **Risk matrix** — visual table with color-coded cells: `--rust` for high impact/likelihood, `--clay` for medium, `--olive` for low
-4. **Status timeline** — shows current plan status with all phases: Research → Draft → Approved → Executing → Verified. Current phase highlighted.
-5. **Scale badge** — displays Greenfield, Brownfield, or Phase Planning
-6. **Copy as markdown** — button using Bloom clipboard pattern (Clipboard API + `execCommand('copy')` fallback)
-7. **Print stylesheet** — `@media print` hides toolbar, ensures tables and checklists print without UI chrome
+Follow Bloom Construction Rules (1–12) and Security Rules (S1–S8). Required: decision cards as expandable `<details>`, checklist persisting to `localStorage`, risk matrix (color-coded: `--rust`=high, `--clay`=med, `--olive`=low), status timeline (Research→Draft→Approved→Executing→Verified), scale badge, copy-as-markdown button (Clipboard API + `execCommand('copy')` fallback), `@media print` stylesheet.
 
 ---
 
 **Self-check (before finalizing any plan):**
-- [ ] Every decision has 3–4 alternatives with concrete examples and verifiable benchmarks
-- [ ] Chosen option is clearly marked with justification
-- [ ] Scale correctly detected (not over-planning brownfield, not under-planning greenfield)
-- [ ] All file paths are specific and real (no "update config" — must be "`src/config/auth.ts` line 24")
-- [ ] Steps are ordered correctly with verification criteria per step
-- [ ] Risk table has likelihood and impact as low/med/high
+- [ ] Self-audit completed: weak benchmarks strengthened or collapsed, empty tables skipped
+- [ ] Every kept decision has 3–4 alternatives with concrete examples and verifiable benchmarks
+- [ ] Scale correctly detected (not over-planning trivial scope, not under-planning greenfield)
+- [ ] Every step has a contingency path ("if this fails, revert by...")
+- [ ] Cross-cutting section covers security, testing, observability, rollback
+- [ ] Execution environment validated and noted in prerequisites
+- [ ] All file paths are specific and real
 - [ ] `.plan.md` and `.plan.html` both written to `.cursor/plans/`
 - [ ] User explicitly approved before execution
 - [ ] No files were modified during research phase
