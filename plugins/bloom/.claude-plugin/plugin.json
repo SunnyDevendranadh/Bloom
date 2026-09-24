@@ -1,0 +1,22 @@
+{
+  "name": "bloom",
+  "version": "1.4.0",
+  "description": "Per-session sticky HTML artifacts (reports, reviews, plans) and decision-transparent planning. Both skills token-optimized — combined 3,001 tokens. Activate artifacts with /bloom, planning with /bloom-plan.",
+  "author": {
+    "name": "Sunny Devendranadh",
+    "url": "https://github.com/SunnyDevendranadh"
+  },
+  "homepage": "https://github.com/SunnyDevendranadh/Bloom",
+  "repository": "https://github.com/SunnyDevendranadh/Bloom",
+  "license": "MIT",
+  "keywords": [
+    "html",
+    "artifacts",
+    "session-mode",
+    "bloom",
+    "markdown",
+    "reports",
+    "code-review",
+    "design-system"
+  ]
+}

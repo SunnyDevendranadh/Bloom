@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Acme — Motion Easing Sandbox</title>
+<style>
+:root {
+  --ivory: #FAF9F5;
+  --slate: #141413;
+  --clay: #D97757;
+  --oat: #E3DACC;
+  --olive: #788C5D;
+  --gray-100: #F0EEE6;
+  --gray-300: #D1CFC5;
+  --gray-500: #87867F;
+  --gray-700: #3D3D3A;
+  --white: #FFFFFF;
+  --serif: ui-serif, Georgia, "Times New Roman", serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+  --duration-normal: 250ms;
+  --ease: ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--ivory);
+  color: var(--gray-700);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.6;
+  padding: 48px 24px 96px;
+}
+.page { max-width: 720px; margin: 0 auto; }
+header { margin-bottom: 32px; }
+h1 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 32px;
+  color: var(--slate);
+  margin-bottom: 6px;
+}
+.lede { color: var(--gray-500); font-size: 14px; }
+.stage {
+  background: var(--white);
+  border: 1.5px solid var(--gray-300);
+  border-radius: 12px;
+  padding: 32px 24px 48px;
+  margin-bottom: 24px;
+  position: relative;
+  height: 140px;
+  overflow: hidden;
+}
+.box-fill { font-size: 0; line-height: 0; opacity: 0; }
+.box {
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  background: var(--clay);
+  position: absolute;
+  left: 24px;
+  top: 42px;
+  animation: slide-across 1.4s var(--ease) infinite alternate;
+}
+@keyframes slide-across {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(100% - 104px)); }
+}
+.controls { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.btn {
+  appearance: none;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1.5px solid var(--gray-300);
+  background: var(--white);
+  color: var(--slate);
+  cursor: pointer;
+}
+.btn[aria-pressed="true"] { background: var(--clay); color: var(--white); border-color: var(--clay); }
+.btn:hover { background: var(--gray-100); }
+.btn[aria-pressed="true"]:hover { background: var(--clay); }
+.btn:focus-visible { outline: 2px solid var(--clay); outline-offset: 2px; }
+.ease-label {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--slate);
+  margin-bottom: 12px;
+}
+.ease-label span { color: var(--clay); }
+.snippet-wrap {
+  background: var(--gray-100);
+  border: 1.5px solid var(--gray-300);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+.snippet-wrap h2 {
+  font-family: var(--serif);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--gray-500);
+  margin-bottom: 8px;
+}
+pre {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--slate);
+  white-space: pre-wrap;
+  margin: 0;
+}
+img { max-width: 100%; }
+:focus-visible { outline: 2px solid var(--clay); outline-offset: 2px; }
+@media (max-width: 960px) {
+  body { padding: 36px 20px 72px; }
+}
+@media (max-width: 640px) {
+  body { padding: 24px 16px 64px; }
+  h1 { font-size: 26px; }
+  .stage { height: 120px; padding: 24px 16px 40px; }
+}
+@media print {
+  body { padding: 0; background: var(--white); }
+  .controls { display: none; }
+  .box { animation: none; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <h1>Motion easing sandbox</h1>
+    <p class="lede">Preview how the demo box moves under different timing functions.</p>
+  </header>
+  <main>
+    <section aria-label="Easing preview">
+      <div class="stage" id="stage">
+        <div class="box" id="demo-box" role="img" aria-label="Easing preview block"><span class="box-fill" aria-hidden="true">·</span></div>
+      </div>
+      <div class="controls" role="group" aria-label="Easing presets">
+        <button type="button" class="btn" data-ease="ease-out" aria-pressed="true">ease-out</button>
+        <button type="button" class="btn" data-ease="ease-in-out" aria-pressed="false">ease-in-out</button>
+        <button type="button" class="btn" data-ease="cubic-bezier(0.34, 1.56, 0.64, 1)" aria-pressed="false">bounce</button>
+      </div>
+      <p class="ease-label">Current: <span id="ease-display">ease-out</span></p>
+      <div class="snippet-wrap">
+        <h2>CSS snippet</h2>
+        <pre id="ease-snippet" readonly tabindex="-1">animation: slide-across 1.4s ease-out infinite alternate;</pre>
+      </div>
+    </section>
+  </main>
+</div>
+<script>
+(function () {
+  var root = document.documentElement;
+  var display = document.getElementById('ease-display');
+  var snippet = document.getElementById('ease-snippet');
+  var presets = document.querySelectorAll('.btn[data-ease]');
+  function applyEase(val) {
+    root.style.setProperty('--ease', val);
+    if (display) display.textContent = val;
+    if (snippet) snippet.textContent = 'animation: slide-across 1.4s ' + val + ' infinite alternate;';
+    presets.forEach(function (b) {
+      b.setAttribute('aria-pressed', b.getAttribute('data-ease') === val ? 'true' : 'false');
+    });
+  }
+  presets.forEach(function (btn) {
+    btn.addEventListener('click', function () { applyEase(btn.getAttribute('data-ease')); });
+  });
+})();
+</script>
+</body>
+</html>

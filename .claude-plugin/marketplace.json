@@ -1,0 +1,28 @@
+{
+  "name": "bloom",
+  "owner": {
+    "name": "Sunny Devendranadh",
+    "url": "https://github.com/SunnyDevendranadh"
+  },
+  "description": "Marketplace for Bloom \u2014 the per-session sticky HTML output skill.",
+  "plugins": [
+    {
+      "name": "bloom",
+      "source": "./plugins/bloom",
+      "description": "Per-session sticky HTML artifacts and decision-transparent planning. Token-optimized — 3,001 combined tokens. Activate artifacts with /bloom, planning with /bloom-plan.",
+      "version": "1.4.0",
+      "homepage": "https://github.com/SunnyDevendranadh/Bloom",
+      "keywords": [
+        "html",
+        "artifacts",
+        "session-mode",
+        "bloom",
+        "markdown",
+        "reports",
+        "code-review",
+        "planning",
+        "decision-transparency"
+      ]
+    }
+  ]
+}

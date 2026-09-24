@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Warns — image and empty elements</title>
+<style>
+:root { --slate: #141413; --ivory: #FAF9F5; }
+body { background: var(--ivory); color: var(--slate); padding: 2rem; }
+:focus-visible { outline: 2px solid var(--slate); }
+@media print { body { padding: 0; } }
+</style>
+</head>
+<body>
+<header><h1>Missing responsive image styles</h1></header>
+<main>
+  <section>
+    <img src="diagram.png" alt="Dependency graph">
+    <p></p>
+    <div style="color: var(--slate)">Inline style should move to the stylesheet.</div>
+  </section>
+</main>
+</body>
+</html>

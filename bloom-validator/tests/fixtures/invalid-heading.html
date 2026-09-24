@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Broken — Skipped headings and duplicate h1</title>
+<style>
+:root { --slate: #141413; }
+body { color: var(--slate); }
+</style>
+</head>
+<body>
+<header>
+  <h1>First Title</h1>
+</header>
+<main>
+  <section>
+    <h3>Skipped to h3 from h1</h3>
+    <p>Bad hierarchy.</p>
+  </section>
+  <section>
+    <h1>Second h1 — not allowed</h1>
+  </section>
+</main>
+</body>
+</html>
