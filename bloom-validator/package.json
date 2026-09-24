@@ -7,9 +7,9 @@
     "bloom-validate": "./src/index.ts"
   },
   "scripts": {
-    "start": "node src/index.ts",
-    "test": "node --test tests/validator.test.ts",
-    "test:fixtures": "node src/index.ts tests/fixtures/valid.html",
+    "start": "node --experimental-strip-types src/index.ts",
+    "test": "node --experimental-strip-types --test tests/validator.test.ts",
+    "test:fixtures": "node --experimental-strip-types src/index.ts tests/fixtures/valid.html",
     "validate-all": "node scripts/validate-all.mjs"
   },
   "engines": {

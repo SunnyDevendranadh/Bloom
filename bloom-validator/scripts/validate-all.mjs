@@ -42,7 +42,7 @@ if (files.length === 0) {
 
 const result = spawnSync(
   process.execPath,
-  [join(VALIDATOR_DIR, "src", "index.ts"), ...files],
+  ["--experimental-strip-types", join(VALIDATOR_DIR, "src", "index.ts"), ...files],
   { stdio: "inherit", cwd: VALIDATOR_DIR },
 );
 
