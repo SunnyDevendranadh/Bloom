@@ -26,7 +26,7 @@ export function validate(filePath: string, source: string): ValidationReport {
   };
 }
 
-function parseArgs(argv: string[]): { files: string[]; json: boolean; noColor: boolean; help: boolean } {
+function parseArgs(argv: string[]): { files: string[]; json: boolean; noColor: boolean; help: boolean; error?: string } {
   const files: string[] = [];
   let json = false;
   let noColor = false;
@@ -35,7 +35,8 @@ function parseArgs(argv: string[]): { files: string[]; json: boolean; noColor: b
     if (arg === "--json") json = true;
     else if (arg === "--no-color") noColor = true;
     else if (arg === "-h" || arg === "--help") help = true;
-    else if (!arg.startsWith("-")) files.push(arg);
+    else if (arg.startsWith("-")) return { files, json, noColor, help, error: `unknown option: ${arg}` };
+    else files.push(arg);
   }
   return { files, json, noColor, help };
 }
@@ -57,6 +58,10 @@ Exit codes:
 
 function main(): void {
   const args = parseArgs(process.argv.slice(2));
+  if (args.error) {
+    process.stderr.write(`bloom-validate: ${args.error}\nTry --help for usage.\n`);
+    process.exit(2);
+  }
   if (args.help || args.files.length === 0) {
     process.stdout.write(HELP_TEXT + "\n");
     process.exit(args.help ? 0 : 2);
@@ -65,13 +70,18 @@ function main(): void {
   const reports: ValidationReport[] = [];
   for (const file of args.files) {
     const abs = resolve(file);
+    let source: string;
     try {
-      statSync(abs);
-    } catch {
-      process.stderr.write(`bloom-validate: cannot find file: ${file}\n`);
+      if (!statSync(abs).isFile()) {
+        process.stderr.write(`bloom-validate: not a regular file: ${file}\n`);
+        process.exit(2);
+      }
+      source = readFileSync(abs, "utf8");
+    } catch (error) {
+      const detail = error instanceof Error ? error.message : String(error);
+      process.stderr.write(`bloom-validate: cannot read ${file}: ${detail}\n`);
       process.exit(2);
     }
-    const source = readFileSync(abs, "utf8");
     reports.push(validate(abs, source));
   }
 

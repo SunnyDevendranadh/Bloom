@@ -416,7 +416,7 @@ All templates follow the security guidelines in [`docs/security.md`](docs/securi
 - No `data:` URIs for executable content
 - All event handlers use `addEventListener`, not inline `on*` attributes
 
-The validator enforces all of these via the `security-hardening` rule.
+The validator catches several of these patterns, but its checks are heuristic. Review generated files against the full [security checklist](docs/security.md), especially dynamic content and embedded data URIs.
 
 ---
 

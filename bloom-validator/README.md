@@ -14,7 +14,7 @@ Exit codes:
 
 - `0` — all files pass (no errors; warnings are non-blocking)
 - `1` — one or more files have errors
-- `2` — invalid usage or missing file
+- `2` — invalid usage or a file that cannot be read
 
 ## Rules implemented
 
@@ -92,7 +92,7 @@ When multiple files are passed, the top level is an array of these objects.
 npm test
 ```
 
-13 tests under [`tests/`](tests/) cover one passing file (`valid.html`), one false-positive guard (`valid-with-urls.html`), and one targeted failure fixture per rule family.
+Tests under [`tests/`](tests/) cover rule behavior and CLI exit codes, including invalid options and unreadable inputs.
 
 ## Validating every template, skeleton, and example
 

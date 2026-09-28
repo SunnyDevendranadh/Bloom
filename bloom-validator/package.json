@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "node --experimental-strip-types src/index.ts",
-    "test": "node --experimental-strip-types --test tests/validator.test.ts",
+    "test": "node --experimental-strip-types --test tests/cli.test.ts tests/validator.test.ts",
     "test:fixtures": "node --experimental-strip-types src/index.ts tests/fixtures/valid.html",
     "validate-all": "node scripts/validate-all.mjs"
   },
